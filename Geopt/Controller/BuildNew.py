@@ -1,0 +1,1 @@
+# Functions associated with the BuildNew View
