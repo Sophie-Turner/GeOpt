@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elements>
+
+ <element atomicNumber="1">
+  <symbol>H</symbol>
+  <name>Hydrogen</name>
+  <mass>1<mass>
+  <charge>0</charge>
+  <valanceEs>1</valanceEs>
+ </element>
+
+ <element atomicNumber="1">
+  <symbol></symbol>
+  <name></name>
+  <mass><mass>
+  <charge></charge>
+  <valanceEs></valanceEs>
+ </element>

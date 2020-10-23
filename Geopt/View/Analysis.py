@@ -1,1 +1,1 @@
-from View import Shared
+from View.Shared import *
