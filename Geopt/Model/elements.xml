@@ -1,20 +1,307 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <elements>
+ <period periodNum = "1">
 
- <element atomicNumber="1">
-  <symbol>H</symbol>
-  <name>Hydrogen</name>
-  <mass>1<mass>
-  <charge>0</charge>
-  <valanceEs>1</valanceEs>
- </element>
+  <element atomicNumber="1">
+   <symbol>H</symbol>
+   <name>Hydrogen</name>
+   <mass>1.0078</mass>
+   <charge>0</charge>
+   <group>1</group>
+  </element>
 
- <element atomicNumber="1">
-  <symbol></symbol>
-  <name></name>
-  <mass><mass>
-  <charge></charge>
-  <valanceEs></valanceEs>
- </element>
+  <element atomicNumber="2">
+   <symbol>He</symbol>
+   <name>Helium</name>
+   <mass>4.0026</mass>
+   <charge>0</charge>
+   <group>18</group>
+  </element>
+
+ </period>
+
+ <period periodNum = "2">
+
+  <element atomicNumber="3">
+   <symbol>Li</symbol>
+   <name>Lithium</name>
+   <mass>6.938</mass>
+   <charge>0</charge>
+   <group>1</group>
+  </element>
+
+  <element atomicNumber="4">
+   <symbol>Be</symbol>
+   <name>Berylium</name>
+   <mass>9.012</mass>
+   <charge>0</charge>
+   <group>2</group>
+  </element>
+
+  <element atomicNumber="5">
+   <symbol>B</symbol>
+   <name>Boron</name>
+   <mass>10.811</mass>
+   <charge>0</charge>
+   <group>13</group>
+  </element>
+
+  <element atomicNumber="6">
+   <symbol>C</symbol>
+   <name>Carbon</name>
+   <mass>12.011</mass>
+   <charge>0</charge>
+   <group>14</group>
+  </element>
+
+  <element atomicNumber="7">
+   <symbol>N</symbol>
+   <name>Nitrogen</name>
+   <mass>14.007</mass>
+   <charge>0</charge>
+   <group>15</group>
+  </element>
+
+  <element atomicNumber="8">
+   <symbol>O</symbol>
+   <name>Oxygen</name>
+   <mass>15.999</mass>
+   <charge>0</charge>
+   <group>16</group>
+  </element>
+
+  <element atomicNumber="9">
+   <symbol>F</symbol>
+   <name>Fluorine</name>
+   <mass>18.988</mass>
+   <charge>0</charge>
+   <group>17</group>
+  </element>
+
+  <element atomicNumber="10">
+   <symbol>Ne</symbol>
+   <name>Neon</name>
+   <mass>20.180</mass>
+   <charge>0</charge>
+   <group>18</group>
+  </element>
+
+ </period>
+
+ <period periodNum="3">
+
+  <element atomicNumber="11">
+   <symbol>Na</symbol>
+   <name>Sodium</name>
+   <mass>22.990</mass>
+   <charge>0</charge>
+   <group>1</group>
+  </element>
+
+  <element atomicNumber="12">
+   <symbol>Mg</symbol>
+   <name>Magnesium</name>
+   <mass>24.305</mass>
+   <charge>0</charge>
+   <group>2</group>
+  </element>
+
+  <element atomicNumber="13">
+   <symbol>Al</symbol>
+   <name>Aluminium</name>
+   <mass>26.982</mass>
+   <charge>0</charge>
+   <group>13</group>
+  </element>
+
+  <element atomicNumber="14">
+   <symbol>Si</symbol>
+   <name>Silicon</name>
+   <mass>28.086</mass>
+   <charge>0</charge>
+   <group>14</group>
+  </element>
+
+  <element atomicNumber="15">
+   <symbol>P</symbol>
+   <name>Phosphorous</name>
+   <mass>30.974</mass>
+   <charge>0</charge>
+   <group>15</group>
+  </element>
+
+  <element atomicNumber="16">
+   <symbol>S</symbol>
+   <name>Sulfur</name>
+   <mass>32.066</mass>
+   <charge>0</charge>
+   <group>16</group>
+  </element>
+
+  <element atomicNumber="17">
+   <symbol>Cl</symbol>
+   <name>Chlorine</name>
+   <mass>35.453</mass>
+   <charge>0</charge>
+   <group>17</group>
+  </element>
+
+  <element atomicNumber="18">
+   <symbol>Ar</symbol>
+   <name>Argon</name>
+   <mass>39.948</mass>
+   <charge>0</charge>
+   <group>18</group>
+  </element>
+
+ </period>
+
+ <period periodNum="4">
+
+   <element atomicNumber="19">
+    <symbol>K</symbol>
+    <name>Potassium</name>
+    <mass>39.098</mass>
+    <charge>0</charge>
+    <group>1</group>
+  </element>
+
+  <element atomicNumber="20">
+    <symbol>Ca</symbol>
+    <name>Calcium</name>
+    <mass>40.078</mass>
+    <charge>0</charge>
+    <group>2</group>
+  </element>
+
+  <element atomicNumber="21">
+    <symbol>Sc</symbol>
+    <name>Scandium</name>
+    <mass>44.956</mass>
+    <charge>0</charge>
+    <group>3</group>
+  </element>
+
+  <element atomicNumber="22">
+    <symbol>Ti</symbol>
+    <name>Titanium</name>
+    <mass>47.88</mass>
+    <charge>0</charge>
+    <group>4</group>
+  </element>
+
+  <element atomicNumber="23">
+    <symbol>V</symbol>
+    <name>Vanadium</name>
+    <mass>50.942</mass>
+    <charge>0</charge>
+    <group>5</group>
+  </element>
+
+  <element atomicNumber="24">
+    <symbol>Cr</symbol>
+    <name>Chromium</name>
+    <mass>51.996</mass>
+    <charge>0</charge>
+    <group>6</group>
+  </element>
+
+  <element atomicNumber="25">
+    <symbol>Mn</symbol>
+    <name>Manganese</name>
+    <mass>54.938</mass>
+    <charge>0</charge>
+    <group>7</group>
+  </element>
+
+  <element atomicNumber="26">
+    <symbol>Fe</symbol>
+    <name>Iron</name>
+    <mass>55.933</mass>
+    <charge>0</charge>
+    <group>8</group>
+  </element>
+
+  <element atomicNumber="27">
+    <symbol>Co</symbol>
+    <name>Cobalt</name>
+    <mass>58.933</mass>
+    <charge>0</charge>
+    <group>9</group>
+  </element>
+
+  <element atomicNumber="28">
+    <symbol>Ni</symbol>
+    <name>Nickel</name>
+    <mass>58.693</mass>
+    <charge>0</charge>
+    <group>10</group>
+  </element>
+
+  <element atomicNumber="29">
+    <symbol>Cu</symbol>
+    <name>Copper</name>
+    <mass>63.546</mass>
+    <charge>0</charge>
+    <group>11</group>
+  </element>
+
+  <element atomicNumber="30">
+    <symbol>Zn</symbol>
+    <name>Zinc</name>
+    <mass>65.39</mass>
+    <charge>0</charge>
+    <group>12</group>
+  </element>
+
+  <element atomicNumber="31">
+    <symbol>Ga</symbol>
+    <name>Gallium</name>
+    <mass>69.732</mass>
+    <charge>0</charge>
+    <group>13</group>
+  </element>
+
+  <element atomicNumber="32">
+    <symbol>Ge</symbol>
+    <name>Germanium</name>
+    <mass>72.61</mass>
+    <charge>0</charge>
+    <group>14</group>
+  </element>
+
+  <element atomicNumber="33">
+    <symbol>As</symbol>
+    <name>Arsenic</name>
+    <mass>74.922</mass>
+    <charge>0</charge>
+    <group>15</group>
+  </element>
+
+  <element atomicNumber="34">
+    <symbol>Se</symbol>
+    <name>Selenium</name>
+    <mass>78.972</mass>
+    <charge>0</charge>
+    <group>16</group>
+  </element>
+
+  <element atomicNumber="35">
+    <symbol>Br</symbol>
+    <name>Bromine</name>
+    <mass>79.904</mass>
+    <charge>0</charge>
+    <group>17</group>
+  </element>
+
+  <element atomicNumber="36">
+    <symbol>Kr</symbol>
+    <name>Krypton</name>
+    <mass>84.80</mass>
+    <charge>0</charge>
+    <group>18</group>
+  </element>
+
+ </period>
 
 </elements>
