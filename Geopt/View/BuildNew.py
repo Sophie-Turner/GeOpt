@@ -18,21 +18,23 @@ def TestClick():
 
 
 # get list from XML
-list = GetXML()
+elements = GetXML()
+mainBlock = elements[0]
+fBlock = elements[1]
 
 root = SetupWindow()
 
-tableFrame = Frame(root)
-tableFrame.pack()
-
 # Populate the main blocks
-periods = 4
-MakeTable(tableFrame, periods, list)
+periods = 7
+tableFrame1 = Frame(root)
+tableFrame1.pack(pady=10)
+MakeTable(tableFrame1, periods, mainBlock)
 
 # Populate the f block
-# We will need to change the way it finds them as this will find the first 2 periods atm, not the last 2
-#periods = 2
-#MakeTable(tableFrame, periods, list)
+periods = 2
+tableFrame2 = Frame(root)
+tableFrame2.pack(pady=10)
+MakeTable(tableFrame2, periods, fBlock)
 
 root.mainloop()
 

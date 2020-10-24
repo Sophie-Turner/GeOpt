@@ -2,9 +2,11 @@
 import xml.etree.ElementTree as ET
 
 def GetXML():
-    tree = ET.parse('../Model/elements.xml')
-    treeroot = tree.getroot()
-    return treeroot
+    treeMain = ET.parse('../Model/mainblocks.xml')
+    treeF = ET.parse('../Model/fblock.xml')
+    treerootMain = treeMain.getroot()
+    treerootF = treeF.getroot()
+    return treerootMain, treerootF
     # how to get certain XML elements:
     #for element in treeroot:
         #print(element.tag, element.attrib)
