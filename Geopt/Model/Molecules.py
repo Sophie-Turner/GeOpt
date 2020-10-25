@@ -1,11 +1,13 @@
 class Molecule:
 
-    # A molecule HAS ONE OR MANY atoms - class structure...
-    # A molecule HAS A PES
-
-    def __init__(self):
-        # Whatever properties a molecule has
-        pass
+    def __init__(self, atoms, functionalGroups, ions, charge):
+        # The properties a molecule has
+        self.atoms = atoms
+        self.functionalGroups = functionalGroups
+        self.ions = ions
+        self.charge = charge
+        if self.charge is None:
+            self.charge = 0
 
 
 class Isomer:
