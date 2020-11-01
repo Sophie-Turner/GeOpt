@@ -1,6 +1,6 @@
 # COMP3000
-<h1>Title of the project</h1>
-<p>Molecular Geometry Optimisation Using Machine Learning</p>
+<h1>Molecular Geometry Optimisation Using Machine Learning</h1>
+<p>Sophie Turner's final year project</p>
 
 <h2>Vision</h2>
 <p>

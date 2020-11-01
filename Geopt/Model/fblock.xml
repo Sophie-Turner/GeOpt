@@ -1,0 +1,250 @@
+<fblock>
+
+    <period periodNum="1">
+
+  <element atomicNumber="57">
+    <symbol>La</symbol>
+    <name>Lanthanum</name>
+    <mass>138.91</mass>
+    <charge>0</charge>
+    <group>3</group>
+  </element>
+
+  <element atomicNumber="58">
+    <symbol>Ce</symbol>
+    <name>Cerium</name>
+    <mass>140.12</mass>
+    <charge>0</charge>
+    <group>4</group>
+  </element>
+
+    <element atomicNumber="59">
+    <symbol>Pr</symbol>
+    <name>Praseodymium</name>
+    <mass>140.91</mass>
+    <charge>0</charge>
+    <group>5</group>
+  </element>
+
+    <element atomicNumber="60">
+    <symbol>Nd</symbol>
+    <name>Neodymium</name>
+    <mass>144.24</mass>
+    <charge>0</charge>
+    <group>6</group>
+  </element>
+
+    <element atomicNumber="61">
+    <symbol>Pm</symbol>
+    <name>Promethium</name>
+    <mass>145.00</mass>
+    <charge>0</charge>
+    <group>7</group>
+  </element>
+
+  <element atomicNumber="62">
+    <symbol>Sm</symbol>
+    <name>Samarium</name>
+    <mass>150.36</mass>
+    <charge>0</charge>
+    <group>8</group>
+  </element>
+
+    <element atomicNumber="63">
+    <symbol>Eu</symbol>
+    <name>Europium</name>
+    <mass>151.96</mass>
+    <charge>0</charge>
+    <group>9</group>
+  </element>
+
+    <element atomicNumber="64">
+    <symbol>Gd</symbol>
+    <name>Gadolinium</name>
+    <mass>157.25</mass>
+    <charge>0</charge>
+    <group>10</group>
+  </element>
+
+    <element atomicNumber="65">
+    <symbol>Tb</symbol>
+    <name>Terbium</name>
+    <mass>158.93</mass>
+    <charge>0</charge>
+    <group>11</group>
+  </element>
+
+    <element atomicNumber="66">
+    <symbol>Dy</symbol>
+    <name>Dysprosium</name>
+    <mass>162.50</mass>
+    <charge>0</charge>
+    <group>12</group>
+  </element>
+
+    <element atomicNumber="67">
+    <symbol>Ho</symbol>
+    <name>Holmium</name>
+    <mass>164.93</mass>
+    <charge>0</charge>
+    <group>13</group>
+  </element>
+
+    <element atomicNumber="68">
+    <symbol>Er</symbol>
+    <name>Erbium</name>
+    <mass>167.26</mass>
+    <charge>0</charge>
+    <group>14</group>
+  </element>
+
+    <element atomicNumber="69">
+    <symbol>Tm</symbol>
+    <name>Thulium</name>
+    <mass>168.93</mass>
+    <charge>0</charge>
+    <group>15</group>
+  </element>
+
+    <element atomicNumber="70">
+    <symbol>Yb</symbol>
+    <name>Ytterbium</name>
+    <mass>173.05</mass>
+    <charge>0</charge>
+    <group>16</group>
+  </element>
+
+    <element atomicNumber="71">
+    <symbol>Lu</symbol>
+    <name>Lutetium</name>
+    <mass>175.00</mass>
+    <charge>0</charge>
+    <group>17</group>
+  </element>
+
+ </period>
+
+<period periodNum = "2">
+
+  <element atomicNumber="89">
+    <symbol>Ac</symbol>
+    <name>Actinium</name>
+    <mass>227.00</mass>
+    <charge>0</charge>
+    <group>3</group>
+  </element>
+
+	  <element atomicNumber="90">
+    <symbol>Th</symbol>
+    <name>Thorium</name>
+    <mass>232.04</mass>
+    <charge>0</charge>
+    <group>4</group>
+     </element>
+
+	  <element atomicNumber="91">
+    <symbol>Pa</symbol>
+    <name>Protactinium</name>
+    <mass>231.04</mass>
+    <charge>0</charge>
+    <group>5</group>
+     </element>
+
+	  <element atomicNumber="92">
+    <symbol>U</symbol>
+    <name>Uranium</name>
+    <mass>238.03</mass>
+    <charge>0</charge>
+    <group>6</group>
+     </element>
+
+	  <element atomicNumber="93">
+    <symbol>Np</symbol>
+    <name>Neptunium</name>
+    <mass>237.00</mass>
+    <charge>0</charge>
+    <group>7</group>
+     </element>
+
+	  <element atomicNumber="94">
+    <symbol>Pu</symbol>
+    <name>Plutonium</name>
+    <mass>244.00</mass>
+    <charge>0</charge>
+    <group>8</group>
+     </element>
+
+	  <element atomicNumber="95">
+    <symbol>Am</symbol>
+    <name>Americium</name>
+    <mass>243.00</mass>
+    <charge>0</charge>
+    <group>9</group>
+     </element>
+
+	  <element atomicNumber="96">
+    <symbol>Cm</symbol>
+    <name>Curium</name>
+    <mass>247.00</mass>
+    <charge>0</charge>
+    <group>10</group>
+      </element>
+
+	  <element atomicNumber="97">
+    <symbol>Bk</symbol>
+    <name>Berkelium</name>
+    <mass>247.00</mass>
+    <charge>0</charge>
+    <group>11</group>
+     </element>
+
+	  <element atomicNumber="98">
+    <symbol>Cf</symbol>
+    <name>Californium</name>
+    <mass>251.00</mass>
+    <charge>0</charge>
+    <group>12</group>
+     </element>
+
+	  <element atomicNumber="99">
+    <symbol>Es</symbol>
+    <name>Einsteinium</name>
+    <mass>254</mass>
+    <charge>0</charge>
+    <group>13</group>
+     </element>
+
+	  <element atomicNumber="100">
+    <symbol>Fm</symbol>
+    <name>Fermium</name>
+    <mass>257.00</mass>
+    <charge>0</charge>
+    <group>14</group>
+     </element>
+
+	  <element atomicNumber="101">
+    <symbol>Md</symbol>
+    <name>Mendelevium</name>
+    <mass>258.00</mass>
+    <charge>0</charge>
+    <group>15</group>
+     </element>
+
+	  <element atomicNumber="102">
+    <symbol>No</symbol>
+    <name>Nobelium</name>
+    <mass>259.00</mass>
+    <charge>0</charge>
+    <group>16</group>
+     </element>
+
+	  <element atomicNumber="103">
+    <symbol>Lr</symbol>
+    <name>Lawrencium</name>
+    <mass>266.00</mass>
+    <charge>0</charge>
+    <group>17</group>
+  </element>
+
+ </period>
+ </fblock>
