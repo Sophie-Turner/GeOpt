@@ -7,6 +7,8 @@ from Model.Molecules import Molecule
 from Controller.Shared import *
 
 elementList = []
+formula = []
+subscript = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
 
 def GetXML():
     treeMain = ET.parse('../Model/mainblocks.xml')
@@ -24,38 +26,65 @@ def AddElement(frame, element):
         howMany = simpledialog.askinteger(title=name, prompt='How many {} atoms?'.format(name))
         if not howMany:
             return
+
+    if howMany >= 20:
+        messagebox.showerror(title="Error", message="Too many {}s!".format(name))
+        return
     for eachatom in range(howMany):
         elementList.append(element)
-    if howMany == 1:
-        lblAdded = Label(frame, text="{} was added to the molecule.".format(name),
-                        font=('Agency FB', 14))
-        lblAdded.config(bg='#222222', fg='#EEFFEE')
-        lblAdded.pack()
-        frame.pack()
-    elif howMany < 20:
-        lblAdded = Label(frame, text="{} {}s were added to the molecule.".format(howMany, name),
-                        font=('Agency FB', 14))
-        lblAdded.config(bg='#222222', fg='#EEFFEE')
-        lblAdded.pack()
-        frame.pack()
-    else:
-        messagebox.showerror(title="Error", message="Too many {}s!".format(name))
+    # Update the displayed info. Separated into another function for readability
+    UpdateLabels(frame, element, howMany, name)
     frame.config(bg='#222222')
+    frame.pack()
 
 
+def UpdateLabels(frame, element, howMany, name):
+    # Remove existing labels
+    ClearLabels(frame)
 
-def Build():
-    if elementList:
-        thisMolecule = Molecule(elementList, None, None, None)
+    # Put new formula label in
+    symbol = element[0].text
+    if howMany == 1:
+        formula.append(symbol)
+    else:
+        thisString = symbol + str(howMany).translate(subscript)
+        formula.append(thisString)
+    lblMolecule = Label(frame, text=formula, font=('Agency FB', 30))
+    lblMolecule.config(bg='#222222', fg='#EEFFEE')
+    lblMolecule.pack()
+
+
+def Build(box, isEntry):
+    # If they chose elements from the table
+    if isEntry is False:
+        if elementList:
+            thisMolecule = Molecule(elementList, None, None, None)
+        else:
+            messagebox.showinfo(title='No elements',
+                                message='Please choose the elements for the molecule.')
+    # If they used the entry box instead
+    elif isEntry is True:
+        if len(box.get()) == 0:
+            # If the user hasn't entered any text, see if they selected elements from the table
+            isEntry = False
+            Build(box, isEntry)
+        else:
+            # build up element list from entry box
+            pass
 
 
 def Clear(frame, box):
     elementList = []
+    formula = []
     box.delete(0, END)
+    ClearLabels(frame)
+
+
+def ClearLabels(frame):
     try:
         for label in frame.children.values():
             label.destroy()
-            Clear(frame, box)
+            ClearLabels(frame)
     except:
         frame.pack_forget()
 

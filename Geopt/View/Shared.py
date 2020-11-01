@@ -2,6 +2,17 @@ from Controller.Shared import *
 
 def SetupWindow():
     root = tk.Tk()
+
+    # Get the values of the screen height and width.
+    windowWidth = root.winfo_reqwidth()
+    windowHeight = root.winfo_reqheight()
+    print("Width", windowWidth, "Height", windowHeight)
+
+    # Stop tkinter putting the window in a ridiculous place.
+    positionRight = int(root.winfo_screenwidth() / 4 - windowWidth / 2)
+    positionDown = 0
+    root.geometry("+{}+{}".format(positionRight, positionDown))
+
     root.title('Geopt')
     root.resizable(1, 1)
     root.config(bg='#222222')
