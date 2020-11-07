@@ -22,15 +22,16 @@ def ExtraSpace(atomsList, periods, xmlList):
     return size/10
 
 
-def EvenSpacing(atomsList, extraSpace):
+def EvenSpacing(atomsList):
     # Space out atoms evenly in a 3D box.
     numItems = len(atomsList)
     # Find the cube root because a box is a cube. Round up with ceiling. This will be the dimensions of the box.
     # Add 2 units so that we can centre the atoms easily later on.
-    axis = math.ceil(numItems ** (1 / 3)) + extraSpace
+    axis = math.ceil(numItems ** (1 / 3))
     axisSquared = axis ** 2
     dimensions = axis + 2
     boxSize = (dimensions, dimensions, dimensions)
+    print("boxSize:", boxSize)
     # the box is split into segments of size 1,1,1
     coordinates = []
     for i in range(axis):

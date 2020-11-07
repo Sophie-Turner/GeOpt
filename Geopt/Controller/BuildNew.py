@@ -17,7 +17,7 @@ def AddElement(box, element):
         howMany = simpledialog.askinteger(title=name, prompt='How many {} atoms?'.format(name))
         if not howMany:
             return
-    if howMany > 20:
+    if howMany > 49:
         messagebox.showerror(title="Error", message="Too many {}s!".format(name))
         return
     # Update the displayed info. Separated into another function for readability
@@ -51,8 +51,8 @@ def Build(box):
         howMany= 0
         for i in range(len(boxText)):
             # Don't let the user break their computer with massive molecules!
-            if len(elementsList) > 50:
-                messagebox.showerror(title='Massive molecule',
+            if len(elementsList) > 49:
+                messagebox.showerror(title='Huge molecule',
                                      message='This molecule is too large to build! Cancelling...')
                 Clear(box)
                 return
