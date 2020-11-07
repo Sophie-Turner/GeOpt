@@ -1,6 +1,7 @@
 # This is the Atomic Simulation Environment (ASE) package
-from ase import Atoms, Atom
+from ase import Atoms
 from ase.io import write
+from Model import Calculations
 
 class Molecule:
 
@@ -17,17 +18,13 @@ class Molecule:
 
 
     def ModelMolecule(self):
-        # Create a model of this molecule using ASE
-        atomObjectList = []
-        i = 0
-        for eachAtom in self.atoms:
-            # Make an equation to space them all out evenly
-            atomObjectList.append(Atom(eachAtom, [i, 0, 0]))
-            i=i+0.25
-        self.structure = Atoms(atomObjectList, cell=(6, 6, 6))
-
+        # Create a model of this molecule using ASE.
+        # Calculate cell size and positions for atom placement.
+        boxSize, atomObjectList = Calculations.EvenSpacing(self.atoms)
+        self.structure = Atoms(atomObjectList, cell=boxSize)
+        # Translate atoms to the centre of the unit cell.
+        self.structure.center()
         # See if it worked!
-        self.structure.center()  # translate atoms to centre of unit cell
         write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/testcell.png", self.structure)
 
 

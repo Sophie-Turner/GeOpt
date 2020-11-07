@@ -1,5 +1,4 @@
 import math
-from ase import Atom
 
 
 def EvenSpacing(atomsList):
@@ -19,7 +18,7 @@ def EvenSpacing(atomsList):
                 # Use axis as the numerical base to get the index of the atom list without another loop.
                 index = i*axisSquared + j*axis + k
                 print(index)
-                coordinates.append(Atom(atomsList[index], [i, j, k]))
+                coordinates.append((atomsList[index], [i, j, k]))
                 # Don't create too many co-ordinates. numAtoms is unlikely to divide perfectly into the grid.
                 if len(coordinates) == numItems:
                     print(coordinates)
@@ -27,6 +26,5 @@ def EvenSpacing(atomsList):
                     return boxSize, coordinates
 
 
-
-
-
+testList = ('C'*18)
+EvenSpacing(testList)
