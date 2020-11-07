@@ -10,8 +10,8 @@ backToNormal = str.maketrans("₀₁₂₃₄₅₆₇₈₉", "0123456789")
 
 
 def GetXML():
-    treeMain = ET.parse('../Model/mainblocks.xml')
-    treeF = ET.parse('../Model/fblock.xml')
+    treeMain = ET.parse('../Data/mainblocks.xml')
+    treeF = ET.parse('../Data/fblock.xml')
     treerootMain = treeMain.getroot()
     treerootF = treeF.getroot()
     return treerootMain, treerootF
@@ -33,7 +33,6 @@ def AddElement(box, element):
 
 
 def UpdateFormula(box, element, howMany, name):
-
     # Put new formula in
     symbol = element[0].text
     if howMany == 1:
@@ -41,7 +40,6 @@ def UpdateFormula(box, element, howMany, name):
     else:
         thisString = symbol + str(howMany).translate(subscript)
         formula.append(thisString)
-
     box.delete(0, END)
     box.insert(END, formula)
 
@@ -58,26 +56,45 @@ def Build(box):
         # Disassemble the string and piece it back together one atom at a time
         elementsList = []
         thisAtom = ''
-        for character in boxText:
-            if character.isupper():
-                elementsList.append(thisAtom)
-                thisAtom = character
-            elif character.isdigit():
-                character = character.translate(backToNormal)
-                howMany = int(character)
-                for i in range(howMany-1):
+        howMany= 0
+        for i in range(len(boxText)):
+            # Don't let the user break their computer with massive molecules!
+            if len(elementsList) > 50:
+                messagebox.showerror(title='Massive molecule',
+                                     message='This molecule is too large to build! Cancelling...')
+                Clear(box)
+                return
+            # Skip a loop iteration if the last character was 2-digit to prevent overwriting.
+            if howMany < 10:
+                # We'll need to check one node ahead.
+                character = boxText[i]
+                try:
+                    nextCharacter = boxText[i+1]
+                except:
+                    nextCharacter = ''
+                # Capital letter is the start of a new element so add the previous one to the list.
+                if character.isupper():
                     elementsList.append(thisAtom)
-            else:
-                thisAtom = thisAtom + character
+                    thisAtom = character
+                # Check for multiples.
+                elif character.isdigit():
+                    character = character.translate(backToNormal)
+                    nextCharacter = nextCharacter.translate(backToNormal)
+                    howMany = int(character)
+                    # It might be a two-digit number.
+                    if nextCharacter.isdigit():
+                        howMany = howMany * 10 + int(nextCharacter)
+                    for j in range(howMany-1):
+                        elementsList.append(thisAtom)
+                else:
+                    # It could be an element with two letters in the symbol.
+                    thisAtom = thisAtom + character
         elementsList.append(thisAtom)
         del elementsList[0]
-        print(elementsList)
 
         # Create an instance of the molecule class and create the molecule.
         thisMolecule = Molecule(elementsList, None, None, None)
         thisMolecule.ModelMolecule()
-
-
 
 
 def Clear(box):

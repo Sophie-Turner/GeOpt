@@ -21,6 +21,7 @@ class Molecule:
         atomObjectList = []
         i = 0
         for eachAtom in self.atoms:
+            # Make an equation to space them all out evenly
             atomObjectList.append(Atom(eachAtom, [i, 0, 0]))
             i=i+0.25
         self.structure = Atoms(atomObjectList, cell=(6, 6, 6))
