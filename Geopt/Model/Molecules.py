@@ -1,7 +1,8 @@
 # This is the Atomic Simulation Environment (ASE) package
 from ase import Atoms
 from ase.io import write
-from Model import Calculations
+from Model.Calculations import *
+from Model.InteractWithData import GetXML
 
 class Molecule:
 
@@ -19,8 +20,11 @@ class Molecule:
 
     def ModelMolecule(self):
         # Create a model of this molecule using ASE.
+        # Find the largest atom's relative size and adjust the cell for this.
+        treerootMain, treerootF = GetXML()
+        extraSpace = ExtraSpace(self.atoms, 7, treerootMain)
         # Calculate cell size and positions for atom placement.
-        boxSize, atomObjectList = Calculations.EvenSpacing(self.atoms)
+        boxSize, atomObjectList = EvenSpacing(self.atoms, extraSpace)
         self.structure = Atoms(atomObjectList, cell=boxSize)
         # Translate atoms to the centre of the unit cell.
         self.structure.center()

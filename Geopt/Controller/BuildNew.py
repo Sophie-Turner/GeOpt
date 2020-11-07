@@ -1,20 +1,12 @@
 # Functions associated with the BuildNew View
-import xml.etree.ElementTree as ET
 from tkinter import simpledialog, messagebox
 from Model.Molecules import Molecule
+from Model.InteractWithData import GetXML
 from Controller.Shared import *
 
 formula = []
 subscript = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
 backToNormal = str.maketrans("₀₁₂₃₄₅₆₇₈₉", "0123456789")
-
-
-def GetXML():
-    treeMain = ET.parse('../Data/mainblocks.xml')
-    treeF = ET.parse('../Data/fblock.xml')
-    treerootMain = treeMain.getroot()
-    treerootF = treeF.getroot()
-    return treerootMain, treerootF
 
 
 def AddElement(box, element):
@@ -112,10 +104,3 @@ def Clear(box):
 #         frame.pack_forget()
 
 
-# How to get certain XML elements
-    #for element in treeroot:
-        #print(element.tag, element.attrib)
-        #print(element[2].text)
-    #print(root[0][2].text)
-    #print("len(treeroot):", len(treeroot))
-    #print("len(treeroot[0]):", len(treeroot[0]))
