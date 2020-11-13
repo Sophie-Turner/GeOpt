@@ -1,5 +1,5 @@
 from Model.Molecules import Molecule
-
+from ase import Atoms, Atom
 
 class Optimiser:
 
@@ -8,3 +8,5 @@ class Optimiser:
     def __init__(self, molecule):
         self.molecule = molecule
 
+    def EAtest(self):
+        self.molecule.GetEnergy()

@@ -1,21 +1,25 @@
 # This is the Atomic Simulation Environment (ASE) package
 from ase import Atoms
 from ase.io import write
+from ase.calculators.emt import EMT
 from Model.Calculations import *
 from Model.InteractWithData import GetXML
 
+
 class Molecule:
 
-    def __init__(self, atoms, functionalGroups, ions, charge):
-        # The properties a molecule has
+    def __init__(self, atoms, functionalGroups, ions, charge, calcName):
+        # The properties a molecule has.
         self.atoms = atoms
         self.functionalGroups = functionalGroups
         self.ions = ions
         self.charge = charge
+        self.calcName = calcName
         if self.charge is None:
             self.charge = 0
-
+        # Properties that will be created later in the program.
         self.structure = None
+        self.energy = None
 
 
     def ModelMolecule(self):
@@ -28,8 +32,15 @@ class Molecule:
         self.structure = Atoms(atomObjectList, cell=boxSize)
         # Translate atoms to the centre of the unit cell.
         self.structure.center()
+        # Set up the ase force calculator for finding energies.
+        self.structure.calc = EMT()
         # See if it worked!
         write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/testcell.png", self.structure)
+
+
+    def GetEnergy(self):
+        energy = self.structure.get_potential_energy()
+        print("energy:", energy)
 
 
 

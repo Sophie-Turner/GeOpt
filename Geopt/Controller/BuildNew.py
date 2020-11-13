@@ -85,8 +85,9 @@ def Build(box):
         del elementsList[0]
 
         # Create an instance of the molecule class and create the molecule.
-        thisMolecule = Molecule(elementsList, None, None, None)
+        thisMolecule = Molecule(elementsList, None, None, None, 'EMT')
         thisMolecule.ModelMolecule()
+        thisMolecule.GetEnergy()
 
 
 def Clear(box):
