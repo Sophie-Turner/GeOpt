@@ -1,5 +1,6 @@
 import math
 from ase import Atom
+import numpy as np
 
 
 def ExtraSpace(atomsList, periods, xmlList):

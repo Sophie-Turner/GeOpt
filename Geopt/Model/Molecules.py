@@ -38,11 +38,14 @@ class Molecule:
         write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/testcell2d.png", self.structure)
         write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/testcell3d.png", self.structure,
               rotation='10x,30y,0z')
+        return atomObjectList
 
 
     def GetEnergy(self):
         energy = self.structure.get_potential_energy()
-        print("energy:", energy)
+        return energy
+
+
 
 
 

@@ -1,6 +1,7 @@
 # Functions associated with the BuildNew View
 from tkinter import simpledialog, messagebox
 from Model.Molecules import Molecule
+from Model.EAs import StartEA
 from Model.InteractWithData import GetXML
 from Controller.Shared import *
 
@@ -86,10 +87,7 @@ def Build(box):
         elementsList.append(thisAtom)
         del elementsList[0]
 
-        # Create an instance of the molecule class and create the molecule.
-        thisMolecule = Molecule(elementsList, None, None, None, 'EMT')
-        thisMolecule.ModelMolecule()
-        thisMolecule.GetEnergy()
+        StartEA(elementsList)
 
 
 def Clear(box):
