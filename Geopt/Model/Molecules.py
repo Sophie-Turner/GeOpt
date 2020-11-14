@@ -35,12 +35,16 @@ class Molecule:
         # Set up the ase force calculator for finding energies.
         self.structure.calc = EMT()
         # See if it worked!
-        write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/testcell.png", self.structure)
+        write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/testcell2d.png", self.structure)
+        write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/testcell3d.png", self.structure,
+              rotation='10x,30y,0z')
 
 
     def GetEnergy(self):
         energy = self.structure.get_potential_energy()
         print("energy:", energy)
+
+
 
 
 

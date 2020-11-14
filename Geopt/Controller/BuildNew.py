@@ -48,7 +48,7 @@ def Build(box):
         # Disassemble the string and piece it back together one atom at a time
         elementsList = []
         thisAtom = ''
-        howMany= 0
+        howMany = 0
         for i in range(len(boxText)):
             # Don't let the user break their computer with massive molecules!
             if len(elementsList) > 49:
@@ -57,7 +57,9 @@ def Build(box):
                 Clear(box)
                 return
             # Skip a loop iteration if the last character was 2-digit to prevent overwriting.
-            if howMany < 10:
+            if howMany > 9:
+                howMany = 0
+            else:
                 # We'll need to check one node ahead.
                 character = boxText[i]
                 try:
