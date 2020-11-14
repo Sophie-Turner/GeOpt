@@ -33,7 +33,7 @@ def EvenSpacing(atomsList, extraSpace):
     dimensions = axis + 2 + extraSpace*axis
     boxSize = (dimensions, dimensions, dimensions)
     print("boxSize:", boxSize)
-    print("axis factor:", axis)
+    print("segments per plane:", axis)
     print("extraSpace:", extraSpace)
     # the box is split into segments of size 1,1,1 plus extra spacing for the largest atom
     coordinates = []

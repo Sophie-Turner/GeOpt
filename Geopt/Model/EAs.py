@@ -1,35 +1,38 @@
 import numpy as np
 from numpy import random
-from Model.Molecules import Molecule
+from Model import Molecules
+from ase import Atoms
+from ase.calculators.emt import EMT
+from ase.io import write
 # If there is only 1 atom we do nothing.
 # If there are 2 atoms we need to only move one of them and only on one plane.
 
 
 def StartEA(elementsList):
-    # Create an instance of the molecule class and create the molecule.
-    thisMolecule = Molecule(elementsList, None, None, None, 'EMT')
-    startingPositions = thisMolecule.ModelMolecule()
-    oldEnergy = thisMolecule.GetEnergy()
-    # Put this inside a loop... and run (4) parallel processes.
-    MoveAllAtoms(startingPositions)
-    newEnergy = thisMolecule.GetEnergy()
-    #print("old energy: ", oldEnergy, "   new energy: ", newEnergy)
+    boxSize, atomObjectList = Molecules.SetUpMolecule(elementsList)
+
+    parentMolecule = Atoms(atomObjectList, cell=boxSize)
+    parentEnergy = GetEnergy(parentMolecule)
+
+    MoveAllAtoms(atomObjectList)
+
+    childMolecule = Atoms(atomObjectList, cell=boxSize)
+    childEnergy = GetEnergy(childMolecule)
+
+
+def GetEnergy(molecule):
+    # Translate atoms to the centre of the unit cell.
+    molecule.center()
+    # Set up the ase force calculator for finding energies.
+    molecule.calc = EMT()
+    # energy in electron volts
+    energy = molecule.get_potential_energy()
+    return energy
 
 
 def MoveAllAtoms(itsAtoms):
     for eachAtom in itsAtoms:
-        MutatePositions(eachAtom)
-
-
-def MoveOneAtom(itsAtoms, atomToMove):
-    pass
-
-
-def MutatePositions(atomToMove):
-    print("old atom", atomToMove)
-    atomToMove.position += ((random.randint(-50, 50, 3)) / 100)
-    print("new atom", atomToMove)
-    return atomToMove
+        eachAtom.position += ((random.randint(-50, 50, 3)) / 100)
 
 
 
