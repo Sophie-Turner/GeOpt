@@ -10,8 +10,6 @@ from ase.io import write
 
 def StartEA(elementsList):
     boxSize, atomObjectList = Molecules.SetUpMolecule(elementsList)
-    if atomObjectList is None:
-        return False
 
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentEnergy = GetEnergy(parentMolecule)

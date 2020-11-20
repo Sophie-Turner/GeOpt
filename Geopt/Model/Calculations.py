@@ -7,15 +7,14 @@ def ExtraSpace(atomsList, periods, xmlList):
     # Some atoms are much larger than others so the cell must be adjusted for this.
     size = 0
     lastAtom = ''
-    isValidElement = False
     for eachAtom in atomsList:
         # Don't look up the same element multiple times
         if eachAtom != lastAtom:
             for i in range(periods):
-                isValidElement = False
+                isFound = False
                 for j in xmlList[i]:
                     if j[0].text == eachAtom:
-                        isValidElement = True
+                        isFound = True
                         group = int(j[4].text)
                         relativeSize = (18 - group) * i
                         # Update size to find largest atom
@@ -23,7 +22,7 @@ def ExtraSpace(atomsList, periods, xmlList):
                             size = relativeSize
                             print(size)
         lastAtom = eachAtom
-    return isValidElement, size/10
+    return size/10
 
 
 def EvenSpacing(atomsList, extraSpace):
