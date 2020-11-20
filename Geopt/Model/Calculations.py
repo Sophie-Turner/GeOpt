@@ -1,28 +1,39 @@
 import math
 from ase import Atom
 import numpy as np
+from Model.InteractWithData import GetXML
 
 
-def ExtraSpace(atomsList, periods, xmlList):
+def ExtraSpace(atomsList):
     # Some atoms are much larger than others so the cell must be adjusted for this.
-    size = 0
+    treerootMain, treerootF = GetXML()
+    maxSize = 0
     lastAtom = ''
     for eachAtom in atomsList:
-        # Don't look up the same element multiple times
+        # Don't look up the same element multiple times.
         if eachAtom != lastAtom:
-            for i in range(periods):
-                isFound = False
-                for j in xmlList[i]:
-                    if j[0].text == eachAtom:
-                        isFound = True
-                        group = int(j[4].text)
-                        relativeSize = (18 - group) * i
-                        # Update size to find largest atom
-                        if relativeSize > size:
-                            size = relativeSize
-                            print(size)
+            # Most elements are in the main block so check there first.
+            isFound, maxSize = FindAtom(eachAtom, treerootMain, 7, maxSize)
+            if isFound is False:
+                # Check in the F block if it hasn't been found.
+                isFound, maxSize = FindAtom(eachAtom, treerootF, 2, maxSize)
         lastAtom = eachAtom
-    return size/10
+    return maxSize/10
+
+
+def FindAtom(atomToFind, xmlList, periods, maxSize):
+    isFound = False
+    for i in range(periods):
+        for j in xmlList[i]:
+            if j[0].text == atomToFind:
+                isFound = True
+                print("The atom was found.")
+                group = int(j[4].text)
+                relativeSize = (18 - group) * i
+                # Update size to find largest atom
+                if relativeSize > maxSize:
+                    maxSize = relativeSize
+    return isFound, maxSize
 
 
 def EvenSpacing(atomsList, extraSpace):
