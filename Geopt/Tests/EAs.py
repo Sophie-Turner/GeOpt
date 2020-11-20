@@ -5,6 +5,8 @@ from Model import Molecules
 from numpy import random
 
 def StartEA(elementsList):
+    changeSizes = [10, 50, 150]  # Ranges of random atom movements.
+
     # Set up and initialise our template molecule to start with.
     boxSize, coordinates, atomObjectList = Molecules.SetUpMolecule(elementsList)
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
@@ -13,7 +15,10 @@ def StartEA(elementsList):
     # Create 3 children from this initial parent using large random ranges for mutation.
     childrenList = []
     for i in range(3):
-        childMolecule, childCoordinates, childAtomsObject = GenerateChild(elementsList, coordinates, boxSize)
+        permutedCoordinates = random.permutation(coordinates)
+        childCoordinates, childAtomsObject = PrepareChild(elementsList, permutedCoordinates)
+        #MoveAllAtoms(childAtomsObject, changeSizes[2])
+        childMolecule = GenerateChild(childAtomsObject, boxSize)
         childrenList.append([childMolecule, childCoordinates, childAtomsObject])
 
     parentEnergy = GetEnergy(parentMolecule)
@@ -24,7 +29,7 @@ def StartEA(elementsList):
     print("Parent atoms object: ", atomObjectList)
     print("Child 1 atoms object: ", childrenList[0][2])
     print("Parent energy: ", parentEnergy)
-    print("Child energy: ", child1Energy)
+    print("Child 1 energy: ", child1Energy)
 
     write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
          rotation='10x,30y,0z')
@@ -37,18 +42,19 @@ def StartEA(elementsList):
 
 
 
-def GenerateChild(elementsList, parentCoordinates, boxSize):
-    changeSizes = [10, 50, 150]  # Ranges of random atom movements.
+def PrepareChild(elementsList, parentCoordinates):
     childAtomsObject = []
     childCoordinates = parentCoordinates[:]
     for i in range(len(elementsList)):
         childAtomsObject.append(Atom(elementsList[i], childCoordinates[i]))
-    MoveAllAtoms(childAtomsObject, changeSizes[2])
+    return childCoordinates, childAtomsObject
+
+
+def GenerateChild(childAtomsObject, boxSize):
     child = Atoms(childAtomsObject, cell=boxSize)
     # Translate atoms to the centre of the unit cell. It's OK if the atoms stick out of their cell.
     child.center()
-    return child, childCoordinates, childAtomsObject
-
+    return child
 
 
 def GetEnergy(molecule):
@@ -63,7 +69,7 @@ def MoveAllAtoms(itsAtoms, changeSize):
         eachAtom.position += ((random.randint(-changeSize, changeSize, 3)) / 100)
 
 
-testList = ['C', 'H', 'H', 'H', 'H']
+testList = ['C', 'H', 'H', 'H', 'O']
 StartEA(testList)
 
 # How to remove old objects from memory:
