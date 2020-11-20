@@ -5,24 +5,49 @@ from Model import Molecules
 from numpy import random
 
 def StartEA(elementsList):
-    boxSize, atomObjectList = Molecules.SetUpMolecule(elementsList)
+    boxSize, coordinates, atomObjectList = Molecules.SetUpMolecule(elementsList)
 
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentEnergy = GetEnergy(parentMolecule)
-    print("parent atoms: ", atomObjectList)
 
-    MoveAllAtoms(atomObjectList)
+    GenerateChild(elementsList, coordinates, boxSize)
+    child1Molecule, child1Coordinates, child1AtomsObject = GenerateChild(elementsList, coordinates, boxSize)
+    MoveAllAtoms(child1AtomsObject)
 
-    childMolecule = Atoms(atomObjectList, cell=boxSize)
-    childEnergy = GetEnergy(childMolecule)
-    print("child atoms: ", atomObjectList)
+    print("Parent molecule: ", parentMolecule)
+    print("Child molecule: ", child1Molecule)
+    print("Parent atoms object: ", atomObjectList)
+    print("Child atoms object: ", child1AtomsObject)
 
-    print("parent energy: ", parentEnergy, "\nchild energy: ", childEnergy)
-    print("parent positions: \n", parentMolecule.get_positions(), "\nchild positions: \n", childMolecule.get_positions())
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
-          rotation='10x,30y,0z')
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child.png", childMolecule,
-          rotation='10x,30y,0z')
+    # How to remove old objects from memory:
+    for eachAtom in child1AtomsObject:
+        print("removing ", eachAtom)
+        del(eachAtom)
+    print("removing ", child1Molecule)
+    del(child1Molecule)
+
+
+
+    #childEnergy = GetEnergy(childMolecule1)
+
+    #print("parent energy: ", parentEnergy, "\nchild energy: ", childEnergy)
+    #print("parent positions: \n", parentMolecule.get_positions(), "\nchild positions: \n", childMolecule1.get_positions())
+    #write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
+    #      rotation='10x,30y,0z')
+    #write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child.png", childMolecule1,
+    #      rotation='10x,30y,0z')
+
+
+
+def GenerateChild(elementsList, parentCoordinates, boxSize):
+    childAtomsObject = []
+    childCoordinates = parentCoordinates[:]
+    for i in range(len(elementsList)):
+        childAtomsObject.append(Atom(elementsList[i], childCoordinates[i]))
+    child = Atoms(childAtomsObject, cell=boxSize)
+    child.calc = EMT()
+    return child, childCoordinates, childAtomsObject
+
 
 
 def GetEnergy(molecule):

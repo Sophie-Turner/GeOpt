@@ -3,10 +3,8 @@ from Controller.Shared import *
 def SetupWindow():
     root = tk.Tk()
 
-    # Get the values of the screen height and width.
+    # Get the value of the screen width.
     windowWidth = root.winfo_reqwidth()
-    windowHeight = root.winfo_reqheight()
-    print("Width", windowWidth, "Height", windowHeight)
 
     # Stop tkinter putting the window in a ridiculous place.
     positionRight = int(root.winfo_screenwidth() / 4 - windowWidth / 2)

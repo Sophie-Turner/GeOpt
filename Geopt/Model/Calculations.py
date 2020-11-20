@@ -43,23 +43,30 @@ def EvenSpacing(atomsList, extraSpace):
     # Add 2 units so that we can centre the atoms easily later on.
     axis = math.ceil(numItems ** (1 / 3))
     axisSquared = axis ** 2
+    # The box is split into segments of size 1,1,1 plus extra spacing for the largest atom.
     dimensions = axis + 2 + extraSpace*axis
     boxSize = (dimensions, dimensions, dimensions)
     print("boxSize:", boxSize)
     print("segments per plane:", axis)
     print("extraSpace:", extraSpace)
-    # the box is split into segments of size 1,1,1 plus extra spacing for the largest atom
+    # The coordinates list is kept separate so it can be altered easily during the EA.
     coordinates = []
+    # This list of for creating the initial model and it's quicker to build it up during this loop.
+    atomObjectList = []
     for i in range(axis):
         for j in range(axis):
             for k in range(axis):
                 # Use axis as the numerical base to get the index of the atom list without another loop.
                 index = i*axisSquared + j*axis + k
                 # Create a matrix for the co-ordinates of each atom in the molecule
-                coordinates.append(Atom(atomsList[index], [i+i*extraSpace, j+j*extraSpace, k+k*extraSpace]))
+                x = i+i*extraSpace
+                y = j+j*extraSpace
+                z = k+k*extraSpace
+                coordinates.append([x, y, z])
+                atomObjectList.append(Atom(atomsList[index], [x, y, z]))
                 # Don't create too many co-ordinates. numAtoms is unlikely to divide perfectly into the grid.
                 if len(coordinates) == numItems:
-                    return boxSize, coordinates
+                    return boxSize, coordinates, atomObjectList
 
 
 
