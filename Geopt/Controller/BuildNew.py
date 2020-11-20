@@ -86,7 +86,11 @@ def Build(box):
         elementsList.append(thisAtom)
         del elementsList[0]
 
-        StartEA(elementsList)
+        isMolecule = StartEA(elementsList)
+        if isMolecule is False:
+            elementsList.clear()
+            Clear(box)
+            messagebox.showerror(title="Invalid input", message="Please enter a valid molecular formula, e.g. H2SO4")
 
 
 def Clear(box):
