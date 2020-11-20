@@ -1,7 +1,7 @@
 import numpy as np
 from numpy import random
 from Model import Molecules
-from ase import Atoms
+from ase import Atom, Atoms
 from ase.calculators.emt import EMT
 from ase.io import write
 # If there is only 1 atom we do nothing.
@@ -9,15 +9,23 @@ from ase.io import write
 
 
 def StartEA(elementsList):
-    boxSize, atomObjectList = Molecules.SetUpMolecule(elementsList)
+    boxSize, coordinates, atomObjectList = Molecules.SetUpMolecule(elementsList)
 
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentEnergy = GetEnergy(parentMolecule)
 
-    MoveAllAtoms(atomObjectList)
+    child1Molecule, child1Coordinates, child1AtomsObject = GenerateChild(elementsList, coordinates, boxSize)
+    childEnergy = GetEnergy(child1Molecule)
 
-    childMolecule = Atoms(atomObjectList, cell=boxSize)
-    childEnergy = GetEnergy(childMolecule)
+
+def GenerateChild(elementsList, parentCoordinates, boxSize):
+    childAtomsObject = []
+    childCoordinates = parentCoordinates[:]
+    for i in range(len(elementsList)):
+        childAtomsObject.append(Atom(elementsList[i], childCoordinates[i]))
+    child = Atoms(childAtomsObject, cell=boxSize)
+    child.calc = EMT()
+    return child, childCoordinates, childAtomsObject
 
 
 def GetEnergy(molecule):
