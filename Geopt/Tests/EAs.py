@@ -11,7 +11,9 @@ def StartEA(elementsList):
     boxSize, coordinates, atomObjectList = Molecules.SetUpMolecule(elementsList)
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentMolecule.center()
-
+    parentEnergy = GetEnergy(parentMolecule)
+    bestEnergy = parentEnergy
+    bestMolecule = parentMolecule
     # Create 3 children from this initial parent using large random ranges for mutation.
     childrenList = []
     for i in range(3):
@@ -19,17 +21,19 @@ def StartEA(elementsList):
         childCoordinates, childAtomsObject = PrepareChild(elementsList, permutedCoordinates)
         #MoveAllAtoms(childAtomsObject, changeSizes[2])
         childMolecule = GenerateChild(childAtomsObject, boxSize)
-        childrenList.append([childMolecule, childCoordinates, childAtomsObject])
+        childEnergy = GetEnergy(childMolecule)
+        print("Energy:", childEnergy)
+        if childEnergy < bestEnergy:
+            bestEnergy = childEnergy
+            bestMolecule = childMolecule
+        childrenList.append([childMolecule, childCoordinates, childAtomsObject, childEnergy])
 
-    parentEnergy = GetEnergy(parentMolecule)
-    child1Energy = GetEnergy(childrenList[0][0])
-
+    print("Parent energy: ", parentEnergy)
     print("Parent molecule: ", parentMolecule)
     print("Child 1 molecule: ", childrenList[0][0])
     print("Parent atoms object: ", atomObjectList)
     print("Child 1 atoms object: ", childrenList[0][2])
-    print("Parent energy: ", parentEnergy)
-    print("Child 1 energy: ", child1Energy)
+    print("The best energy is", bestEnergy)
 
     write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
          rotation='10x,30y,0z')
@@ -39,7 +43,6 @@ def StartEA(elementsList):
           rotation='10x,30y,0z')
     write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child3.png", childrenList[2][0],
           rotation='10x,30y,0z')
-
 
 
 def PrepareChild(elementsList, parentCoordinates):

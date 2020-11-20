@@ -9,38 +9,51 @@ from ase.io import write
 
 
 def StartEA(elementsList):
+    changeSizes = [10, 50, 150]  # Ranges of random atom movements.
+
+    # Set up and initialise our template molecule to start with.
     boxSize, coordinates, atomObjectList = Molecules.SetUpMolecule(elementsList)
-
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
+    parentMolecule.center()
     parentEnergy = GetEnergy(parentMolecule)
+    bestEnergy = parentEnergy
+    bestMolecule = parentMolecule
+    # Create 3 children from this initial parent using large random ranges for mutation.
+    childrenList = []
+    for i in range(3):
+        permutedCoordinates = random.permutation(coordinates)
+        childCoordinates, childAtomsObject = PrepareChild(elementsList, permutedCoordinates)
+        #MoveAllAtoms(childAtomsObject, changeSizes[2])
+        childMolecule = GenerateChild(childAtomsObject, boxSize)
+        childEnergy = GetEnergy(childMolecule)
+        if childEnergy < bestEnergy:
+            bestEnergy = childEnergy
+            bestMolecule = childMolecule
+        childrenList.append([childMolecule, childCoordinates, childAtomsObject, childEnergy])
 
-    child1Molecule, child1Coordinates, child1AtomsObject = GenerateChild(elementsList, coordinates, boxSize)
-    childEnergy = GetEnergy(child1Molecule)
 
-
-def GenerateChild(elementsList, parentCoordinates, boxSize):
+def PrepareChild(elementsList, parentCoordinates):
     childAtomsObject = []
     childCoordinates = parentCoordinates[:]
     for i in range(len(elementsList)):
         childAtomsObject.append(Atom(elementsList[i], childCoordinates[i]))
+    return childCoordinates, childAtomsObject
+
+
+def GenerateChild(childAtomsObject, boxSize):
     child = Atoms(childAtomsObject, cell=boxSize)
-    child.calc = EMT()
-    return child, childCoordinates, childAtomsObject
+    # Translate atoms to the centre of the unit cell. It's OK if the atoms stick out of their cell.
+    child.center()
+    return child
 
 
 def GetEnergy(molecule):
-    # Translate atoms to the centre of the unit cell.
-    molecule.center()
     # Set up the ase force calculator for finding energies.
     molecule.calc = EMT()
-    # energy in electron volts
     energy = molecule.get_potential_energy()
     return energy
 
 
-def MoveAllAtoms(itsAtoms):
+def MoveAllAtoms(itsAtoms, changeSize):
     for eachAtom in itsAtoms:
-        eachAtom.position += ((random.randint(-50, 50, 3)) / 100)
-
-
-
+        eachAtom.position += ((random.randint(-changeSize, changeSize, 3)) / 100)
