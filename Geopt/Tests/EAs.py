@@ -34,7 +34,7 @@ def StartEA(elementsList):
             bestMolecule = childMolecule
         population.append([childMolecule, childCoordinates, childEnergy])
 
-    Calculations.SortByEnergy(population)
+    population = RankByE(population)
 
     # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
     #      rotation='10x,30y,0z')
@@ -71,6 +71,23 @@ def GetEnergy(molecule):
 def MoveAllAtoms(itsAtoms, changeSize):
     for eachAtom in itsAtoms:
         eachAtom.position += ((random.randint(-changeSize, changeSize, 3)) / 100)
+
+
+def RankByE(population):
+    # I originally planned to use a quicksort but decided that since the list is small there was no need to make it complicated.
+    full = len(population)
+    rankedPopulation = []
+    print("original population: ", population)
+    while len(rankedPopulation) < full:
+        bestEnergy = 1000
+        for eachMember in population:
+            if eachMember[2] < bestEnergy:
+                bestEnergy = eachMember[2]
+                bestMolecule = eachMember
+        rankedPopulation.append(bestMolecule)
+        population.remove(bestMolecule)
+    print("ranked population: ", rankedPopulation)
+    return rankedPopulation
 
 
 testList = ['C', 'O', 'H', 'H', 'H']

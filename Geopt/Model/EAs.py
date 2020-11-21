@@ -32,6 +32,7 @@ def StartEA(elementsList):
         childrenList.append([childMolecule, childCoordinates, childAtomsObject, childEnergy])
 
 
+
 def PrepareChild(elementsList, parentCoordinates):
     childAtomsObject = []
     childCoordinates = parentCoordinates[:]
@@ -57,3 +58,18 @@ def GetEnergy(molecule):
 def MoveAllAtoms(itsAtoms, changeSize):
     for eachAtom in itsAtoms:
         eachAtom.position += ((random.randint(-changeSize, changeSize, 3)) / 100)
+
+
+def RankByE(population):
+    full = len(population)
+    rankedPopulation = []
+    while len(rankedPopulation) < full:
+        worstEnergy = -1
+        for eachMember in population:
+            if eachMember[2] > worstEnergy:
+                worstEnergy = eachMember[2]
+                worstMolecule = eachMember
+        rankedPopulation.append(worstMolecule)
+        population.remove(worstMolecule)
+    print("ranked population: ", rankedPopulation)
+    return rankedPopulation

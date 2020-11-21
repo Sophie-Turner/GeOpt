@@ -52,6 +52,45 @@ def EvenSpacing(atomsList):
                     return boxSize, coordinates, atomObjectList
 
 
+def SortByEnergy(population):
+    # Sort the population by energy values.
+    print("length of population: ", len(population))
+    indexSmall = 0
+    indexBig = len(population) - 1
+    print("Before the sort: ", population)
+    Traverse(indexSmall, indexBig, population)
+
+
+def Traverse(indexSmall, indexBig, population):
+    pivot = round((indexBig - indexSmall) / 2)
+    pivotValue = population[pivot][2]
+    print("pivot index: ", pivot)
+    print("pivot value: ", pivotValue)
+    while indexSmall < indexBig:
+        while population[indexSmall][2] < pivotValue:
+            indexSmall = indexSmall + 1
+            print("indexSmall incremented to ", indexSmall)
+        while population[indexBig][2] > pivotValue:
+            indexBig = indexBig - 1
+            print("indexBig decremented to ", indexBig)
+        smallMolecule = population[indexSmall]
+        bigMolecule = population[indexBig]
+        if smallMolecule[2] > pivotValue > bigMolecule[2]:
+            Swap(indexSmall, indexBig, population)
+        elif smallMolecule[2] > pivotValue:
+            Swap(indexSmall, pivot, population)
+        elif pivotValue > bigMolecule[2]:
+            Swap(pivot, indexBig, population)
+    print("After this iteration: ", population)
+
+
+def Swap(smallIndex, bigIndex, population):
+    print(population[smallIndex][2], "is bigger than", population[bigIndex][2], ". Swapping.")
+    tempCopy = population[bigIndex]
+    population[bigIndex] = population[smallIndex]
+    population[smallIndex] = tempCopy
+
+
 testList = ('C', 'H', 'Li', 'Na')
 EvenSpacing(testList)
 treerootMain, treerootF = GetXML()
