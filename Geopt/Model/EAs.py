@@ -60,16 +60,17 @@ def MoveAllAtoms(itsAtoms, changeSize):
         eachAtom.position += ((random.randint(-changeSize, changeSize, 3)) / 100)
 
 
-def RankByE(population):
-    full = len(population)
+def RankByE(population, numToKeep):
+    # I originally planned to use a quicksort but decided that since the list is small there was no need to make it complicated.
     rankedPopulation = []
-    while len(rankedPopulation) < full:
-        worstEnergy = -1
+    print("original population: ", population)
+    while len(rankedPopulation) < numToKeep:
+        bestEnergy = 1000
         for eachMember in population:
-            if eachMember[2] > worstEnergy:
-                worstEnergy = eachMember[2]
-                worstMolecule = eachMember
-        rankedPopulation.append(worstMolecule)
-        population.remove(worstMolecule)
+            if eachMember[2] < bestEnergy:
+                bestEnergy = eachMember[2]
+                bestMolecule = eachMember
+        rankedPopulation.append(bestMolecule)
+        population.remove(bestMolecule)
     print("ranked population: ", rankedPopulation)
     return rankedPopulation
