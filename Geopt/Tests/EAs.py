@@ -1,8 +1,7 @@
 from ase import Atoms, Atom
 from ase.io import write
 from ase.calculators.emt import EMT
-from Model import Molecules
-import numpy as np
+from Model import Molecules, Calculations
 from numpy import random
 
 def StartEA(elementsList):
@@ -21,13 +20,8 @@ def StartEA(elementsList):
     bestEnergy = parentEnergy
     bestMolecule = parentMolecule
 
-    # Store the population in a struct because it's easier to sort quickly.
-    populationStruct = [('molecule', Atoms), ('coordinates', []), ('energy', float)]
-    values = [(parentMolecule, coordinates, parentEnergy)]
-    population = np.array(values, dtype=populationStruct)
-
     # Create 3 permutations from this initial parent.
-    #population = [[parentMolecule, coordinates, parentEnergy]]
+    population = [[parentMolecule, coordinates, parentEnergy]]
     for i in range(3):
         permutedCoordinates = random.permutation(coordinates)
         childCoordinates, childAtomsObject = PrepareChild(elementsList, permutedCoordinates)
@@ -38,22 +32,18 @@ def StartEA(elementsList):
         if childEnergy < bestEnergy:
             bestEnergy = childEnergy
             bestMolecule = childMolecule
-        values = [(childMolecule, childCoordinates, childEnergy)]
-        temp = np.array(values, dtype=populationStruct)
-        population = np.append(population, temp)
-        population = np.sort(population, order='energy')
-        print("The best energy is: ", population[0]['energy'])
-        print("The second best energy is: ", population[1]['energy'])
+        population.append([childMolecule, childCoordinates, childEnergy])
 
+    Calculations.SortByEnergy(population)
 
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
-         rotation='10x,30y,0z')
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child1.png", childrenList[0][0],
-         rotation='10x,30y,0z')
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child2.png", childrenList[1][0],
-          rotation='10x,30y,0z')
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child3.png", childrenList[2][0],
-          rotation='10x,30y,0z')
+    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
+    #      rotation='10x,30y,0z')
+    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child1.png", childrenList[0][0],
+    #      rotation='10x,30y,0z')
+    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child2.png", childrenList[1][0],
+    #       rotation='10x,30y,0z')
+    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child3.png", childrenList[2][0],
+    #       rotation='10x,30y,0z')
 
 
 def PrepareChild(elementsList, parentCoordinates):
