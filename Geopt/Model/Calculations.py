@@ -18,7 +18,7 @@ def ExtraSpace(atomsList):
                 # Check in the F block if it hasn't been found.
                 isFound, maxSize = FindAtom(eachAtom, treerootF, 2, maxSize)
         lastAtom = eachAtom
-    return maxSize/10
+    return maxSize/16
 
 
 def FindAtom(atomToFind, xmlList, periods, maxSize):
