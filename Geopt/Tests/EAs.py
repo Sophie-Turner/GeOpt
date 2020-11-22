@@ -1,67 +1,112 @@
 from ase import Atoms, Atom
 from ase.io import write
 from ase.calculators.emt import EMT
-from Model import Molecules, Calculations
+from Model.Populations import Population
 from numpy import random
 
+# Ranges of random atom movements.
+global changeSizes
+changeSizes = [10, 50, 150]
+
 def StartEA(elementsList):
-    changeSizes = [10, 50, 150]  # Ranges of random atom movements.
 
     # Set up and initialise our template molecule to start with.
-    boxSize, firstCoordinates, atomObjectList = Molecules.SetUpMolecule(elementsList)
+    thisPopulation = Population(elementsList)
+    boxSize = thisPopulation.boxSize
+    firstCoordinates = thisPopulation.initPositions
+    atomObjectList = thisPopulation.initAtomsObject
+
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentMolecule.center()
     parentEnergy = GetEnergy(parentMolecule)
+    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
+          rotation='10x,30y,0z')
 
     if len(elementsList) == 1:
         # If there's only 1 atom we can skip all this...
         pass
 
-    bestEnergy = parentEnergy
-    bestMolecule = parentMolecule
-
     # Create 3 permutations from this initial parent.
     population = [[parentMolecule, firstCoordinates, parentEnergy]]
     for i in range(3):
         permutedCoordinates = random.permutation(firstCoordinates)
-        childCoordinates, childAtomsObject = PrepareChild(elementsList, permutedCoordinates)
-        childMolecule = GenerateChild(childAtomsObject, boxSize)
-        childEnergy = GetEnergy(childMolecule)
-        population.append([childMolecule, childCoordinates, childEnergy])
+        MakeNewMolecule(elementsList, permutedCoordinates, None, boxSize, population, False, False)
 
-    # Sort the molecules into order of lowest energy and keep the two best ones.
-    population = RankByE(population, 2)
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/dad.png", population[1][0],
+    # # Sort the molecules into order of lowest energy and keep the two best ones.
+    # population = RankByE(population, 2)
+    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/dad.png", population[1][0],
+    #       rotation='10x,30y,0z')
+    #
+    # # Make 2 child molecules from these parents.
+    # for i in range(2):
+    #     # Do a random crossover and a small random mutation.
+    #     MakeNewMolecule(elementsList, None, changeSizes[0], boxSize, population, True, True)
+    #
+    # # Get rid of the dad and introduce a random stranger.
+    # population.pop(1)
+    # permutedCoordinates = random.permutation(firstCoordinates)
+    # MakeNewMolecule(elementsList, permutedCoordinates, changeSizes[2], boxSize, population, True, False)
+    #
+    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/mum.png", population[0][0],
+    #      rotation='10x,30y,0z')
+    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child1.png", population[1][0],
+    #      rotation='10x,30y,0z')
+    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child2.png", population[2][0],
+    #       rotation='10x,30y,0z')
+    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/random.png", population[3][0],
+    #       rotation='10x,30y,0z')
+
+    Evolve(elementsList, boxSize, firstCoordinates, population)
+
+
+def Evolve(elementsList, boxSize, firstCoordinates, population):
+    # See how many iterations it takes.
+    iterations = 0
+    similarity = 0
+    # End if the best energy doesn't change much for 3 consecutive iterations.
+    while similarity < 3:
+        lastBestEnergy = population[0][2]
+        # Selection.
+        population = RankByE(population, 2)
+        # New child molecules.
+        for i in range(2):
+            # Do a random crossover and a small random mutation.
+            MakeNewMolecule(elementsList, None, changeSizes[0], boxSize, population, True, True)
+        # Get rid of the dad and introduce a random stranger.
+        population.pop(1)
+        permutedCoordinates = random.permutation(firstCoordinates)
+        MakeNewMolecule(elementsList, permutedCoordinates, changeSizes[2], boxSize, population, True, False)
+        # Update the stopping criterion.
+        newBestEnergy = population[0][2]
+        if abs(lastBestEnergy - newBestEnergy) < 0.01:
+            similarity = similarity + 1
+        else:
+            similarity = 0
+        iterations = iterations + 1
+        print("Iteration: ", iterations)
+        print("Energy: ", newBestEnergy, "\n")
+
+    print("Iterations performed: ", iterations)
+    print("The best energy found was: ", lastBestEnergy)
+    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/optimised.png", population[0][0],
           rotation='10x,30y,0z')
-
-    # Make 2 child molecules from these parents
-    for i in range(2):
-        # Do a random crossover and a small random mutation
-        childCoordinates = Crossover(population)
-        childCoordinates, childAtomsObject = PrepareChild(elementsList, childCoordinates)
-        MoveAllAtoms(childAtomsObject, changeSizes[0])
-        childMolecule = GenerateChild(childAtomsObject, boxSize)
-        childEnergy = GetEnergy(childMolecule)
-        population.append([childMolecule, childCoordinates, childEnergy])
-
-    # Get rid of the dad and introduce a random stranger
-    population.pop(1)
-    permutedCoordinates = random.permutation(firstCoordinates)
-    randCoordinates, randAtomsObject = PrepareChild(elementsList, permutedCoordinates)
-    MoveAllAtoms(randAtomsObject, changeSizes[2])
-    randMolecule = GenerateChild(randAtomsObject, boxSize)
-    randEnergy = GetEnergy(randMolecule)
-    population.append([randMolecule, randCoordinates, randEnergy])
-
-
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/mum.png", population[0][0],
-         rotation='10x,30y,0z')
     write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child1.png", population[1][0],
-         rotation='10x,30y,0z')
+          rotation='10x,30y,0z')
     write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child2.png", population[2][0],
           rotation='10x,30y,0z')
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/random.png", population[3][0],
+    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child3.png", population[3][0],
           rotation='10x,30y,0z')
+
+
+def MakeNewMolecule(elementsList, inCoordinates, changeSize, boxSize, population, mutate, cross):
+    if cross is True:
+        inCoordinates = Crossover(population)
+    childCoordinates, atomsObject = PrepareChild(elementsList, inCoordinates)
+    if mutate is True:
+        MoveAllAtoms(atomsObject, changeSize)
+    childMolecule = GenerateChild(atomsObject, boxSize)
+    childEnergy = GetEnergy(childMolecule)
+    population.append([childMolecule, childCoordinates, childEnergy])
 
 
 def PrepareChild(elementsList, startCoordinates):
@@ -93,16 +138,20 @@ def MoveAllAtoms(itsAtoms, changeSize):
 
 
 def RankByE(population, numToKeep):
-    # I originally planned to use a quicksort but decided that since the list was small there was no need to make it complicated.
+    # I originally planned to use a quicksort but decided that since the list was small
+    # there was no need to make it complicated.
     rankedPopulation = []
+    bestMolecule = None
     while len(rankedPopulation) < numToKeep:
         bestEnergy = 1000
         for eachMember in population:
+            print("This molecule's energy: ", eachMember[2])
             if eachMember[2] < bestEnergy:
                 bestEnergy = eachMember[2]
                 bestMolecule = eachMember
         rankedPopulation.append(bestMolecule)
         population.remove(bestMolecule)
+    print("Ranked population: \n", rankedPopulation)
     return rankedPopulation
 
 
@@ -118,13 +167,10 @@ def Crossover(population):
     return childCoordinates
 
 
-
-
-
-
-
-testList = ['C', 'O', 'H', 'H', 'H']
-StartEA(testList)
+testList = ['C', 'C', 'C', 'O', 'H', 'H', 'H', 'H', 'H', 'H']
+testList2 = ['H', 'H', 'O']
+testList3 = ['C', 'H', 'H', 'H', 'H']
+StartEA(testList3)
 
 # How to remove old objects from memory:
 #    for eachAtom in child1AtomsObject:
