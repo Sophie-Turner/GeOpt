@@ -6,7 +6,7 @@ from numpy import random
 
 # Ranges of random atom movements.
 global changeSizes
-changeSizes = [10, 50, 150]
+changeSizes = [10, 20, 50, 100, 150]
 
 def StartEA(elementsList):
 
@@ -29,32 +29,7 @@ def StartEA(elementsList):
     # Create 3 permutations from this initial parent.
     population = [[parentMolecule, firstCoordinates, parentEnergy]]
     for i in range(3):
-        permutedCoordinates = random.permutation(firstCoordinates)
-        MakeNewMolecule(elementsList, permutedCoordinates, None, boxSize, population, False, False)
-
-    # # Sort the molecules into order of lowest energy and keep the two best ones.
-    # population = RankByE(population, 2)
-    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/dad.png", population[1][0],
-    #       rotation='10x,30y,0z')
-    #
-    # # Make 2 child molecules from these parents.
-    # for i in range(2):
-    #     # Do a random crossover and a small random mutation.
-    #     MakeNewMolecule(elementsList, None, changeSizes[0], boxSize, population, True, True)
-    #
-    # # Get rid of the dad and introduce a random stranger.
-    # population.pop(1)
-    # permutedCoordinates = random.permutation(firstCoordinates)
-    # MakeNewMolecule(elementsList, permutedCoordinates, changeSizes[2], boxSize, population, True, False)
-    #
-    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/mum.png", population[0][0],
-    #      rotation='10x,30y,0z')
-    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child1.png", population[1][0],
-    #      rotation='10x,30y,0z')
-    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child2.png", population[2][0],
-    #       rotation='10x,30y,0z')
-    # write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/random.png", population[3][0],
-    #       rotation='10x,30y,0z')
+        MakeNewMolecule(elementsList, firstCoordinates, None, boxSize, population, False, False, True)
 
     Evolve(elementsList, boxSize, firstCoordinates, population)
 
@@ -63,19 +38,22 @@ def Evolve(elementsList, boxSize, firstCoordinates, population):
     # See how many iterations it takes.
     iterations = 0
     similarity = 0
+    lastBestEnergy = 1000
     # End if the best energy doesn't change much for 3 consecutive iterations.
-    while similarity < 3:
+    while similarity < 10:
         lastBestEnergy = population[0][2]
         # Selection.
-        population = RankByE(population, 2)
+        population = RankByE(population, 1)
+        bestCoordinates = population[0][1]
         # New child molecules.
-        for i in range(2):
-            # Do a random crossover and a small random mutation.
-            MakeNewMolecule(elementsList, None, changeSizes[0], boxSize, population, True, True)
-        # Get rid of the dad and introduce a random stranger.
-        population.pop(1)
-        permutedCoordinates = random.permutation(firstCoordinates)
-        MakeNewMolecule(elementsList, permutedCoordinates, changeSizes[2], boxSize, population, True, False)
+        for i in range(5):
+            # Make 3 with random mutations but no crossover.
+            MakeNewMolecule(elementsList, bestCoordinates, changeSizes[1], boxSize, population, True, False, False)
+            # Make 3 permutations with mutations.
+            MakeNewMolecule(elementsList, bestCoordinates, changeSizes[1], boxSize, population, True, False, True)
+            # Introduce 2 random strangers.
+            MakeNewMolecule(elementsList, firstCoordinates, changeSizes[3], boxSize, population, True, False, True)
+
         # Update the stopping criterion.
         newBestEnergy = population[0][2]
         if abs(lastBestEnergy - newBestEnergy) < 0.01:
@@ -88,6 +66,7 @@ def Evolve(elementsList, boxSize, firstCoordinates, population):
 
     print("Iterations performed: ", iterations)
     print("The best energy found was: ", lastBestEnergy)
+    print("Population size: ", len(population))
     write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/optimised.png", population[0][0],
           rotation='10x,30y,0z')
     write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/child1.png", population[1][0],
@@ -98,9 +77,11 @@ def Evolve(elementsList, boxSize, firstCoordinates, population):
           rotation='10x,30y,0z')
 
 
-def MakeNewMolecule(elementsList, inCoordinates, changeSize, boxSize, population, mutate, cross):
+def MakeNewMolecule(elementsList, inCoordinates, changeSize, boxSize, population, mutate, cross, permute):
     if cross is True:
         inCoordinates = Crossover(population)
+    if permute is True:
+        inCoordinates = random.permutation(inCoordinates)
     childCoordinates, atomsObject = PrepareChild(elementsList, inCoordinates)
     if mutate is True:
         MoveAllAtoms(atomsObject, changeSize)
@@ -170,7 +151,7 @@ def Crossover(population):
 testList = ['C', 'C', 'C', 'O', 'H', 'H', 'H', 'H', 'H', 'H']
 testList2 = ['H', 'H', 'O']
 testList3 = ['C', 'H', 'H', 'H', 'H']
-StartEA(testList3)
+StartEA(testList)
 
 # How to remove old objects from memory:
 #    for eachAtom in child1AtomsObject:
