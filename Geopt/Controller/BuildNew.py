@@ -1,6 +1,6 @@
 # Functions associated with the BuildNew View
 from tkinter import simpledialog, messagebox
-from Model.EAs import StartEA
+from Model.EAmanyMolecules import StartEA
 from Model.InteractWithData import GetXML
 from Controller.Shared import *
 

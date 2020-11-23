@@ -1,41 +1,38 @@
-import numpy as np
-from numpy import random
-from Model import Molecules
-from ase import Atom, Atoms
-from ase.calculators.emt import EMT
+from ase import Atoms, Atom
 from ase.io import write
-# If there is only 1 atom we do nothing.
-# If there are 2 atoms we need to only move one of them and only on one plane.
+from ase.calculators.emt import EMT
+from Model.Populations import Population
+from numpy import random
 
 
-def StartEA(elementsList):
-    changeSizes = [10, 50, 150]  # Ranges of random atom movements.
+def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute):
+    if cross is True:
+        inCoordinates = Crossover(population)
+    if permute is True:
+        inCoordinates = random.permutation(inCoordinates)
+    childCoordinates, atomsObject = PrepareChild(elementsList, inCoordinates)
+    if mutate == 1:
+        MoveAtomsUniform(atomsObject, changeSize)
+    elif mutate == 2:
+        MoveAtomsGauss(atomsObject, 0, changeSize)
+    elif mutate == 3:
+        FillCellGauss(atomsObject, boxSize)
+    elif mutate == 4:
+        FillCellUniform(atomsObject, boxSize)
+    elif mutate == 5:
+        MoveHydrogen(atomsObject, boxSize)
+    childMolecule = GenerateChild(atomsObject, boxSize)
+    childEnergy = GetEnergy(childMolecule)
+    # Don't keep any extremely terrible structures.
+    if childEnergy >= bestE * 100:
+        MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute)
+    population.append([childMolecule, childCoordinates, childEnergy])
 
-    # Set up and initialise our template molecule to start with.
-    boxSize, coordinates, atomObjectList = Molecules.SetUpMolecule(elementsList)
-    parentMolecule = Atoms(atomObjectList, cell=boxSize)
-    parentMolecule.center()
-    parentEnergy = GetEnergy(parentMolecule)
-    bestEnergy = parentEnergy
-    bestMolecule = parentMolecule
-    # Create 3 children from this initial parent using large random ranges for mutation.
-    childrenList = []
-    for i in range(3):
-        permutedCoordinates = random.permutation(coordinates)
-        childCoordinates, childAtomsObject = PrepareChild(elementsList, permutedCoordinates)
-        #MoveAllAtoms(childAtomsObject, changeSizes[2])
-        childMolecule = GenerateChild(childAtomsObject, boxSize)
-        childEnergy = GetEnergy(childMolecule)
-        if childEnergy < bestEnergy:
-            bestEnergy = childEnergy
-            bestMolecule = childMolecule
-        childrenList.append([childMolecule, childCoordinates, childAtomsObject, childEnergy])
 
-
-
-def PrepareChild(elementsList, parentCoordinates):
+def PrepareChild(elementsList, startCoordinates):
     childAtomsObject = []
-    childCoordinates = parentCoordinates[:]
+    # Need to copy the parent's co-ordinates so we don't alter the parent molecule at the same time.
+    childCoordinates = startCoordinates[:]
     for i in range(len(elementsList)):
         childAtomsObject.append(Atom(elementsList[i], childCoordinates[i]))
     return childCoordinates, childAtomsObject
@@ -55,15 +52,59 @@ def GetEnergy(molecule):
     return energy
 
 
-def MoveAllAtoms(itsAtoms, changeSize):
+def MoveAtomsUniform(itsAtoms, changeSize):
     for eachAtom in itsAtoms:
         eachAtom.position += ((random.randint(-changeSize, changeSize, 3)) / 100)
 
 
+def MoveAtomsGauss(itsAtoms, mean, sigma):
+    for eachAtom in itsAtoms:
+        eachAtom.position += (random.normal(mean, sigma, 3))
+
+
+def FillCellUniform(itsAtoms, boxSize):
+    for eachAtom in itsAtoms:
+        eachAtom.position = (random.random(3)*boxSize/2)
+
+
+def FillCellGauss(itsAtoms, boxSize):
+    centre = boxSize[0]/2
+    for eachAtom in itsAtoms:
+        eachAtom.position = (random.normal(centre, centre/3, 3))
+
+
+def PermuteAtoms(itsAtoms, inCoordinates):
+    newCoordinates = random.permutation(inCoordinates)
+    for eachAtom in itsAtoms:
+        eachAtom.position = newCoordinates[eachAtom]
+
+
+def MoveHydrogen(itsAtoms, boxSize):
+    # Hydrogens tend to get lost so push them all onto the Carbon atoms.
+    change = boxSize[0]/12
+    moveTo = []
+    carbons = 0
+    for eachAtom in itsAtoms:
+        if eachAtom.symbol == 'C':
+            moveTo.append(eachAtom.position)
+        elif eachAtom.symbol == 'H':
+            if len(moveTo) > 0:
+                try:
+                    eachAtom.position = moveTo[carbons] + (random.normal(0, change, 3))
+                    carbons += 1
+                except:
+                    carbons = 0
+                    eachAtom.position = moveTo[carbons] + (random.normal(0, change, 3))
+            else:
+                eachAtom.position += (random.normal(0, change * 2, 3))
+
+
+
 def RankByE(population, numToKeep):
-    # I originally planned to use a quicksort but decided that since the list is small there was no need to make it complicated.
+    # I originally planned to use a quicksort but decided that since the list was small
+    # there was no need to make it complicated.
     rankedPopulation = []
-    print("original population: ", population)
+    bestMolecule = None
     while len(rankedPopulation) < numToKeep:
         bestEnergy = 1000
         for eachMember in population:
@@ -72,5 +113,16 @@ def RankByE(population, numToKeep):
                 bestMolecule = eachMember
         rankedPopulation.append(bestMolecule)
         population.remove(bestMolecule)
-    print("ranked population: ", rankedPopulation)
     return rankedPopulation
+
+
+def Crossover(population):
+    mumCoordinates = population[0][1]
+    howMany = len(mumCoordinates)
+    mumOrDad = random.randint(0, 2, howMany)
+    childCoordinates = []
+    for i in range(howMany):
+        whichParent = mumOrDad[i]
+        thisPoint = population[whichParent][1][i]
+        childCoordinates.append(thisPoint)
+    return childCoordinates
