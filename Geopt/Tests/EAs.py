@@ -1,11 +1,22 @@
 from ase import Atoms, Atom
 from ase.io import write
 from ase.calculators.emt import EMT
+from ase.calculators.vasp import Vasp
 from Model.Populations import Population
 from numpy import random
 
 
-def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute):
+def SetUpVasp():
+    calc = Vasp(
+        xc='pbe',  # exchange-correlation functional
+        nbands=6,  # number of bands
+        encut=350,  # planewave cutoff
+        ismear=1,  # Methfessel-Paxton smearing
+        sigma=0.01,  # very small smearing factor for a molecule
+    )
+    return calc
+
+def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, calc):
     if cross is True:
         inCoordinates = Crossover(population)
     if permute is True:
@@ -22,7 +33,7 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     elif mutate == 5:
         MoveHydrogen(atomsObject, boxSize)
     childMolecule = GenerateChild(atomsObject, boxSize)
-    childEnergy = GetEnergy(childMolecule)
+    childEnergy = GetEnergy(childMolecule, calc)
     # Don't keep any extremely terrible structures.
     if childEnergy >= bestE * 100:
         MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute)
@@ -45,9 +56,9 @@ def GenerateChild(childAtomsObject, boxSize):
     return child
 
 
-def GetEnergy(molecule):
+def GetEnergy(molecule, calc):
     # Set up the ase force calculator for finding energies.
-    molecule.calc = EMT()
+    molecule.calc = calc
     energy = molecule.get_potential_energy()
     return energy
 
@@ -135,7 +146,8 @@ testC12 = ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C']
 testN2O4 = ['N', 'N', 'O', 'O', 'O', 'O']
 testBenzene = ['C', 'C', 'C', 'C', 'C', 'C', 'H', 'H', 'H', 'H', 'H', 'H']
 testAcetonitrile = ['C', 'H', 'H', 'H', 'C', 'N']
-testCO2 = ['C', 'C', 'O']
+testCO2 = ['C', 'O', 'O']
+testAlOx = ['Al', 'Al', 'O', 'O', 'O']
 
 
 # How to remove old objects from memory:

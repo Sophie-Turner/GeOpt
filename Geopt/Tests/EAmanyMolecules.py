@@ -3,6 +3,7 @@ from Tests.EAs import *
 
 def StartEA(elementsList):
     # Set up and initialise our template molecule to start with.
+    calc = SetUpVasp()
     thisPopulation = Population(elementsList)
     boxSize = thisPopulation.boxSize
     firstCoordinates = thisPopulation.initPositions
@@ -11,7 +12,7 @@ def StartEA(elementsList):
 
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentMolecule.center()
-    parentEnergy = GetEnergy(parentMolecule)
+    parentEnergy = GetEnergy(parentMolecule, calc)
     print("Parent energy: ", parentEnergy)
     write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
           rotation='10x,30y,0z')
@@ -28,7 +29,7 @@ def StartEA(elementsList):
     for i in range(len(elementsList)):
         # Make some permutations.
         MakeNewMolecule(elementsList, firstCoordinates, lastBestEnergy, None, boxSize, population, False, False,
-                        True)
+                        True, calc)
 
     # Find the best permutation.
     population = RankByE(population, 1)
@@ -51,13 +52,13 @@ def Evolve(elementsList, boxSize, population):
     population.pop(0)
 
     # End if the best energy doesn't change much for several consecutive iterations.
-    while similarity < 5:
+    while similarity < 5 and iterations < 300:
 
         # New child molecules.
         for i in range(len(elementsList)):
             # Make some with random mutations.
             MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, changeSizes[1], boxSize, population, 2,
-                            False, False)
+                            False, False, calc)
 
         # Selection.
         population = RankByE(population, 1)
@@ -67,7 +68,7 @@ def Evolve(elementsList, boxSize, population):
         for i in range(len(elementsList)):
             # Introduce some random strangers.
             MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, None, boxSize, population, 3, False,
-                            False)
+                            False, calc)
 
         # Selection.
         population = RankByE(population, 1)
@@ -90,4 +91,4 @@ def Evolve(elementsList, boxSize, population):
           rotation='10x,30y,0z')
 
 
-StartEA(testAcetone)
+StartEA(testAlOx)
