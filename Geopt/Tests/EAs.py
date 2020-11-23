@@ -126,3 +126,31 @@ def Crossover(population):
         thisPoint = population[whichParent][1][i]
         childCoordinates.append(thisPoint)
     return childCoordinates
+
+
+testAcetone = ['C', 'C', 'C', 'O', 'H', 'H', 'H', 'H', 'H', 'H']
+testWater = ['H', 'H', 'O']
+testMethane = ['C', 'H', 'H', 'H', 'H']
+testC12 = ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C']
+testN2O4 = ['N', 'N', 'O', 'O', 'O', 'O']
+testBenzene = ['C', 'C', 'C', 'C', 'C', 'C', 'H', 'H', 'H', 'H', 'H', 'H']
+testAcetonitrile = ['C', 'H', 'H', 'H', 'C', 'N']
+testCO2 = ['C', 'C', 'O']
+
+
+# How to remove old objects from memory:
+#    for eachAtom in child1AtomsObject:
+#        print("removing ", eachAtom)
+#        del(eachAtom)
+#    print("removing ", child1Molecule)
+#    del(child1Molecule)
+
+class Optimiser:
+
+    # User can adjust parameters
+
+    def __init__(self, molecule):
+        self.molecule = molecule
+
+    def EAtest(self):
+        self.molecule.GetEnergy()
