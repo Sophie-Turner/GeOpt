@@ -6,6 +6,7 @@ global energyCalculations
 def StartEA(elementsList):
     # Set up initial values & placeholders
     calc = SetUpVasp()
+    calc = EMT()
     overallBestEnergy = 1000
     bestMolecule = None
 

@@ -3,7 +3,8 @@ from Tests.EAs import *
 
 def StartEA(elementsList):
     # Set up and initialise our template molecule to start with.
-    calc = SetUpVasp()
+    #calc = SetUpVasp()
+    calc = EMT()
     thisPopulation = Population(elementsList)
     boxSize = thisPopulation.boxSize
     firstCoordinates = thisPopulation.initPositions
@@ -34,10 +35,10 @@ def StartEA(elementsList):
     # Find the best permutation.
     population = RankByE(population, 1)
 
-    Evolve(elementsList, boxSize, population)
+    Evolve(elementsList, boxSize, population, calc)
 
 
-def Evolve(elementsList, boxSize, population):
+def Evolve(elementsList, boxSize, population, calc):
     # Ranges of random atom movements.
     width = boxSize[0]
     changeSizes = [width/30, width/20, width/16, width/12, width/8, width/4]
@@ -91,4 +92,4 @@ def Evolve(elementsList, boxSize, population):
           rotation='10x,30y,0z')
 
 
-StartEA(testAlOx)
+StartEA(testWater)
