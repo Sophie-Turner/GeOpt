@@ -1,6 +1,6 @@
 import math
 from ase import Atom
-import numpy as np
+from ase.data import atomic_numbers, covalent_radii
 from Model.InteractWithData import GetXML
 
 
@@ -8,32 +8,37 @@ def ExtraSpace(atomsList):
     # Some atoms are much larger than others so the cell must be adjusted for this.
     treerootMain, treerootF = GetXML()
     maxSize = 0
+    covRads = []
+    covRad = None
     lastAtom = ''
     for eachAtom in atomsList:
         # Don't look up the same element multiple times.
         if eachAtom != lastAtom:
             # Most elements are in the main block so check there first.
-            isFound, maxSize = FindAtom(eachAtom, treerootMain, 7, maxSize)
+            isFound, maxSize, covRad = FindAtom(eachAtom, treerootMain, 7, maxSize)
             if isFound is False:
                 # Check in the F block if it hasn't been found.
-                isFound, maxSize = FindAtom(eachAtom, treerootF, 2, maxSize)
+                isFound, maxSize, covRad= FindAtom(eachAtom, treerootF, 2, maxSize)
         lastAtom = eachAtom
-    return maxSize/16
+        covRads.append(covRad)
+    return maxSize/16, covRads
 
 
 def FindAtom(atomToFind, xmlList, periods, maxSize):
     isFound = False
+    covRad = None
+    relativeSize = None
     for i in range(periods):
         for j in xmlList[i]:
             if j[0].text == atomToFind:
                 isFound = True
-                print("The atom was found.")
                 group = int(j[4].text)
                 relativeSize = (18 - group) * i
+                covRad = covalent_radii[atomic_numbers[atomToFind]]
                 # Update size to find largest atom
                 if relativeSize > maxSize:
                     maxSize = relativeSize
-    return isFound, maxSize
+    return isFound, maxSize, covRad
 
 
 def EvenSpacing(atomsList, extraSpace):
@@ -46,9 +51,6 @@ def EvenSpacing(atomsList, extraSpace):
     # The box is split into segments of size 1,1,1 plus extra spacing for the largest atom.
     dimensions = axis + 2 + extraSpace*axis
     boxSize = (dimensions, dimensions, dimensions)
-    print("boxSize:", boxSize)
-    print("segments per plane:", axis)
-    print("extraSpace:", extraSpace)
     # The coordinates list is kept separate so it can be altered easily during the EA.
     coordinates = []
     # This list of for creating the initial model and it's quicker to build it up during this loop.

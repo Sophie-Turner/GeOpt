@@ -8,10 +8,12 @@ def StartEA(elementsList):
     firstCoordinates = thisPopulation.initPositions
     atomObjectList = thisPopulation.initAtomsObject
     numAtoms = len(elementsList)
+    # calc = SetUpVasp()
+    calc = EMT()
 
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentMolecule.center()
-    parentEnergy = GetEnergy(parentMolecule)
+    parentEnergy = GetEnergy(parentMolecule, calc)
     print("Parent energy: ", parentEnergy)
     write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
           rotation='10x,30y,0z')
@@ -28,15 +30,15 @@ def StartEA(elementsList):
     for i in range(len(elementsList)):
         # Make some permutations.
         MakeNewMolecule(elementsList, firstCoordinates, lastBestEnergy, None, boxSize, population, False, False,
-                        True)
+                        True, calc)
 
     # Find the best permutation.
     population = RankByE(population, 1)
 
-    Evolve(elementsList, boxSize, population)
+    Evolve(elementsList, boxSize, population, calc)
 
 
-def Evolve(elementsList, boxSize, population):
+def Evolve(elementsList, boxSize, population, calc):
     # Ranges of random atom movements.
     width = boxSize[0]
     changeSizes = [width/30, width/20, width/16, width/12, width/8, width/4]
@@ -57,7 +59,7 @@ def Evolve(elementsList, boxSize, population):
         for i in range(len(elementsList)):
             # Make some with random mutations.
             MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, changeSizes[1], boxSize, population, 2,
-                            False, False)
+                            False, False, calc)
 
         # Selection.
         population = RankByE(population, 1)
@@ -67,7 +69,7 @@ def Evolve(elementsList, boxSize, population):
         for i in range(len(elementsList)):
             # Introduce some random strangers.
             MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, None, boxSize, population, 3, False,
-                            False)
+                            False, calc)
 
         # Selection.
         population = RankByE(population, 1)

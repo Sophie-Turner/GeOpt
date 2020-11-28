@@ -4,6 +4,7 @@ from ase.calculators.emt import EMT
 from ase.calculators.vasp import Vasp
 from Model.Populations import Population
 from numpy import random
+from concurrent import futures
 
 
 def SetUpVasp():
@@ -61,6 +62,11 @@ def GetEnergy(molecule, calc):
     molecule.calc = calc
     energy = molecule.get_potential_energy()
     return energy
+
+
+def MoveOneAtomGauss(fixedAtom, atomToMove, sigma):
+    mean = fixedAtom.position
+    atomToMove.position = (random.normal(mean, sigma, 3))
 
 
 def MoveAtomsUniform(itsAtoms, changeSize):
@@ -148,6 +154,7 @@ testBenzene = ['C', 'C', 'C', 'C', 'C', 'C', 'H', 'H', 'H', 'H', 'H', 'H']
 testAcetonitrile = ['C', 'H', 'H', 'H', 'C', 'N']
 testCO2 = ['C', 'O', 'O']
 testAlOx = ['Al', 'Al', 'O', 'O', 'O']
+testEthane = ['C', 'H', 'H', 'H', 'C', 'H', 'H', 'H']
 
 
 # How to remove old objects from memory:

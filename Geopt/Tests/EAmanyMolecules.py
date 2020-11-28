@@ -92,4 +92,4 @@ def Evolve(elementsList, boxSize, population, calc):
           rotation='10x,30y,0z')
 
 
-StartEA(testWater)
+StartEA(testMethane)
