@@ -1,3 +1,4 @@
+from concurrent import futures
 from Tests.EAs import *
 
 global arrayChanges
@@ -5,7 +6,7 @@ global energyCalculations
 
 def StartEA(elementsList):
     # Set up initial values & placeholders
-    calc = SetUpVasp()
+    # calc = SetUpVasp()
     calc = EMT()
     overallBestEnergy = 1000
     bestMolecule = None
@@ -16,19 +17,22 @@ def StartEA(elementsList):
     length = boxSize[0]
     gaussRange = [length/16, length/8, length/4, length/len(elementsList)]
 
-    for i in range(4):
-        bestAtomsObject, bestEnergy = Evolve(elementsList, boxSize, gaussRange[i], calc)
-        if bestEnergy < overallBestEnergy:
-            overallBestEnergy = bestEnergy
-            bestMolecule = bestAtomsObject
-        print("best energy:", i, bestEnergy)
+    if __name__ == '__main__':
+        with futures.ProcessPoolExecutor() as executor:
+            results = [executor.submit(Evolve, elementsList, boxSize, gaussRange[i], calc) for i in range(4)]
+            for f in futures.as_completed(results):
+                thisResult = f.result()
+                thisEnergy = thisResult[1]
+                if thisEnergy < overallBestEnergy:
+                    overallBestEnergy = thisEnergy
+                    bestMolecule = thisResult[0]
 
-    newMolecule = Atoms(bestMolecule, cell=boxSize)
-    newMolecule.center()
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/bestBuildUp.png", newMolecule,
-        rotation='10x,30y,0z')
-    print("newMolecule", newMolecule)
-    print("best energy:", overallBestEnergy)
+        newMolecule = Atoms(bestMolecule, cell=boxSize)
+        newMolecule.center()
+        write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/bestBuildUp.png", newMolecule,
+            rotation='10x,30y,0z')
+        print("newMolecule", newMolecule)
+        print("best energy:", overallBestEnergy)
 
 
 def Evolve(elementsList, boxSize, gaussRange, calc):
