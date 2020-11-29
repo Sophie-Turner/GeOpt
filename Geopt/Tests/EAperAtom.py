@@ -1,6 +1,8 @@
+from time import perf_counter
 from Tests.EAs import *
 
 def StartEA(elementsList):
+    startTime = perf_counter()
     # Set up initial values & placeholders
     # calc = SetUpVasp()
     calc = EMT()
@@ -23,7 +25,7 @@ def StartEA(elementsList):
 
     if __name__ == '__main__':
         with futures.ProcessPoolExecutor() as executor:
-            results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc) for i in range(1)]
+            results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc) for _ in range(6)]
             for f in futures.as_completed(results):
                 thisResult = f.result()
                 thisEnergy = thisResult[1]
@@ -34,8 +36,11 @@ def StartEA(elementsList):
         newMolecule = Atoms(bestMolecule, cell=boxSize)
         newMolecule.center()
         write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/bestBuildUp.png", newMolecule,
-            rotation='10x,30y,0z')
+              rotation='10x,30y,0z')
         print("best energy:", overallBestEnergy)
+        stopTime = perf_counter()
+        elapsed = stopTime - startTime
+        print("Time taken =", elapsed, "seconds.")
 
 
 def Evolve(elementsList, boxSize, covRads, calc):
@@ -54,10 +59,10 @@ def Evolve(elementsList, boxSize, covRads, calc):
                 onlyH = False
         # Reset the energy test as it is likely to increase as more atoms are added.
         buildUpBestEnergy = 1000
+
         # Move each atom around every atom.
         buildUpBestEnergy, buildUpBestStructure = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure,
                                                                 onlyH, covRads, boxSize, calc)
-        buildUp = buildUpBestStructure
     print("this best energy:", buildUpBestEnergy)
 
     similarity = 0
@@ -88,10 +93,9 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
             move = buildUp[eachAtomToMove]
             # Don't let H2 form and break the molecule apart
             # but if the molecule only contains H (eg. H2) we still need to do it.
-            if fixed.symbol != 'H' or onlyH is True:
+            if fixed.symbol != 'H' or move.symbol != 'H' or onlyH is True:
                 moveRange = covRads[eachAtomToMove] + covRads[eachAtomFixed]
-                # Multithread this bit?
-                for _ in range(4):
+                for _ in range(6):
                     MoveOneAtomTight(fixed, move, moveRange)
                     newMolecule = Atoms(buildUp, cell=boxSize)
                     newMolecule.center()
@@ -99,6 +103,8 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
                     if currentEnergy < bestEnergy:
                         bestEnergy = currentEnergy
                         bestStructure = buildUp
+        # Revert to best structure at this point.
+        buildUp = bestStructure
     return bestEnergy, bestStructure
 
 
@@ -110,4 +116,5 @@ def MoveOneAtomTight(fixedAtom, atomToMove, moveRange):
     directions = (multis - 0.5) * high
     atomToMove.position = middle + directions
 
-StartEA(testC12)
+
+StartEA(testN2O4)

@@ -153,8 +153,9 @@ testN2O4 = ['N', 'N', 'O', 'O', 'O', 'O']
 testBenzene = ['C', 'C', 'C', 'C', 'C', 'C', 'H', 'H', 'H', 'H', 'H', 'H']
 testAcetonitrile = ['C', 'H', 'H', 'H', 'C', 'N']
 testCO2 = ['C', 'O', 'O']
-testAlOx = ['Al', 'Al', 'O', 'O', 'O']
+testAlox = ['Al', 'Al', 'O', 'O', 'O']
 testEthane = ['C', 'H', 'H', 'H', 'C', 'H', 'H', 'H']
+testH2 = ['H', 'H']
 
 
 # How to remove old objects from memory:
