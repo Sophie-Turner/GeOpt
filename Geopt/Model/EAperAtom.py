@@ -1,8 +1,7 @@
-from time import perf_counter
 from Tests.EAs import *
 
+
 def StartEA(elementsList):
-    startTime = perf_counter()
     # Set up initial values & placeholders
     # calc = SetUpVasp()
     calc = EMT()
@@ -38,9 +37,6 @@ def StartEA(elementsList):
         write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/bestBuildUp.png", newMolecule,
               rotation='10x,30y,0z')
         print("best energy:", overallBestEnergy)
-        stopTime = perf_counter()
-        elapsed = stopTime - startTime
-        print("Time taken =", elapsed, "seconds.")
 
 
 def Evolve(elementsList, boxSize, covRads, calc):
@@ -80,8 +76,6 @@ def Evolve(elementsList, boxSize, covRads, calc):
             buildUpBestStructure = newBestStructure
             buildUp = newBestStructure
         iterations += 1
-        print("this best energy:", newBestEnergy)
-    print("iterations:", iterations)
     return buildUp, buildUpBestEnergy
 
 
@@ -108,13 +102,5 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
     return bestEnergy, bestStructure
 
 
-def MoveOneAtomTight(fixedAtom, atomToMove, moveRange):
-    # Stop the atom drifting away into space.
-    middle = fixedAtom.position
-    high = moveRange * 2
-    multis = random.random(3)
-    directions = (multis - 0.5) * high
-    atomToMove.position = middle + directions
 
 
-StartEA(testN2O4)

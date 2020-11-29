@@ -1,0 +1,8 @@
+Update test structure after each movement?
+
+           update       no update    
+c12	   3.2 ok	3.9 broken  
+benzene    8.0 broken	9.0 broken  
+acetone    5.5 broken	8.6 broken   
+ethane     2.7 broken	2.6 broken          
+n2o4       3.6 broken   1.2 ok      
