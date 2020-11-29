@@ -1,11 +1,24 @@
 from ase import Atoms, Atom
 from ase.io import write
 from ase.calculators.emt import EMT
+from ase.calculators.vasp import Vasp
 from Model.Populations import Population
 from numpy import random
+from concurrent import futures
 
 
-def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute):
+def SetUpVasp():
+    calc = Vasp(
+        xc='pbe',  # exchange-correlation functional
+        nbands=6,  # number of bands
+        encut=350,  # planewave cutoff
+        ismear=1,  # Methfessel-Paxton smearing
+        sigma=0.01,  # very small smearing factor for a molecule
+    )
+    return calc
+
+
+def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, calc):
     if cross is True:
         inCoordinates = Crossover(population)
     if permute is True:
@@ -22,10 +35,10 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     elif mutate == 5:
         MoveHydrogen(atomsObject, boxSize)
     childMolecule = GenerateChild(atomsObject, boxSize)
-    childEnergy = GetEnergy(childMolecule)
+    childEnergy = GetEnergy(childMolecule, calc)
     # Don't keep any extremely terrible structures.
     if childEnergy >= bestE * 100:
-        MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute)
+        MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, calc)
     population.append([childMolecule, childCoordinates, childEnergy])
 
 
@@ -45,11 +58,25 @@ def GenerateChild(childAtomsObject, boxSize):
     return child
 
 
-def GetEnergy(molecule):
+def GetEnergy(molecule, calc):
     # Set up the ase force calculator for finding energies.
-    molecule.calc = EMT()
+    molecule.calc = calc
     energy = molecule.get_potential_energy()
     return energy
+
+
+def MoveOneAtomTight(fixedAtom, atomToMove, moveRange):
+    # Stop the atom drifting away into space.
+    middle = fixedAtom.position
+    high = moveRange * 2
+    multis = random.random(3)
+    directions = (multis - 0.5) * high
+    atomToMove.position = middle + directions
+
+
+def MoveOneAtomGauss(fixedAtom, atomToMove, sigma):
+    mean = fixedAtom.position
+    atomToMove.position = (random.normal(mean, sigma, 3))
 
 
 def MoveAtomsUniform(itsAtoms, changeSize):
@@ -99,7 +126,6 @@ def MoveHydrogen(itsAtoms, boxSize):
                 eachAtom.position += (random.normal(0, change * 2, 3))
 
 
-
 def RankByE(population, numToKeep):
     # I originally planned to use a quicksort but decided that since the list was small
     # there was no need to make it complicated.
@@ -126,3 +152,5 @@ def Crossover(population):
         thisPoint = population[whichParent][1][i]
         childCoordinates.append(thisPoint)
     return childCoordinates
+
+

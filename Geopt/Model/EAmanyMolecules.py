@@ -1,15 +1,14 @@
-from Tests.EAs import *
-
+from Model.EAs import *
 
 def StartEA(elementsList):
     # Set up and initialise our template molecule to start with.
+    #calc = SetUpVasp()
+    calc = EMT()
     thisPopulation = Population(elementsList)
     boxSize = thisPopulation.boxSize
     firstCoordinates = thisPopulation.initPositions
     atomObjectList = thisPopulation.initAtomsObject
     numAtoms = len(elementsList)
-    # calc = SetUpVasp()
-    calc = EMT()
 
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentMolecule.center()
@@ -53,7 +52,7 @@ def Evolve(elementsList, boxSize, population, calc):
     population.pop(0)
 
     # End if the best energy doesn't change much for several consecutive iterations.
-    while similarity < 5:
+    while similarity < 5 and iterations < 300:
 
         # New child molecules.
         for i in range(len(elementsList)):
@@ -90,3 +89,4 @@ def Evolve(elementsList, boxSize, population, calc):
 
     write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/optimised.png", population[0][0],
           rotation='10x,30y,0z')
+

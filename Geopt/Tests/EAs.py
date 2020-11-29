@@ -37,7 +37,7 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     childEnergy = GetEnergy(childMolecule, calc)
     # Don't keep any extremely terrible structures.
     if childEnergy >= bestE * 100:
-        MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute)
+        MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, calc)
     population.append([childMolecule, childCoordinates, childEnergy])
 
 
