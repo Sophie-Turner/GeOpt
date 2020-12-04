@@ -1,9 +1,10 @@
-from Tests.EAs import *
+from Model.EAs import *
 
 
 def StartEA(elementsList):
     # Set up initial values & placeholders
     # calc = SetUpVasp()
+    print("EA starting with", elementsList)
     calc = EMT()
     overallBestEnergy = 1000
     bestMolecule = None
@@ -22,7 +23,7 @@ def StartEA(elementsList):
     boxSize = thisPopulation.boxSize
     covRads = thisPopulation.covRads
 
-    if __name__ == '__main__':
+    if __name__ == 'Model.EAperAtom':
         with futures.ProcessPoolExecutor() as executor:
             results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc) for _ in range(6)]
             for f in futures.as_completed(results):
@@ -34,6 +35,7 @@ def StartEA(elementsList):
 
         newMolecule = Atoms(bestMolecule, cell=boxSize)
         newMolecule.center()
+        newMolecule.set_pbc((False, False, False))
         write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/bestBuildUp.png", newMolecule,
               rotation='10x,30y,0z')
         print("best energy:", overallBestEnergy)

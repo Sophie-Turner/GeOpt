@@ -2,7 +2,8 @@ from View.Shared import *
 from Controller.BuildNew import *
 from Controller.Shared import *
 
-root = SetupWindow()
+application = Application()
+root = application.root
 
 
 def MakeTable(tableFrame, periods, xmlList, box):

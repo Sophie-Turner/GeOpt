@@ -117,4 +117,4 @@ def MoveOneAtomTight(fixedAtom, atomToMove, moveRange):
     atomToMove.position = middle + directions
 
 
-StartEA(testN2O4)
+StartEA(testMethane)
