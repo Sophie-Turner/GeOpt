@@ -1,5 +1,5 @@
 from Controller.BuildNew import *
-from Controller.Shared import *
+from View.Shared import SetUpWindow
 
 
 def MakeTable(tableFrame, periods, xmlList, box):
@@ -14,6 +14,8 @@ def MakeTable(tableFrame, periods, xmlList, box):
 
 
 def MakeUI(root):
+    SetUpWindow(root)
+
     # get list from XML
     elements = GetXML()
     mainBlock = elements[0]
@@ -28,7 +30,7 @@ def MakeUI(root):
     lblFormula.grid(row=1, column=1, padx='5')
     entryFormula = Entry(formulaFrame, font=('Agency FB', 14))
     entryFormula.grid(row=1, column=2, padx='5')
-    btnBuild = Button(formulaFrame, text='Build molecule', command=lambda: Build(entryFormula), font=('Agency FB', 14))
+    btnBuild = Button(formulaFrame, text='Build molecule', command=(lambda: Build(entryFormula)), font=('Agency FB', 14))
     btnBuild.grid(row=1, column=3, padx='5')
     btnClear = Button(formulaFrame, text='Clear', command=lambda: Clear(entryFormula), font=('Agency FB', 14))
     btnClear.grid(row=1, column=4, padx='5')
@@ -49,3 +51,4 @@ def MakeUI(root):
     MakeTable(tableFrame2, periods, fBlock, entryFormula)
 
     root.mainloop()
+

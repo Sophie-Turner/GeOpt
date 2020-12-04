@@ -35,10 +35,11 @@ def StartEA(elementsList):
 
         newMolecule = Atoms(bestMolecule, cell=boxSize)
         newMolecule.center()
-        newMolecule.set_pbc((False, False, False))
-        write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/bestBuildUp.png", newMolecule,
-              rotation='10x,30y,0z')
+
+        #newMolecule.set_pbc((False, False, False))
+
         print("best energy:", overallBestEnergy)
+    return newMolecule, overallBestEnergy
 
 
 def Evolve(elementsList, boxSize, covRads, calc):
@@ -96,6 +97,7 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
                     newMolecule = Atoms(buildUp, cell=boxSize)
                     newMolecule.center()
                     currentEnergy = GetEnergy(newMolecule, calc)
+                    del newMolecule
                     if currentEnergy < bestEnergy:
                         bestEnergy = currentEnergy
                         bestStructure = buildUp

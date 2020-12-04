@@ -1,9 +1,8 @@
 # Functions associated with the BuildNew View
 from tkinter import simpledialog, messagebox
-#from Model.EAmanyMolecules import StartEA
-from Model.EAperAtom import StartEA
 from Model.InteractWithData import GetXML
 from Controller.Shared import *
+from View.Analysis import StartAnalysis
 
 formula = []
 subscript = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
@@ -51,9 +50,9 @@ def Build(box):
         thisAtom = ''
         howMany = 0
         for i in range(len(boxText)):
-            # Don't let the user break their computer with massive molecules!
-            if len(elementsList) > 49:
-                messagebox.showerror(title='Huge molecule',
+            # Don't let the user make huge molecules!
+            if len(elementsList) > 20:
+                messagebox.showerror(title='Large molecule',
                                      message='This molecule is too large to build! Cancelling...')
                 Clear(box)
                 return
@@ -88,7 +87,7 @@ def Build(box):
         del elementsList[0]
 
         try:
-            StartEA(elementsList)
+            StartAnalysis(elementsList)
         except:
             messagebox.showerror(title="Invalid input", message="Please enter a valid molecular formula, e.g. H2SO4")
             elementsList.clear()
