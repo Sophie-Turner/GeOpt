@@ -2,7 +2,7 @@
 from tkinter import simpledialog, messagebox
 from Model.InteractWithData import GetXML
 from Controller.Shared import *
-from View.Analysis import StartAnalysis
+from View.Analysis2 import StartAnalysis
 
 formula = []
 subscript = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
@@ -86,12 +86,12 @@ def Build(box):
         elementsList.append(thisAtom)
         del elementsList[0]
 
-        try:
-            StartAnalysis(elementsList)
-        except:
-            messagebox.showerror(title="Invalid input", message="Please enter a valid molecular formula, e.g. H2SO4")
-            elementsList.clear()
-            Clear(box)
+        #try:
+        StartAnalysis(elementsList)
+        #except:
+            #messagebox.showerror(title="Invalid input", message="Please enter a valid molecular formula, e.g. H2SO4")
+            #elementsList.clear()
+            #Clear(box)
 
 
 def Clear(box):

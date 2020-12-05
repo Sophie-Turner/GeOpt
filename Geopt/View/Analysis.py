@@ -4,6 +4,7 @@ from tkinter import *
 from Controller.Analysis import *
 from View.Shared import SetUpWindow
 
+
 def StartAnalysis(elementsList):
     window = tk.Toplevel()
     SetUpWindow(window)

@@ -1,5 +1,7 @@
 from Controller.Shared import *
 
+# To do: When the user clicks the red cross all molecule instances etc. should be deleted.
+
 
 def SetUpWindow(window):
     # Get the value of the screen width.
@@ -20,4 +22,4 @@ def SetUpWindow(window):
     lblDescription = Label(bannerFrame, text='Molecular geometry optimisation', font=('Agency FB', 18),
                            fg='white',
                            bg='#222222')
-    lblDescription.pack(pady=3)
+    lblDescription.pack(pady=10)
