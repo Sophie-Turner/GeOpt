@@ -23,15 +23,18 @@ def StartEA(elementsList):
     boxSize = thisPopulation.boxSize
     covRads = thisPopulation.covRads
 
+    population = []
+
     if __name__ == '__main__':
         with futures.ProcessPoolExecutor() as executor:
             results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc) for _ in range(6)]
             for f in futures.as_completed(results):
                 thisResult = f.result()
-                thisEnergy = thisResult[1]
-                if thisEnergy < overallBestEnergy:
-                    overallBestEnergy = thisEnergy
-                    bestMolecule = thisResult[0]
+                population.append([thisResult[0], thisResult[1]])
+
+        population = RankByE(population, 3)
+        overallBestEnergy = population[0][1]
+        bestMolecule = population[0][0]
 
         newMolecule = Atoms(bestMolecule, cell=boxSize)
         newMolecule.center()
@@ -41,6 +44,7 @@ def StartEA(elementsList):
         stopTime = perf_counter()
         elapsed = stopTime - startTime
         print("Time taken =", elapsed, "seconds.")
+    return population
 
 
 def Evolve(elementsList, boxSize, covRads, calc):

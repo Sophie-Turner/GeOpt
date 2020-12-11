@@ -134,8 +134,10 @@ def RankByE(population, numToKeep):
     while len(rankedPopulation) < numToKeep:
         bestEnergy = 1000
         for eachMember in population:
-            if eachMember[2] < bestEnergy:
-                bestEnergy = eachMember[2]
+            # Access the last item of population because different EAs have different types
+            # of population and put energy at the end.
+            if eachMember[-1] < bestEnergy:
+                bestEnergy = eachMember[-1]
                 bestMolecule = eachMember
         rankedPopulation.append(bestMolecule)
         population.remove(bestMolecule)

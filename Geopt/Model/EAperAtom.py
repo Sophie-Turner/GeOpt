@@ -23,23 +23,27 @@ def StartEA(elementsList):
     boxSize = thisPopulation.boxSize
     covRads = thisPopulation.covRads
 
+    population = []
+    bestMolecules = []
+
     if __name__ == 'Model.EAperAtom':
         with futures.ProcessPoolExecutor() as executor:
             results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc) for _ in range(6)]
             for f in futures.as_completed(results):
                 thisResult = f.result()
-                thisEnergy = thisResult[1]
-                if thisEnergy < overallBestEnergy:
-                    overallBestEnergy = thisEnergy
-                    bestMolecule = thisResult[0]
+                population.append(thisResult)
+        population = RankByE(population, 3)
+        for eachBest in population:
+            newMolecule = Atoms(eachBest[0], cell=boxSize)
+            newMolecule.center()
+            bestMolecules.append(newMolecule)
 
-        newMolecule = Atoms(bestMolecule, cell=boxSize)
-        newMolecule.center()
-
-        #newMolecule.set_pbc((False, False, False))
+        # newMolecule = Atoms(eachBest, pbc=false, cell=boxSize)
+        # or
+        # newMolecule.set_pbc((False, False, False))
 
         print("best energy:", overallBestEnergy)
-    return newMolecule, overallBestEnergy
+    return bestMolecules, population
 
 
 def Evolve(elementsList, boxSize, covRads, calc):
