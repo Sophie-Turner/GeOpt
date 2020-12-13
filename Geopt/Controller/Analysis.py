@@ -5,5 +5,5 @@ from Model.EAperAtom import StartEA
 
 
 def DoTheEA(elementsList):
-    bestMolecules, population, plotE, plotX, plotY, plotZ, plotSym = StartEA(elementsList)
-    return bestMolecules, population, plotE, plotX, plotY, plotZ, plotSym
+    bestMolecules, population, plot = StartEA(elementsList)
+    return bestMolecules, population, plot

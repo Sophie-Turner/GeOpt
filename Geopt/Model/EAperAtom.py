@@ -26,7 +26,7 @@ def StartEA(elementsList):
     population = []
     bestMolecules = []
     # This will become a dataset for the potential energy plot.
-    plotE, plotX, plotY, plotZ, plotSym = [], [], [], [], []
+    plot = []
 
     if __name__ == 'Model.EAperAtom':
         with futures.ProcessPoolExecutor() as executor:
@@ -36,11 +36,7 @@ def StartEA(elementsList):
                 population.append([thisResult[0], thisResult[1]])
                 # Append separately from each process to prevent them being added in the wrong order by multiple process
                 # attempting to write at the same time. Long-winded but done to avoid corruption and unnecessary locks.
-                plotE.append(thisResult[2])
-                plotX.append(thisResult[3])
-                plotY.append(thisResult[4])
-                plotZ.append(thisResult[5])
-                plotSym.append(thisResult[6])
+                plot.append(thisResult[2])
         population = RankByE(population, 3)
         for eachBest in population:
             newMolecule = Atoms(eachBest[0], cell=boxSize)
@@ -50,13 +46,12 @@ def StartEA(elementsList):
         # newMolecule = Atoms(eachBest, pbc=false, cell=boxSize)
         # or
         # newMolecule.set_pbc((False, False, False))
-        print("len(plotE):", len(plotE))
 
-    return bestMolecules, population, plotE, plotX, plotY, plotZ, plotSym
+    return bestMolecules, population, plot
 
 
 def Evolve(elementsList, boxSize, covRads, calc):
-    allE, allX, allY, allZ, sym = [], [], [], [], []
+    plot = []
     buildUp = []
     buildUpBestStructure = buildUp
     firstCoordinates = [0, 0, 0]
@@ -75,7 +70,7 @@ def Evolve(elementsList, boxSize, covRads, calc):
 
         # Move each atom around every atom.
         buildUpBestEnergy, buildUpBestStructure = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure, onlyH,
-                                                                covRads, boxSize, calc, None, None, None, None, None)
+                                                                covRads, boxSize, calc, None)
     print("this best energy:", buildUpBestEnergy)
 
     similarity = 0
@@ -84,8 +79,7 @@ def Evolve(elementsList, boxSize, covRads, calc):
     while similarity < 2:
         # Move each atom around every atom.
         newBestEnergy, newBestStructure = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure, onlyH,
-                                                        covRads, boxSize, calc, allE, allX, allY, allZ, sym)
-        print("len(allE):", len(allE))
+                                                        covRads, boxSize, calc, plot)
         if abs(newBestEnergy - buildUpBestEnergy) < 0.5:
             similarity += 1
         else:
@@ -95,10 +89,10 @@ def Evolve(elementsList, boxSize, covRads, calc):
             buildUpBestStructure = newBestStructure
             buildUp = newBestStructure
         iterations += 1
-    return buildUp, buildUpBestEnergy, allE, allX, allY, allZ, sym
+    return buildUp, buildUpBestEnergy, plot
 
 
-def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, allE, allX, allY, allZ, sym):
+def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, plot):
     # Move each atom around every atom.
     numSoFar = len(buildUp)
     for eachAtomToMove in range(numSoFar):
@@ -117,13 +111,9 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
 
                     # Now we need to maintain a dataset of all possible positions and their associated energies to
                     # show the energy plot but we only want to do this when all atoms are in the molecule.
-                    if allE is not None:
-                        # Made the arrays separate because it means fewer iterations and less indexing later on.
-                        allE.append(currentEnergy)
-                        allX.append(x)
-                        allY.append(y)
-                        allZ.append(z)
-                        sym.append(move.symbol)
+                    if plot is not None:
+                        # Separate the arrays for fewer iterations and less indexing later on.
+                        plot.append((currentEnergy, x, y, z, move.symbol))
 
                     del newMolecule
                     if currentEnergy < bestEnergy:

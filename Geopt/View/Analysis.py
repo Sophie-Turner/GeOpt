@@ -12,23 +12,25 @@ from View.Shared import SetUpWindow
 def StartAnalysis(elementsList):
     window = tk.Toplevel()
     SetUpWindow(window)
-    bestMolecules, population, plotE, plotX, plotY, plotZ, plotSym = DoTheEA(elementsList)
+    bestMolecules, population, plot = DoTheEA(elementsList)
 
-    # ElementsList can be used for symbols?
-    print('plotX:', plotX)
-    print('plotSym:', plotSym)
-    #for processed in plotXYZ:
-        #for atomMoved in processed:
-                #print('x coords:', atomMoved[0])
+    print('plot:', plot)
+    for atomVersion in plot:
+        print('atomVersion:', atomVersion)
 
-    x = np.arange(-5, 5, 0.25)
-    y = np.arange(-5, 5, 0.25)
-    r = np.sqrt(x ** 2 + y ** 2)
-    z = np.sin(r)
+    firstPlot = plot[0]
+    firstPlot = np.array(firstPlot)
+    E = firstPlot[:, 0].astype('float64')
+    x = firstPlot[:, 1].astype('float64')
+    y = firstPlot[:, 2].astype('float64')
+    z = firstPlot[:, 3].astype('float64')
+    s = firstPlot[:, 4]
 
     testFig = plt.figure()
     ax = testFig.add_subplot(111, projection='3d')
-    ax.scatter(x, y, z)
+    # Change the markers to be the symbols and colour according to energy.
+    ax.scatter(x, y, z, marker='${}$'.format('.'))
+    # Add all 6 versions to the plot.
     plt.savefig("Images/fig3.png")
 
     for i in range(3):
