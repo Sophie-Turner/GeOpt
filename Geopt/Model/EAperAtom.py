@@ -51,7 +51,7 @@ def StartEA(elementsList):
         print("len(plotE):", len(plotE))
         print("len(plotXYZ):", len(plotXYZ))
 
-    return bestMolecules, population
+    return bestMolecules, population, plotE, plotXYZ
 
 
 def Evolve(elementsList, boxSize, covRads, calc):
