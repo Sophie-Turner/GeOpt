@@ -1,6 +1,9 @@
 from ase.io import write
 import tkinter
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 from Controller.Analysis import *
 from View.Shared import SetUpWindow
@@ -9,19 +12,23 @@ from View.Shared import SetUpWindow
 def StartAnalysis(elementsList):
     window = tk.Toplevel()
     SetUpWindow(window)
-    bestMolecules, population, plotE, plotXYZ = DoTheEA(elementsList)
+    bestMolecules, population, plotE, plotX, plotY, plotZ, plotSym = DoTheEA(elementsList)
 
-    # This is a placeholder to keep the loop working until an energy plot is made.
-    # Create an example graph to practise plotting on canvas...
-    x=np.linspace(0,2*np.pi,50)
-    y=np.sin(x)
+    # ElementsList can be used for symbols?
+    print('plotX:', plotX)
+    print('plotSym:', plotSym)
+    #for processed in plotXYZ:
+        #for atomMoved in processed:
+                #print('x coords:', atomMoved[0])
+
+    x = np.arange(-5, 5, 0.25)
+    y = np.arange(-5, 5, 0.25)
+    r = np.sqrt(x ** 2 + y ** 2)
+    z = np.sin(r)
+
     testFig = plt.figure()
-    ax = testFig.add_axes([0,0,1,1])
-    ax.plot(x, y)
-
-    for i in range(len(plotE)):
-        pass
-
+    ax = testFig.add_subplot(111, projection='3d')
+    ax.scatter(x, y, z)
     plt.savefig("Images/fig3.png")
 
     for i in range(3):

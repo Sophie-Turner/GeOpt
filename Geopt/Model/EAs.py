@@ -72,6 +72,9 @@ def MoveOneAtomTight(fixedAtom, atomToMove, moveRange):
     multis = random.random(3)
     directions = (multis - 0.5) * high
     atomToMove.position = middle + directions
+    coords = atomToMove.position
+    x, y, z = coords[0], coords[1], coords[2]
+    return x, y, z
 
 
 def MoveOneAtomGauss(fixedAtom, atomToMove, sigma):

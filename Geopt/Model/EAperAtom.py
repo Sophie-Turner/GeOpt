@@ -26,8 +26,7 @@ def StartEA(elementsList):
     population = []
     bestMolecules = []
     # This will become a dataset for the potential energy plot.
-    plotE = []
-    plotXYZ = []
+    plotE, plotX, plotY, plotZ, plotSym = [], [], [], [], []
 
     if __name__ == 'Model.EAperAtom':
         with futures.ProcessPoolExecutor() as executor:
@@ -38,7 +37,10 @@ def StartEA(elementsList):
                 # Append separately from each process to prevent them being added in the wrong order by multiple process
                 # attempting to write at the same time. Long-winded but done to avoid corruption and unnecessary locks.
                 plotE.append(thisResult[2])
-                plotXYZ.append(thisResult[3])
+                plotX.append(thisResult[3])
+                plotY.append(thisResult[4])
+                plotZ.append(thisResult[5])
+                plotSym.append(thisResult[6])
         population = RankByE(population, 3)
         for eachBest in population:
             newMolecule = Atoms(eachBest[0], cell=boxSize)
@@ -49,14 +51,12 @@ def StartEA(elementsList):
         # or
         # newMolecule.set_pbc((False, False, False))
         print("len(plotE):", len(plotE))
-        print("len(plotXYZ):", len(plotXYZ))
 
-    return bestMolecules, population, plotE, plotXYZ
+    return bestMolecules, population, plotE, plotX, plotY, plotZ, plotSym
 
 
 def Evolve(elementsList, boxSize, covRads, calc):
-    allE = []
-    allXYZ = []
+    allE, allX, allY, allZ, sym = [], [], [], [], []
     buildUp = []
     buildUpBestStructure = buildUp
     firstCoordinates = [0, 0, 0]
@@ -75,7 +75,7 @@ def Evolve(elementsList, boxSize, covRads, calc):
 
         # Move each atom around every atom.
         buildUpBestEnergy, buildUpBestStructure = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure, onlyH,
-                                                                covRads, boxSize, calc, None, None)
+                                                                covRads, boxSize, calc, None, None, None, None, None)
     print("this best energy:", buildUpBestEnergy)
 
     similarity = 0
@@ -84,9 +84,8 @@ def Evolve(elementsList, boxSize, covRads, calc):
     while similarity < 2:
         # Move each atom around every atom.
         newBestEnergy, newBestStructure = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure, onlyH,
-                                                        covRads, boxSize, calc, allE, allXYZ)
+                                                        covRads, boxSize, calc, allE, allX, allY, allZ, sym)
         print("len(allE):", len(allE))
-        print("len(allXYZ):", len(allXYZ))
         if abs(newBestEnergy - buildUpBestEnergy) < 0.5:
             similarity += 1
         else:
@@ -96,14 +95,11 @@ def Evolve(elementsList, boxSize, covRads, calc):
             buildUpBestStructure = newBestStructure
             buildUp = newBestStructure
         iterations += 1
-    return buildUp, buildUpBestEnergy, allE, allXYZ
+    return buildUp, buildUpBestEnergy, allE, allX, allY, allZ, sym
 
 
-def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, allE, allXYZ):
+def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, allE, allX, allY, allZ, sym):
     # Move each atom around every atom.
-    # This will become a dataset for the potential energy plot.
-    eplotPositions = []
-    eplotEnergies = []
     numSoFar = len(buildUp)
     for eachAtomToMove in range(numSoFar):
         for eachAtomFixed in range(numSoFar):
@@ -114,7 +110,7 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
             if fixed.symbol != 'H' or move.symbol != 'H' or onlyH is True:
                 moveRange = covRads[eachAtomToMove] + covRads[eachAtomFixed]
                 for _ in range(6):
-                    MoveOneAtomTight(fixed, move, moveRange)
+                    x, y, z = MoveOneAtomTight(fixed, move, moveRange)
                     newMolecule = Atoms(buildUp, cell=boxSize)
                     newMolecule.center()
                     currentEnergy = GetEnergy(newMolecule, calc)
@@ -122,8 +118,12 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
                     # Now we need to maintain a dataset of all possible positions and their associated energies to
                     # show the energy plot but we only want to do this when all atoms are in the molecule.
                     if allE is not None:
+                        # Made the arrays separate because it means fewer iterations and less indexing later on.
                         allE.append(currentEnergy)
-                        allXYZ.append(buildUp)
+                        allX.append(x)
+                        allY.append(y)
+                        allZ.append(z)
+                        sym.append(move.symbol)
 
                     del newMolecule
                     if currentEnergy < bestEnergy:
