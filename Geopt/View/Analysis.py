@@ -25,11 +25,20 @@ def StartAnalysis(elementsList):
     y = firstPlot[:, 2].astype('float64')
     z = firstPlot[:, 3].astype('float64')
     s = firstPlot[:, 4]
+    print('firstPlot:', firstPlot)
 
     testFig = plt.figure()
     ax = testFig.add_subplot(111, projection='3d')
     # Change the markers to be the symbols and colour according to energy.
-    ax.scatter(x, y, z, marker='${}$'.format('.'))
+    for eachPoint in firstPlot:
+        energy = eachPoint[0].astype('float64')
+        print('energy before function:', energy)
+        energy = energy/20
+        if energy > 1:
+            energy = 1
+        print('energy after function:', energy)
+        ax.scatter(eachPoint[1].astype('float64'), eachPoint[2].astype('float64'), eachPoint[3].astype('float64'),
+                   marker='${}$'.format(eachPoint[4]), color=(energy, 1-energy, 0.0))
     # Add all 6 versions to the plot.
     plt.savefig("Images/fig3.png")
 
