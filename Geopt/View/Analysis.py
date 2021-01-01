@@ -12,7 +12,7 @@ def StartAnalysis(elementsList):
     bestMolecules, population, plot = DoTheEA(elementsList)
 
     # The largest energy value is needed for scaling.
-    eMax = population[0][2]
+    eMax = population[0][1]
     firstPlot = plot[0]
     firstPlot = np.array(firstPlot)
 
@@ -21,12 +21,10 @@ def StartAnalysis(elementsList):
     # Change the markers to be the symbols and colour according to energy.
     for eachPoint in firstPlot:
         # Calculate energy colours by scaling.
-        eCol = eachPoint[0].astype('float64')/eMax
+        eCol = (eachPoint[0].astype('float64')/eMax)
         if eCol > 1:
             eCol = 1
-        print('e:', eachPoint[0])
-        print('eCol:', eCol)
-        ax.scatter(eachPoint[1].astype('float64'), eachPoint[2].astype('float64'), eachPoint[3].astype('float64'),
+        ax.plot(eachPoint[1].astype('float64'), eachPoint[2].astype('float64'), eachPoint[3].astype('float64'),
                    marker='${}$'.format(eachPoint[4]), color=(eCol, 1-eCol, 0.0))
     # Add all 6 versions to the plot.
     plt.savefig("Images/fig3.png")
@@ -43,8 +41,8 @@ def StartAnalysis(elementsList):
     sizes = [200, 100, 100, 300]
     colspans = [2, 1, 1, 1]
     rowspans = [1, 1, 1, 3]
-    texts = ['Best configuration found   {:.4f} eV'.format(population[0][1]), '#2   {:.4f} eV'.format(population[1][1]),
-             '#3   {:.4f} eV'.format(population[2][1]), 'All positions tested']
+    texts = ['Best configuration found   {:.4f} eV'.format(population[0][2]), '#2   {:.4f} eV'.format(population[1][2]),
+             '#3   {:.4f} eV'.format(population[2][2]), 'All positions tested']
 
     for i in range(4):
         size = sizes[i]

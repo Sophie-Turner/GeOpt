@@ -5,8 +5,6 @@ def StartEA(elementsList):
     # Set up initial values & placeholders
     # calc = SetUpVasp()
     calc = EMT()
-    overallBestEnergy = 1000
-    bestMolecule = None
 
     # Move Hydrogens to the end of the list, as they can mess up the calculations at the start.
     moves = 0
@@ -88,7 +86,8 @@ def Evolve(elementsList, boxSize, covRads, calc):
             buildUpBestStructure = newBestStructure
             buildUp = newBestStructure
         iterations += 1
-    return buildUp, buildUpBestEnergy, worstEnergy, plot
+    print('The best energy found was:', buildUpBestEnergy)
+    return buildUp, worstEnergy, buildUpBestEnergy, plot
 
 
 def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, plot, worstEnergy):
@@ -113,7 +112,7 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
                     if plot is not None:
                         # Separate the arrays for fewer iterations and less indexing later on.
                         plot.append((currentEnergy, x, y, z, move.symbol))
-
+                    # Clean up to avoid leaving molecules lying around all over the place.
                     del newMolecule
                     if currentEnergy < bestEnergy:
                         bestEnergy = currentEnergy
