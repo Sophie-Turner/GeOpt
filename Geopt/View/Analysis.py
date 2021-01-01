@@ -1,9 +1,6 @@
 from ase.io import write
 import tkinter
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 from Controller.Analysis import *
 from View.Shared import SetUpWindow
@@ -14,31 +11,23 @@ def StartAnalysis(elementsList):
     SetUpWindow(window)
     bestMolecules, population, plot = DoTheEA(elementsList)
 
-    print('plot:', plot)
-    for atomVersion in plot:
-        print('atomVersion:', atomVersion)
-
+    # The largest energy value is needed for scaling.
+    eMax = population[0][2]
     firstPlot = plot[0]
     firstPlot = np.array(firstPlot)
-    E = firstPlot[:, 0].astype('float64')
-    x = firstPlot[:, 1].astype('float64')
-    y = firstPlot[:, 2].astype('float64')
-    z = firstPlot[:, 3].astype('float64')
-    s = firstPlot[:, 4]
-    print('firstPlot:', firstPlot)
 
     testFig = plt.figure()
     ax = testFig.add_subplot(111, projection='3d')
     # Change the markers to be the symbols and colour according to energy.
     for eachPoint in firstPlot:
-        energy = eachPoint[0].astype('float64')
-        print('energy before function:', energy)
-        energy = energy/20
-        if energy > 1:
-            energy = 1
-        print('energy after function:', energy)
+        # Calculate energy colours by scaling.
+        eCol = eachPoint[0].astype('float64')/eMax
+        if eCol > 1:
+            eCol = 1
+        print('e:', eachPoint[0])
+        print('eCol:', eCol)
         ax.scatter(eachPoint[1].astype('float64'), eachPoint[2].astype('float64'), eachPoint[3].astype('float64'),
-                   marker='${}$'.format(eachPoint[4]), color=(energy, 1-energy, 0.0))
+                   marker='${}$'.format(eachPoint[4]), color=(eCol, 1-eCol, 0.0))
     # Add all 6 versions to the plot.
     plt.savefig("Images/fig3.png")
 
@@ -55,7 +44,7 @@ def StartAnalysis(elementsList):
     colspans = [2, 1, 1, 1]
     rowspans = [1, 1, 1, 3]
     texts = ['Best configuration found   {:.4f} eV'.format(population[0][1]), '#2   {:.4f} eV'.format(population[1][1]),
-             '#3   {:.4f} eV'.format(population[2][1]), 'Potential energy plot']
+             '#3   {:.4f} eV'.format(population[2][1]), 'All positions tested']
 
     for i in range(4):
         size = sizes[i]

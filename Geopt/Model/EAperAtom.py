@@ -4,7 +4,6 @@ from Model.EAs import *
 def StartEA(elementsList):
     # Set up initial values & placeholders
     # calc = SetUpVasp()
-    print("EA starting with", elementsList)
     calc = EMT()
     overallBestEnergy = 1000
     bestMolecule = None
@@ -33,10 +32,10 @@ def StartEA(elementsList):
             results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc) for _ in range(6)]
             for f in futures.as_completed(results):
                 thisResult = f.result()
-                population.append([thisResult[0], thisResult[1]])
+                population.append([thisResult[0], thisResult[1], thisResult[2]])
                 # Append separately from each process to prevent them being added in the wrong order by multiple process
                 # attempting to write at the same time. Long-winded but done to avoid corruption and unnecessary locks.
-                plot.append(thisResult[2])
+                plot.append(thisResult[3])
         population = RankByE(population, 3)
         for eachBest in population:
             newMolecule = Atoms(eachBest[0], cell=boxSize)
@@ -54,6 +53,7 @@ def Evolve(elementsList, boxSize, covRads, calc):
     plot = []
     buildUp = []
     buildUpBestStructure = buildUp
+    worstEnergy = 0
     firstCoordinates = [0, 0, 0]
     onlyH = True
     for eachAtom in elementsList:
@@ -69,17 +69,16 @@ def Evolve(elementsList, boxSize, covRads, calc):
         buildUpBestEnergy = 1000
 
         # Move each atom around every atom.
-        buildUpBestEnergy, buildUpBestStructure = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure, onlyH,
-                                                                covRads, boxSize, calc, None)
-    print("this best energy:", buildUpBestEnergy)
+        buildUpBestEnergy, buildUpBestStructure, worstEnergy = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure, onlyH,
+                                                                covRads, boxSize, calc, None, worstEnergy)
 
     similarity = 0
     iterations = 1
     # Wait for convergence (but don't wait for too long).
     while similarity < 2:
         # Move each atom around every atom.
-        newBestEnergy, newBestStructure = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure, onlyH,
-                                                        covRads, boxSize, calc, plot)
+        newBestEnergy, newBestStructure, worstEnergy = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure, onlyH,
+                                                        covRads, boxSize, calc, plot, worstEnergy)
         if abs(newBestEnergy - buildUpBestEnergy) < 0.5:
             similarity += 1
         else:
@@ -89,10 +88,10 @@ def Evolve(elementsList, boxSize, covRads, calc):
             buildUpBestStructure = newBestStructure
             buildUp = newBestStructure
         iterations += 1
-    return buildUp, buildUpBestEnergy, plot
+    return buildUp, buildUpBestEnergy, worstEnergy, plot
 
 
-def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, plot):
+def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, plot, worstEnergy):
     # Move each atom around every atom.
     numSoFar = len(buildUp)
     for eachAtomToMove in range(numSoFar):
@@ -119,9 +118,11 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
                     if currentEnergy < bestEnergy:
                         bestEnergy = currentEnergy
                         bestStructure = buildUp
+                    elif currentEnergy > worstEnergy:
+                        worstEnergy = currentEnergy
         # Revert to best structure at this point.
         buildUp = bestStructure
-    return bestEnergy, bestStructure
+    return bestEnergy, bestStructure, worstEnergy
 
 
 
