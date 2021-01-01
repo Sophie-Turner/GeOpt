@@ -40,10 +40,6 @@ def StartEA(elementsList):
             newMolecule.center()
             bestMolecules.append(newMolecule)
 
-        # newMolecule = Atoms(eachBest, pbc=false, cell=boxSize)
-        # or
-        # newMolecule.set_pbc((False, False, False))
-
     return bestMolecules, population, plot
 
 

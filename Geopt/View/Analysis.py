@@ -6,6 +6,30 @@ from Controller.Analysis import *
 from View.Shared import SetUpWindow
 
 
+def PositionPlot(allAtomPlaces, eMax):
+    testFig = plt.figure()
+    ax = testFig.add_subplot(111, projection='3d')
+    # Change the markers to be the symbols and colour according to energy.
+    for eachPoint in allAtomPlaces:
+        # Calculate energy colours by scaling. eCol is energy colour.
+        eCol = (eachPoint[0].astype('float64') / eMax)
+        if eCol > 1:
+            eCol = 1
+        ax.plot(eachPoint[1].astype('float64'), eachPoint[2].astype('float64'), eachPoint[3].astype('float64'),
+                marker='${}$'.format(eachPoint[4]), color=(eCol, 1 - eCol, 0.0))
+    # Add all 6 versions to the plot.
+    plt.savefig("Images/fig3.png")
+
+
+def PesPlot(allPlaces):
+    E = allPlaces[:, 0].astype('float64')
+    x = allPlaces[:, 1].astype('float64')
+    y = allPlaces[:, 2].astype('float64')
+    z = allPlaces[:, 3].astype('float64')
+    s = allPlaces[:, 4]
+    # Need to make molecules and get distances, angles and energies.
+
+
 def StartAnalysis(elementsList):
     window = tk.Toplevel()
     SetUpWindow(window)
@@ -13,21 +37,10 @@ def StartAnalysis(elementsList):
 
     # The largest energy value is needed for scaling.
     eMax = population[0][1]
-    firstPlot = plot[0]
-    firstPlot = np.array(firstPlot)
-
-    testFig = plt.figure()
-    ax = testFig.add_subplot(111, projection='3d')
-    # Change the markers to be the symbols and colour according to energy.
-    for eachPoint in firstPlot:
-        # Calculate energy colours by scaling.
-        eCol = (eachPoint[0].astype('float64')/eMax)
-        if eCol > 1:
-            eCol = 1
-        ax.plot(eachPoint[1].astype('float64'), eachPoint[2].astype('float64'), eachPoint[3].astype('float64'),
-                   marker='${}$'.format(eachPoint[4]), color=(eCol, 1-eCol, 0.0))
-    # Add all 6 versions to the plot.
-    plt.savefig("Images/fig3.png")
+    allAtomPlaces = plot[0]
+    allAtomPlaces = np.array(allAtomPlaces)
+    PositionPlot(allAtomPlaces, eMax)
+    PesPlot(allAtomPlaces)
 
     for i in range(3):
         fileName = "Images/fig{num}.png".format(num=i)
