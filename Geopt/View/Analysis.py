@@ -17,23 +17,25 @@ def PositionPlot(allAtomPlaces, eMax):
             eCol = 1
         ax.plot(eachPoint[1].astype('float64'), eachPoint[2].astype('float64'), eachPoint[3].astype('float64'),
                 marker='${}$'.format(eachPoint[4]), color=(eCol, 1 - eCol, 0.0))
-    # Add all 6 versions to the plot.
-    plt.savefig("Images/fig3.png")
+        # Add all 6 versions to the plot.
+        plt.savefig("Images/fig3.png")
 
 
 def PesPlot(allPlaces):
-    E = allPlaces[:, 0].astype('float64')
-    x = allPlaces[:, 1].astype('float64')
-    y = allPlaces[:, 2].astype('float64')
-    z = allPlaces[:, 3].astype('float64')
-    s = allPlaces[:, 4]
-    # Need to make molecules and get distances, angles and energies.
+    # Need something like this for PES plot dimensions
+    # if numAtoms == 1:
+    #     return
+    # if numAtoms == 2:
+    #     dims = 2
+    # elif numAtoms > 2:
+    #     dims = 3
+    pass
 
 
 def StartAnalysis(elementsList):
     window = tk.Toplevel()
     SetUpWindow(window)
-    bestMolecules, population, plot = DoTheEA(elementsList)
+    bestMolecules, population, plot, pes = DoTheEA(elementsList)
 
     # The largest energy value is needed for scaling.
     eMax = population[0][1]
