@@ -21,15 +21,11 @@ def PositionPlot(allAtomPlaces, eMax):
         plt.savefig("Images/fig3.png")
 
 
-def PesPlot(allPlaces):
-    # Need something like this for PES plot dimensions
-    # if numAtoms == 1:
-    #     return
-    # if numAtoms == 2:
-    #     dims = 2
-    # elif numAtoms > 2:
-    #     dims = 3
-    pass
+def PesPlot(pesData):
+    distances = pesData[:, 0].astype('float64')
+    energies = pesData[:, 1].astype('float64')
+    angles = pesData[:, 2].astype('float64')
+    print('pesData:', pesData)
 
 
 def StartAnalysis(elementsList):
@@ -39,10 +35,14 @@ def StartAnalysis(elementsList):
 
     # The largest energy value is needed for scaling.
     eMax = population[0][1]
+
     allAtomPlaces = plot[0]
     allAtomPlaces = np.array(allAtomPlaces)
     PositionPlot(allAtomPlaces, eMax)
-    PesPlot(allAtomPlaces)
+
+    pesData = pes[0]
+    pesData = np.array(pesData)
+    PesPlot(pesData)
 
     for i in range(3):
         fileName = "Images/fig{num}.png".format(num=i)

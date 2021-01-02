@@ -115,10 +115,11 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
                                 otherAtom = eachAtomToMove + 1
                                 if otherAtom != eachAtomFixed:
                                     angle = newMolecule.get_angle(eachAtomToMove, eachAtomFixed, otherAtom)
+                                    otherSymbol = buildUp[otherAtom].symbol
                                 else:
                                     angle = 180.0
-                                pes.append((distance, currentEnergy, angle, move.symbol, fixed.symbol,
-                                            buildUp[otherAtom].symbol))
+                                    otherSymbol = None
+                                pes.append((distance, currentEnergy, angle, move.symbol, fixed.symbol, otherSymbol))
                         # Separate the arrays for fewer iterations and less indexing later on.
                         plot.append((currentEnergy, x, y, z, move.symbol))
                     # Clean up to avoid leaving molecules lying around all over the place.
