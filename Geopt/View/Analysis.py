@@ -1,6 +1,8 @@
 from ase.io import write
 import tkinter
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+from matplotlib import cm
 import numpy as np
 from Controller.Analysis import *
 from View.Shared import SetUpWindow
@@ -17,21 +19,43 @@ def PositionPlot(allAtomPlaces, eMax):
             eCol = 1
         ax.plot(eachPoint[1].astype('float64'), eachPoint[2].astype('float64'), eachPoint[3].astype('float64'),
                 marker='${}$'.format(eachPoint[4]), color=(eCol, 1 - eCol, 0.0))
-        # Add all 6 versions to the plot.
-        plt.savefig("Images/fig3.png")
+    # Add all 6 versions to the plot.
+    plt.savefig("Images/fig3.png")
 
 
-def PesPlot(pesData):
-    distances = pesData[:, 0].astype('float64')
-    energies = pesData[:, 1].astype('float64')
-    angles = pesData[:, 2].astype('float64')
-    print('pesData:', pesData)
+def PesPlot(pesData, refs):
+    colourMaps = [cm.Purples, cm.Oranges, cm.Greens, cm.Blues, cm.Greys, cm.Reds]
+    surfFig = plt.figure()
+    pax = surfFig.add_subplot(111, projection='3d')
+    for i in range(len(refs)):
+        group = refs[i]
+        grouped = np.where(pesData[:, 3] == group)
+        distances = pesData[grouped, 0].astype('float64')
+        energies = pesData[grouped, 1].astype('float64')
+        angles = pesData[grouped, 2].astype('float64')
+        pax.plot(distances[0], energies[0], angles[0], marker='x', linewidth=0)
+    plt.savefig("Images/testSurface2.png")
+
+
+def SurfacePlot(pesData, refs):
+    colourMaps = [cm.Purples, cm.Oranges, cm.Greens, cm.Blues, cm.Greys, cm.Reds]
+    surfFig = plt.figure()
+    pax = surfFig.gca(projection='3d')
+    for i in range(len(refs)):
+        group = refs[i]
+        grouped = np.where(pesData[:, 3] == group)
+        distances = pesData[grouped, 0].astype('float64')
+        energies = pesData[grouped, 1].astype('float64')
+        x, y = np.meshgrid(distances[0], energies[0])
+        angles = pesData[grouped, 2].astype('float64')
+        pax.plot_trisurf(distances[0], energies[0], angles[0])
+    plt.savefig("Images/testSurface.png")
 
 
 def StartAnalysis(elementsList):
     window = tk.Toplevel()
     SetUpWindow(window)
-    bestMolecules, population, plot, pes = DoTheEA(elementsList)
+    bestMolecules, population, plot, pes, refs = DoTheEA(elementsList)
 
     # The largest energy value is needed for scaling.
     eMax = population[0][1]
@@ -42,7 +66,9 @@ def StartAnalysis(elementsList):
 
     pesData = pes[0]
     pesData = np.array(pesData)
-    PesPlot(pesData)
+    refData = refs[0]
+    SurfacePlot(pesData, refData)
+    PesPlot(pesData, refData)
 
     for i in range(3):
         fileName = "Images/fig{num}.png".format(num=i)

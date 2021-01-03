@@ -20,11 +20,8 @@ def StartEA(elementsList):
     boxSize = thisPopulation.boxSize
     covRads = thisPopulation.covRads
 
-    population = []
-    bestMolecules = []
-    # This will become a dataset for the potential energy plot.
-    plot = []
-    pes = []
+    # These will become datasets for the potential energy plots etc.
+    population, bestMolecules, plot, pes, refs = [], [], [], [], []
 
     if __name__ == 'Model.EAperAtom':
         with futures.ProcessPoolExecutor() as executor:
@@ -36,19 +33,18 @@ def StartEA(elementsList):
                 # attempting to write at the same time. Long-winded but done to avoid corruption and unnecessary locks.
                 plot.append(thisResult[3])
                 pes.append(thisResult[4])
+                refs.append(thisResult[5])
         population = RankByE(population, 3)
         for eachBest in population:
             newMolecule = Atoms(eachBest[0], cell=boxSize)
             newMolecule.center()
             bestMolecules.append(newMolecule)
 
-    return bestMolecules, population, plot, pes
+    return bestMolecules, population, plot, pes, refs
 
 
 def Evolve(elementsList, boxSize, covRads, calc):
-    plot = []
-    pes = []
-    buildUp = []
+    plot, pes, refs, buildUp = [], [], [], []
     buildUpBestStructure = buildUp
     worstEnergy = 0
     firstCoordinates = [0, 0, 0]
@@ -66,16 +62,19 @@ def Evolve(elementsList, boxSize, covRads, calc):
         buildUpBestEnergy = 1000
 
         # Move each atom around every atom.
-        buildUpBestEnergy, buildUpBestStructure, worstEnergy = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure, onlyH,
-                                                                covRads, boxSize, calc, None, None, worstEnergy)
+        buildUpBestEnergy, buildUpBestStructure, worstEnergy = TestAllPlaces(buildUp, buildUpBestEnergy,
+                                                                             buildUpBestStructure, onlyH,
+                                                                             covRads, boxSize, calc, None, None, None,
+                                                                             worstEnergy)
 
     similarity = 0
     iterations = 1
     # Wait for convergence (but don't wait for too long).
     while similarity < 2:
         # Move each atom around every atom.
-        newBestEnergy, newBestStructure, worstEnergy = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure, onlyH,
-                                                        covRads, boxSize, calc, plot, pes, worstEnergy)
+        newBestEnergy, newBestStructure, worstEnergy = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure,
+                                                                     onlyH, covRads, boxSize, calc, plot, pes, refs,
+                                                                     worstEnergy)
         if abs(newBestEnergy - buildUpBestEnergy) < 0.5:
             similarity += 1
         else:
@@ -85,10 +84,10 @@ def Evolve(elementsList, boxSize, covRads, calc):
             buildUpBestStructure = newBestStructure
             buildUp = newBestStructure
         iterations += 1
-    return buildUp, worstEnergy, buildUpBestEnergy, plot, pes
+    return buildUp, worstEnergy, buildUpBestEnergy, plot, pes, refs
 
 
-def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, plot, pes, worstEnergy):
+def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, plot, pes, refs, worstEnergy):
     # Move each atom around every atom.
     numSoFar = len(buildUp)
     for eachAtomToMove in range(numSoFar):
@@ -117,9 +116,12 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
                                     angle = newMolecule.get_angle(eachAtomToMove, eachAtomFixed, otherAtom)
                                     otherSymbol = buildUp[otherAtom].symbol
                                 else:
-                                    angle = 180.0
-                                    otherSymbol = None
-                                pes.append((distance, currentEnergy, angle, move.symbol, fixed.symbol, otherSymbol))
+                                    angle = 0
+                                    otherSymbol = ''
+                                reference = move.symbol + fixed.symbol + otherSymbol
+                                pes.append((distance, currentEnergy, angle, reference))
+                                if reference not in refs:
+                                    refs.append(reference)
                         # Separate the arrays for fewer iterations and less indexing later on.
                         plot.append((currentEnergy, x, y, z, move.symbol))
                     # Clean up to avoid leaving molecules lying around all over the place.
