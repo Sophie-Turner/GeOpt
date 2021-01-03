@@ -1,8 +1,6 @@
 from ase.io import write
 import tkinter
-from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-from matplotlib import cm
 import numpy as np
 from Controller.Analysis import *
 from View.Shared import SetUpWindow
@@ -23,22 +21,7 @@ def PositionPlot(allAtomPlaces, eMax):
     plt.savefig("Images/fig3.png")
 
 
-def PesPlot(pesData, refs):
-    colourMaps = [cm.Purples, cm.Oranges, cm.Greens, cm.Blues, cm.Greys, cm.Reds]
-    surfFig = plt.figure()
-    pax = surfFig.add_subplot(111, projection='3d')
-    for i in range(len(refs)):
-        group = refs[i]
-        grouped = np.where(pesData[:, 3] == group)
-        distances = pesData[grouped, 0].astype('float64')
-        energies = pesData[grouped, 1].astype('float64')
-        angles = pesData[grouped, 2].astype('float64')
-        pax.plot(distances[0], energies[0], angles[0], marker='x', linewidth=0)
-    plt.savefig("Images/testSurface2.png")
-
-
 def SurfacePlot(pesData, refs):
-    colourMaps = [cm.Purples, cm.Oranges, cm.Greens, cm.Blues, cm.Greys, cm.Reds]
     surfFig = plt.figure()
     pax = surfFig.gca(projection='3d')
     for i in range(len(refs)):
@@ -46,9 +29,13 @@ def SurfacePlot(pesData, refs):
         grouped = np.where(pesData[:, 3] == group)
         distances = pesData[grouped, 0].astype('float64')
         energies = pesData[grouped, 1].astype('float64')
-        x, y = np.meshgrid(distances[0], energies[0])
         angles = pesData[grouped, 2].astype('float64')
-        pax.plot_trisurf(distances[0], energies[0], angles[0])
+        pax.plot_trisurf(energies[0], distances[0], angles[0])
+
+    pax.view_init(110, -90)
+    pax.set_xlabel('Distance between atoms / \u00c5')
+    pax.set_ylabel('Potential energy of molecule / eV')
+    pax.set_zlabel('Angle of atoms / \u00b0')
     plt.savefig("Images/testSurface.png")
 
 
@@ -68,7 +55,6 @@ def StartAnalysis(elementsList):
     pesData = np.array(pesData)
     refData = refs[0]
     SurfacePlot(pesData, refData)
-    PesPlot(pesData, refData)
 
     for i in range(3):
         fileName = "Images/fig{num}.png".format(num=i)
