@@ -2,7 +2,7 @@
 from tkinter import simpledialog, messagebox
 from Model.InteractWithData import GetXML
 from Controller.Shared import *
-from View.Analysis import StartAnalysis
+from View.Analysis2 import StartAnalysis
 
 formula = []
 subscript = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
