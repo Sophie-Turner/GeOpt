@@ -6,6 +6,8 @@ from tkinter import ttk
 from Controller.Analysis import *
 from View.Shared import SetUpWindow
 
+colours = ['deeppink', 'yellow', 'dodgerblue', 'limegreen', 'darkorange', 'purple', 'red', 'blue']
+
 
 def PositionPlot(allAtomPlaces, eMax, fileName):
     testFig = plt.figure()
@@ -25,17 +27,20 @@ def SurfacePlot(pesData, refs, fileName):
     surfFig = plt.figure()
     pax = surfFig.gca(projection='3d')
     for i in range(len(refs)):
+        if i > 7:
+            break
         group = refs[i]
         grouped = np.where(pesData[:, 3] == group)
         distances = pesData[grouped, 0].astype('float64')
         energies = pesData[grouped, 1].astype('float64')
         angles = pesData[grouped, 2].astype('float64')
-        pax.plot_trisurf(energies[0], distances[0], angles[0])
+        pax.plot_trisurf(energies[0], distances[0], angles[0], color=colours[i])
 
     pax.view_init(110, -90)
     pax.set_xlabel('Distance between atoms / \u00c5')
     pax.set_ylabel('Potential energy of molecule / eV')
     pax.set_zlabel('Angle of atoms / \u00b0')
+
     plt.savefig("Images/pes{name}.png".format(name=fileName))
 
 
@@ -87,7 +92,12 @@ def StartAnalysis(elementsList):
                 canvas = tkinter.Canvas(gridFrame, height=sizey, width=sizex)
                 canvas.grid(row=i, column=j+1, rowspan=1, columnspan=1, padx='5', pady='5')
                 canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
-
+    legend = Text(gridFrame, bg="#222222", width="3", height=len(refData)+1)
+    legend.grid(row=2, column=4, rowspan=1, columnspan=1, padx='5', pady='5')
     gridFrame.pack()
+    for i in range(len(refData)):
+        string = (refData[i])
+        legend.tag_configure(string, foreground=colours[i], font=('Agency FB', 12, 'bold'))
+        legend.insert(END, string+'\n', string)
 
     window.mainloop()
