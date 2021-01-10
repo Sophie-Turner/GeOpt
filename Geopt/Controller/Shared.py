@@ -7,6 +7,6 @@ def SetColours(frame):
         item.config(bg='#555555')
         # Not all items have a foreground.
         try:
-            item.config(fg = '#DDFFDD')
+            item.config(fg='#DDFFDD')
         except:
             pass
