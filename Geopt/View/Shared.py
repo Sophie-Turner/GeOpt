@@ -22,4 +22,4 @@ def SetUpWindow(window):
     lblDescription = Label(bannerFrame, text='Molecular geometry optimisation', font=('Agency FB', 18),
                            fg='white',
                            bg='#222222')
-    lblDescription.pack(pady=10)
+    lblDescription.pack(pady=5)
