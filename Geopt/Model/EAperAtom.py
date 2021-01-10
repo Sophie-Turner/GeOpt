@@ -9,10 +9,11 @@ def StartEA(elementsList):
     # Move Hydrogens to the end of the list, as they can mess up the calculations at the start.
     moves = 0
     while moves < len(elementsList):
-        for eachAtom in elementsList:
-            if eachAtom == 'H':
-                elementsList.remove(eachAtom)
-                elementsList.append(eachAtom)
+        if elementsList[0] == 'H':
+            elementsList.remove('H')
+            elementsList.append('H')
+        else:
+            break
         moves += 1
 
     # Get the final box size
