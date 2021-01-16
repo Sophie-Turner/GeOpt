@@ -1,1 +1,0 @@
-# functions associated with the Molecule View

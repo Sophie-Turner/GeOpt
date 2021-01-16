@@ -69,9 +69,3 @@ def EvenSpacing(atomsList, extraSpace):
                 # Don't create too many co-ordinates. numAtoms is unlikely to divide perfectly into the grid.
                 if len(coordinates) == numItems:
                     return boxSize, coordinates, atomObjectList
-
-
-
-
-
-

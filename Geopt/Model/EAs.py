@@ -60,6 +60,7 @@ def GenerateChild(childAtomsObject, boxSize):
 
 def GetEnergy(molecule, calc):
     # Set up the ase force calculator for finding energies.
+    molecule.set_pbc(True)
     molecule.calc = calc
     energy = molecule.get_potential_energy()
     return energy
@@ -72,6 +73,9 @@ def MoveOneAtomTight(fixedAtom, atomToMove, moveRange):
     multis = random.random(3)
     directions = (multis - 0.5) * high
     atomToMove.position = middle + directions
+    coords = atomToMove.position
+    x, y, z = coords[0], coords[1], coords[2]
+    return x, y, z
 
 
 def MoveOneAtomGauss(fixedAtom, atomToMove, sigma):
@@ -134,8 +138,10 @@ def RankByE(population, numToKeep):
     while len(rankedPopulation) < numToKeep:
         bestEnergy = 1000
         for eachMember in population:
-            if eachMember[2] < bestEnergy:
-                bestEnergy = eachMember[2]
+            # Access the last item of population because different EAs have different types
+            # of population and put low energy at the end.
+            if eachMember[-1] < bestEnergy:
+                bestEnergy = eachMember[-1]
                 bestMolecule = eachMember
         rankedPopulation.append(bestMolecule)
         population.remove(bestMolecule)
@@ -152,5 +158,7 @@ def Crossover(population):
         thisPoint = population[whichParent][1][i]
         childCoordinates.append(thisPoint)
     return childCoordinates
+
+
 
 
