@@ -60,6 +60,7 @@ def GenerateChild(childAtomsObject, boxSize):
 
 def GetEnergy(molecule, calc):
     # Set up the ase force calculator for finding energies.
+    molecule.set_pbc(True)
     molecule.calc = calc
     energy = molecule.get_potential_energy()
     return energy

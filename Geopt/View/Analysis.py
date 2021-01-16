@@ -54,14 +54,10 @@ def StartAnalysis(elementsList):
                 canvas = tkinter.Canvas(gridFrame, height=sizey, width=sizex, bg="#222222")
                 canvas.grid(row=i, column=j+1, rowspan=1, columnspan=1, padx='5')
                 canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
-    legend = Text(gridFrame, bg="#222222", width="3", height=11)
+    # Show a legend for the PES plots.
+    legend = Text(gridFrame, bg="#222222", width="3", height="11")
     legend.grid(row=2, column=4, rowspan=1, columnspan=1, padx='5')
     gridFrame.pack()
-    for i in range(len(refData)):
-        string = (refData[i])
-        legend.tag_configure(string, foreground=colours[i], font=('Agency FB', 14, 'bold'))
-        legend.insert(END, string+'\n', string)
-        if i == 7:
-            break
+    SurfaceLegend(legend, refData)
 
     window.mainloop()

@@ -58,15 +58,23 @@ def ShowInfo(version, pes, refs, atoms, rank):
     Label(bottomGrid, text='Some info here', font=('Agency FB', 12), fg='#EEFFEE', bg='#222222') \
         .grid(row=1, column=0, columnspan=1, padx='5')
 
+    # Show info for the PES plot.
+    pesInfoBox = Text(bottomGrid, fg='#EEFFEE', bg="#222222", width="20", height="11")
+    pesInfoBox.grid(row=1, column=0, columnspan=1, padx='5')
+
     imageHolders.append(PhotoImage(file="Images/pes{num}.png".format(num=rank)))
     thisImage = imageHolders[-1]
     canvas = tkinter.Canvas(bottomGrid, width=sizex, height=sizey)
     canvas.grid(row=1, column=1, padx='5')
     canvas.create_image(sizex/2, sizey/2, image=thisImage)
 
-    Label(bottomGrid, text='Some info here', font=('Agency FB', 12), fg='#EEFFEE', bg='#222222') \
-        .grid(row=1, column=3, columnspan=1, padx='5')
+    # Show a legend for the PES plot.
+    legend = Text(bottomGrid, bg="#222222", width="3", height="11")
+    legend.grid(row=1, column=3, columnspan=1, padx='5')
 
     bottomGrid.pack()
+
+    SurfaceInfo(pesInfoBox)
+    SurfaceLegend(legend, refs)
 
     window.mainloop()

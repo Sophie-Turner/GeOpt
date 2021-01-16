@@ -61,7 +61,6 @@ def Evolve(elementsList, boxSize, covRads, calc):
                 onlyH = False
         # Reset the energy test as it is likely to increase as more atoms are added.
         buildUpBestEnergy = 1000
-
         # Move each atom around every atom.
         buildUpBestEnergy, buildUpBestStructure, worstEnergy = TestAllPlaces(buildUp, buildUpBestEnergy,
                                                                              buildUpBestStructure, onlyH,

@@ -32,6 +32,8 @@ def PositionPlot(allAtomPlaces, eMax, fileName):
 
 
 def SurfacePlot(pesData, refs, size, fileName):
+    global surfData, surfRefs
+    surfData, surfRefs = pesData, refs
     surfFig = plt.figure(figsize=(size, size))
     pax = surfFig.gca(projection='3d')
     for i in range(len(refs)):
@@ -42,7 +44,7 @@ def SurfacePlot(pesData, refs, size, fileName):
         distances = pesData[grouped, 0].astype('float64')
         energies = pesData[grouped, 1].astype('float64')
         angles = pesData[grouped, 2].astype('float64')
-        pax.plot_trisurf(energies[0], distances[0], angles[0], color=colours[i])
+        pax.plot_trisurf(distances[0], energies[0], angles[0], color=colours[i])
 
     pax.view_init(110, -90)
     pax.set_xlabel('Distance between atoms / \u00c5', fontsize='x-small')
@@ -55,3 +57,34 @@ def SurfacePlot(pesData, refs, size, fileName):
             tick.label.set_rotation('horizontal')
 
     plt.savefig("Images/pes{name}.png".format(name=fileName))
+
+
+def SurfaceInfo(infoBox):
+    infoBox.insert(END, "Energy minima:\n")
+    for i in range(len(surfRefs)):
+        if i > 7:
+            break
+        group = surfRefs[i]
+        grouped = np.where(surfData[:, 3] == group)
+        distances = (surfData[grouped, 0].astype('float64'))[0]
+        energies = (surfData[grouped, 1].astype('float64'))[0]
+        angles = (surfData[grouped, 2].astype('float64'))[0]
+        minE = min(energies)
+        minI = np.where(energies == minE)
+        atomsDistance = group[0:len(group)]
+        distance = str(distances[minI])
+        angle = str(angles[minI])
+        txt = "Distance between {} {}\u00c5\nAngle over {} {}\u00b0\nPotential energy {} eV\n\n".format\
+            (atomsDistance, distance, group, angle, minE)
+        txt = txt.replace("]", "")
+        txt = txt.replace("[", "")
+        infoBox.insert(END, txt)
+
+
+def SurfaceLegend(legendBox, refData):
+    for i in range(len(refData)):
+        string = (refData[i])
+        legendBox.tag_configure(string, foreground=colours[i], font=('Agency FB', 14, 'bold'))
+        legendBox.insert(END, string + '\n', string)
+        if i == 7:
+            break
