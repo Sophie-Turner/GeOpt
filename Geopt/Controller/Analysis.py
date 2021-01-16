@@ -12,6 +12,7 @@ global surfData, surfRefs
 
 
 def DoTheEA(elementsList):
+    plt.close('all')
     bestMolecules, population, plot, pes, refs = StartEA(elementsList)
     global bestVersions
     bestVersions = bestMolecules
@@ -58,7 +59,7 @@ def SurfacePlot(pesData, refs, size, fileName):
 
 
 def SurfaceInfo(infoBox):
-    infoBox.insert(END, "Energy minima:\n\n")
+    infoBox.insert(END, "Interaction energy minima:\n\n")
     for i in range(len(surfRefs)):
         distances, energies, angles, group = GetGroup(i)
         minE = min(energies)
@@ -75,6 +76,7 @@ def SurfaceInfo(infoBox):
 
 
 def SurfaceLegend(legendBox, refData):
+    legendBox.insert(END, 'Legend')
     for i in range(len(refData)):
         string = (refData[i])
         legendBox.tag_configure(string, foreground=colours[i], font=('Agency FB', 14, 'bold'))

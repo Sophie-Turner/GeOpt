@@ -56,7 +56,7 @@ def StartAnalysis(elementsList):
                 canvas.grid(row=i, column=j+1, rowspan=1, columnspan=1, padx='5')
                 canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
     # Show a legend for the PES plots.
-    legend = Text(gridFrame, bg="#222222", width="3", height="11")
+    legend = Text(gridFrame, fg='#EEFFEE', bg="#222222", width="6", height="11")
     legend.grid(row=2, column=4, rowspan=1, columnspan=1, padx='5')
     gridFrame.pack()
     SurfaceLegend(legend, refData)
