@@ -43,7 +43,8 @@ def StartAnalysis(elementsList):
             .grid(row=i, column=0, rowspan=1, columnspan=1, padx='5')
         for j in range(3):
             if i == 0:
-                Button(gridFrame, text=colText[j], command=(lambda j=j: ShowInfo(population[j], pes[j], refs[j], elementsList, j)),
+                Button(gridFrame, text=colText[j], command=(lambda j=j: ShowInfo(population[j], pes[j], refs[j],
+                                                                                 elementsList, len(allAtomPlaces), j)),
                        font=('Agency FB', 16), fg='#DDFFDD', bg='#555555').grid(row=i, column=j+1, rowspan=1, columnspan=1, padx='5')
             else:
                 sizex = 300
