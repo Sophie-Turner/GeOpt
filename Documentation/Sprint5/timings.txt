@@ -1,0 +1,10 @@
+Num atoms     Time taken / s
+1              2
+2              2
+3              5
+4	       10
+5	       20
+6	       66
+7	       85 computer made alarming sounds! Not trying any more D:
+
+if num atoms > 5 don't show graphs?

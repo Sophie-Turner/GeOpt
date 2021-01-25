@@ -1,6 +1,8 @@
 # Functions associated with the BuildNew View
 from tkinter import simpledialog, messagebox
 from Model.InteractWithData import GetXML
+import time
+from math import exp
 from Controller.Shared import *
 from View.Analysis import StartAnalysis
 
@@ -49,9 +51,11 @@ def Build(box):
         elementsList = []
         thisAtom = ''
         howMany = 0
+
         for i in range(len(boxText)):
+            numAtoms = len(elementsList)
             # Don't let the user make huge molecules!
-            if len(elementsList) > 20:
+            if numAtoms > 20:
                 messagebox.showerror(title='Large molecule',
                                      message='This molecule is too large to build! Cancelling...')
                 Clear(box)
@@ -86,12 +90,15 @@ def Build(box):
         elementsList.append(thisAtom)
         del elementsList[0]
 
-        #try:
-        StartAnalysis(elementsList)
-        #except:
-            #messagebox.showerror(title="Invalid input", message="Please enter a valid molecular formula, e.g. H2SO4")
-            #elementsList.clear()
-            #Clear(box)
+        sure = messagebox.askquestion(title='Build molecule', message='Estimated time = {} seconds. Proceed?'.format(round(0.6798 * exp(0.701 * numAtoms + 0.5))))
+        if sure == 'yes':
+            #try:
+            StartAnalysis(elementsList)
+            #except:
+                #messagebox.showerror(title="Invalid input", message="Please enter a valid molecular formula, e.g. H2O")
+                #elementsList.clear()
+                #Clear(box)
+
 
 
 def Clear(box):
