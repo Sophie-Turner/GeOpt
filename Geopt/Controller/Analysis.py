@@ -64,27 +64,31 @@ def SurfacePlot(pesData, refs, size, fileName):
 def SurfaceInfo(infoBox):
     infoBox.insert(END, "Interaction energy minima:\n\n")
     for i in range(len(surfRefs)):
-        distances, energies, angles, group = GetGroup(i)
-        minE = min(energies)
-        minI = np.where(energies == minE)
-        atom1, atom2 = group[0], group[1]
-        distance = str(distances[minI])
-        angle = str(angles[minI])
-        txt = "Distance between {}{} {} \u00c5\nAngle over {} {}\u00b0\nPotential energy {} eV\n\n".format\
-            (atom1, atom2, distance, group, angle, minE)
-        txt = txt.replace("]", "")
-        txt = txt.replace("[", "")
-        infoBox.insert(END, txt)
+        if i < 8:
+            distances, energies, angles, group = GetGroup(i)
+            minE = min(energies)
+            minI = np.where(energies == minE)
+            atom1, atom2 = group[0], group[1]
+            distance = str(distances[minI])
+            angle = str(angles[minI])
+            txt = "Distance between {}{} {} \u00c5\nAngle over {} {}\u00b0\nPotential energy {} eV\n\n".format\
+                (atom1, atom2, distance, group, angle, minE)
+            txt = txt.replace("]", "")
+            txt = txt.replace("[", "")
+            infoBox.insert(END, txt)
+        else:
+            break
     infoBox.configure(state="disabled")
 
 
 def SurfaceLegend(legendBox, refData):
     legendBox.insert(END, 'Legend')
     for i in range(len(refData)):
-        string = (refData[i])
-        legendBox.tag_configure(string, foreground=colours[i], font=('Agency FB', 14, 'bold'))
-        legendBox.insert(END, string + '\n', string)
-        if i == 7:
+        if i < 8:
+            string = (refData[i])
+            legendBox.tag_configure(string, foreground=colours[i], font=('Agency FB', 14, 'bold'))
+            legendBox.insert(END, string + '\n', string)
+        else:
             break
     legendBox.configure(state="disabled")
 
@@ -129,8 +133,6 @@ def GetBestInfo(rank, txtBox):
 
 
 def GetGroup(n):
-    if n > 7:
-        return
     group = surfRefs[n]
     grouped = np.where(surfData[:, 3] == group)
     distances = (surfData[grouped, 0].astype('float64'))[0]
