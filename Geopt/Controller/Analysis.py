@@ -42,8 +42,11 @@ def SurfacePlot(pesData, refs, size, fileName):
     surfFig = plt.figure(figsize=(size, size))
     pax = surfFig.gca(projection='3d')
     for i in range(len(refs)):
-        distances, energies, angles, group = GetGroup(i)
-        pax.plot_trisurf(distances, energies, angles, color=colours[i])
+        if i < 8:
+            distances, energies, angles, group = GetGroup(i)
+            pax.plot_trisurf(distances, energies, angles, color=colours[i])
+        else:
+            break
 
     pax.view_init(110, -90)
     pax.set_xlabel('Distance between atoms / \u00c5', fontsize='x-small')
