@@ -1,7 +1,7 @@
 # functions associated with the analysis view
 from Controller.Shared import *
 # from Model.EAmanyMolecules import StartEA
-from Model.EAperAtom import StartEA
+from Model.PerAtom import Start
 import tkinter
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,9 +11,9 @@ global bestVersions
 global surfData, surfRefs
 
 
-def DoTheEA(elementsList):
+def DoTheAlgo(elementsList):
     plt.close('all')
-    bestMolecules, population, plot, pes, refs = StartEA(elementsList)
+    bestMolecules, population, plot, pes, refs = Start(elementsList)
     global bestVersions
     bestVersions = bestMolecules
     return bestMolecules, population, plot, pes, refs

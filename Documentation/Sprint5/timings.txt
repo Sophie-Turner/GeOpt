@@ -1,3 +1,5 @@
+PerAtom
+
 Num atoms     Time taken / s
 1              2
 2              2
@@ -8,3 +10,19 @@ Num atoms     Time taken / s
 7	       85 computer made alarming sounds! Not trying any more D:
 
 if num atoms > 5 don't show graphs?
+
+ManyMolecule
+
+Num atoms     300 it 	    	100
+1		n/a		
+2		0
+3		20
+4		37		12
+5		57		19
+6		86		29
+7
+8
+9
+10
+11
+12

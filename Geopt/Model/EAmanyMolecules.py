@@ -1,4 +1,4 @@
-from Model.EAs import *
+from Model.Algos import *
 
 def StartEA(elementsList):
     # Set up and initialise our template molecule to start with.
@@ -13,9 +13,6 @@ def StartEA(elementsList):
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentMolecule.center()
     parentEnergy = GetEnergy(parentMolecule, calc)
-    print("Parent energy: ", parentEnergy)
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
-          rotation='10x,30y,0z')
 
     if numAtoms == 1:
         # If there's only 1 atom we can skip all this...
@@ -35,6 +32,9 @@ def StartEA(elementsList):
     population = RankByE(population, 1)
 
     Evolve(elementsList, boxSize, population, calc)
+
+    # Implement multithreading in this algo too?
+    # Need to return bestMolecules, population, plot, pes, refs.
 
 
 def Evolve(elementsList, boxSize, population, calc):

@@ -1,7 +1,7 @@
-from Model.EAs import *
+from Model.Algos import *
 
 
-def StartEA(elementsList):
+def Start(elementsList):
     # Set up initial values & placeholders
     # calc = SetUpVasp()
     calc = EMT()
@@ -24,7 +24,7 @@ def StartEA(elementsList):
     # These will become datasets for the potential energy plots etc.
     population, bestMolecules, plot, pes, refs = [], [], [], [], []
 
-    if __name__ == 'Model.EAperAtom':
+    if __name__ == 'Model.PerAtom':
         with futures.ProcessPoolExecutor() as executor:
             results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc) for _ in range(6)]
             for f in futures.as_completed(results):

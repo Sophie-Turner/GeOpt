@@ -8,7 +8,7 @@ def StartAnalysis(elementsList):
     window = tk.Toplevel()
     SetUpWindow(window)
     window.geometry("+0+0")
-    bestMolecules, population, plot, pes, refs = DoTheEA(elementsList)
+    bestMolecules, population, plot, pes, refs = DoTheAlgo(elementsList)
 
     imageTypes = ['structure', 'pes', 'positions']
     imageHolders = [[], [], []]

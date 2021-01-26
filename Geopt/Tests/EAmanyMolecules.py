@@ -1,11 +1,16 @@
-from Tests.EAs import *
+from Model.Algos import *
+from time import time
 
+global bestMolecules, returnPop, plot, pes, refs
 
 def StartEA(elementsList):
     # Set up and initialise our template molecule to start with.
     #calc = SetUpVasp()
+    startTime = time()
     calc = EMT()
     thisPopulation = Population(elementsList)
+    global bestMolecules, returnPop, plot, pes, refs
+    bestMolecules, returnPop, plot, pes, refs = [], [], [], [], []
     boxSize = thisPopulation.boxSize
     firstCoordinates = thisPopulation.initPositions
     atomObjectList = thisPopulation.initAtomsObject
@@ -14,9 +19,6 @@ def StartEA(elementsList):
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentMolecule.center()
     parentEnergy = GetEnergy(parentMolecule, calc)
-    print("Parent energy: ", parentEnergy)
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/parent.png", parentMolecule,
-          rotation='10x,30y,0z')
 
     if numAtoms == 1:
         # If there's only 1 atom we can skip all this...
@@ -30,12 +32,17 @@ def StartEA(elementsList):
     for i in range(len(elementsList)):
         # Make some permutations.
         MakeNewMolecule(elementsList, firstCoordinates, lastBestEnergy, None, boxSize, population, False, False,
-                        True, calc)
+                        True, plot, pes, refs, calc)
 
     # Find the best permutation.
     population = RankByE(population, 1)
 
     Evolve(elementsList, boxSize, population, calc)
+
+    endTime = time()
+    print('Time taken = {} seconds'.format(round(endTime-startTime)))
+
+    return bestMolecules, returnPop, plot, pes, refs
 
 
 def Evolve(elementsList, boxSize, population, calc):
@@ -53,13 +60,12 @@ def Evolve(elementsList, boxSize, population, calc):
     population.pop(0)
 
     # End if the best energy doesn't change much for several consecutive iterations.
-    while similarity < 5 and iterations < 300:
-
+    while similarity < 5 and iterations < 100:
         # New child molecules.
         for i in range(len(elementsList)):
             # Make some with random mutations.
             MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, changeSizes[1], boxSize, population, 2,
-                            False, False, calc)
+                            False, False, plot, pes, refs, calc)
 
         # Selection.
         population = RankByE(population, 1)
@@ -69,10 +75,10 @@ def Evolve(elementsList, boxSize, population, calc):
         for i in range(len(elementsList)):
             # Introduce some random strangers.
             MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, None, boxSize, population, 3, False,
-                            False, calc)
+                            False, plot, pes, refs, calc)
 
         # Selection.
-        population = RankByE(population, 1)
+        population = RankByE(population, 3)
 
         # Update the stopping criterion.
         newBestEnergy = population[0][2]
@@ -84,12 +90,30 @@ def Evolve(elementsList, boxSize, population, calc):
         iterations = iterations + 1
 
     print("Iterations performed: ", iterations)
-    print("The best energy found was: ", lastBestEnergy)
     print("Population size: ", len(population))
-    print("Final co-ordinates: ", bestCoordinates)
+    print('Population:', population)
 
     write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/optimised.png", population[0][0],
           rotation='10x,30y,0z')
+    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/optimised2.png", population[1][0],
+          rotation='10x,30y,0z')
+    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/optimised3.png", population[2][0],
+          rotation='10x,30y,0z')
+
+    for member in population:
+        molecule = member[0]
+        theseAtoms = []
+        for atom in molecule:
+            theseAtoms.append(atom)
+        bestMolecules.append(molecule)
+        returnPop.append(theseAtoms)
 
 
-StartEA(testH2)
+elementsList = ['H', 'H', 'O']
+one, two, three, four, five = StartEA(elementsList)
+print('bestMolecules:', one)
+print('population:', two)
+print('plot:', three)
+print('pes:', four)
+print('refs', five)
+
