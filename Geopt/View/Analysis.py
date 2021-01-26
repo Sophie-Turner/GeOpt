@@ -29,9 +29,9 @@ def StartAnalysis(elementsList):
         allAtomPlaces = np.array(allAtomPlaces)
         PositionPlot(allAtomPlaces, eMax, i)
 
-    colText = ['Best geometry found\n{:.4f} eV'.format(population[0][2]),
-               '2nd best found\n{:.4f} eV'.format(population[1][2]),
-               '3rd best found\n{:.4f} eV'.format(population[2][2])]
+    colText = ['Best geometry found {:.4f} eV\nClick for more info'.format(population[0][2]),
+               '2nd best found {:.4f} eV\nClick for more info'.format(population[1][2]),
+               '3rd best found {:.4f} eV\nClick for more info'.format(population[2][2])]
     rowText = ['', 'Structure', 'Potential energy surfaces found', 'All positions tested']
 
     gridFrame = Frame(window)

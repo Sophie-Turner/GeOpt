@@ -51,7 +51,7 @@ def SurfacePlot(pesData, refs, size, fileName):
     pax.view_init(110, -90)
     pax.set_xlabel('Distance between atoms / \u00c5', fontsize='x-small')
     pax.set_ylabel('Potential energy of molecule / eV', fontsize='x-small')
-    pax.set_zlabel('Angle of atoms / \u00b0', fontsize='x-small')
+    pax.set_zlabel('Angle / \u00b0', fontsize='x-small')
     axes = [pax.xaxis, pax.yaxis, pax.zaxis]
     for ax in axes:
         for tick in ax.get_major_ticks():
