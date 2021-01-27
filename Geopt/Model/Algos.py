@@ -18,7 +18,8 @@ def SetUpVasp():
     return calc
 
 
-def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, plot, pes, refs, calc):
+def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, calc):
+    plot, pes, refs = [], [], []
     if cross is True:
         inCoordinates = Crossover(population)
     if permute is True:
@@ -60,6 +61,7 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
                 pes.append((distance, childEnergy, angle, ref))
                 if ref not in refs:
                     refs.append(ref)
+    return plot, pes, refs
 
 
 def PrepareChild(elementsList, startCoordinates):
