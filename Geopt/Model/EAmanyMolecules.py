@@ -24,7 +24,7 @@ def StartEA(elementsList):
 
     # Start with a reasonably spaced estimate to use as an energy comparison.
     population = [[parentMolecule, firstCoordinates, parentEnergy]]
-    lastBestEnergy = population[0][2]
+    lastBestEnergy = parentEnergy
 
     # Start with some permutations.
     for i in range(len(elementsList)):
