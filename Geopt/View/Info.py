@@ -13,7 +13,7 @@ def ShowInfo(version, pes, refs, atoms, numTests, rank):
     SetUpWindow(window)
 
     # Title
-    Label(window, text='Result #{num} for elements {elements}    Potential energy = {energy} eV'.format(num=rank+1, elements=atoms, energy=version[2]),
+    Label(window, text='Result #{num} for elements {elements}    Potential energy = {energy} eV'.format(num=rank+1, elements=atoms, energy=version[1]),
           font=('Agency FB', 16), fg='white', bg='#222222').pack(pady=5)
 
     # Set up grid

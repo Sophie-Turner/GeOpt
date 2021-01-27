@@ -7,16 +7,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 colours = ['deeppink', 'yellow', 'dodgerblue', 'limegreen', 'darkorange', 'purple', 'red', 'blue']
-global bestVersions
-global surfData, surfRefs
+global bestVersions, surfData, surfRefs
 
 
 def DoTheAlgo(elementsList):
     plt.close('all')
-    bestMolecules, population, plot, pes, refs = Start(elementsList)
     global bestVersions
-    bestVersions = bestMolecules
-    return bestMolecules, population, plot, pes, refs
+    bestVersions, energies, plot, pes, refs = StartEA(elementsList)
+    return bestVersions, energies, plot, pes, refs
 
 
 def PositionPlot(allAtomPlaces, eMax, fileName):

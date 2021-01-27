@@ -22,7 +22,7 @@ def Start(elementsList):
     covRads = thisPopulation.covRads
 
     # These will become datasets for the potential energy plots etc.
-    population, bestMolecules, plot, pes, refs = [], [], [], [], []
+    population, bestMolecules, plot, pes, refs, energies = [], [], [], [], [], []
 
     if __name__ == 'Model.PerAtom':
         with futures.ProcessPoolExecutor() as executor:
@@ -40,8 +40,9 @@ def Start(elementsList):
             newMolecule = Atoms(eachBest[0], cell=boxSize)
             newMolecule.center()
             bestMolecules.append(newMolecule)
+            energies.append([eachBest[1], eachBest[2]])
 
-    return bestMolecules, population, plot, pes, refs
+    return bestMolecules, energies, plot, pes, refs
 
 
 def Evolve(elementsList, boxSize, covRads, calc):

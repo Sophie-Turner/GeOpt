@@ -8,7 +8,7 @@ def StartEA(elementsList):
     # calc = SetUpVasp()
     calc = EMT()
     thisPopulation = Population(elementsList)
-    bestMolecules, returnPop, plot, pes, refs = [], [], [], [], []
+    bestMolecules, energies, plot, pes, refs, finalists = [], [], [], [], [], []
     boxSize = thisPopulation.boxSize
     firstCoordinates = thisPopulation.initPositions
     atomObjectList = thisPopulation.initAtomsObject
@@ -29,32 +29,34 @@ def StartEA(elementsList):
     # Start with some permutations.
     for i in range(len(elementsList)):
         # Make some permutations.
-        _, _, _ = MakeNewMolecule(elementsList, firstCoordinates, lastBestEnergy, None, boxSize, population, False, False,
-                        True, calc)
-
+        MakeNewMolecule(elementsList, firstCoordinates, lastBestEnergy, None, boxSize, population,
+                                     False, False, True, None, None, calc)
     # Find the best permutation.
     population = RankByE(population, 1)
 
     if __name__ == 'Model.EAmanyMolecules':
         with futures.ProcessPoolExecutor() as executor:
-            results = [executor.submit(Evolve, elementsList, boxSize, population, calc) for _ in range(6)]
+            results = [executor.submit(Evolve, elementsList, boxSize, population, calc) for _ in range(4)]
             for f in futures.as_completed(results):
                 thisResult = f.result()
-                bestMolecules.append(thisResult[0])
-                returnPop.append(thisResult[1])
-                plot.append(thisResult[2])
-                pes.append(thisResult[3])
-                refs.append(thisResult[4])
-
+                finalists.append([thisResult[0], thisResult[1], thisResult[2]])
+                plot.append(thisResult[3])
+                pes.append(thisResult[4])
+                refs.append(thisResult[5])
+    finalists = RankByE(finalists, 3)
+    for eachMolecule in finalists:
+        bestMolecules.append(eachMolecule[0])
+        energies.append([eachMolecule[1], eachMolecule[2]])
     endTime = time()
     print('Time taken = {} seconds'.format(round(endTime-startTime)))
 
-    return bestMolecules, returnPop, plot, pes, refs
+    return bestMolecules, energies, plot, pes, refs
 
 
 def Evolve(elementsList, boxSize, population, calc):
-    # These will be private datasets to each thread.
-    returnPop = []
+    # These will be private to each thread.
+    plot, pes = [], []
+    worstEnergy = 0
     # Ranges of random atom movements.
     width = boxSize[0]
     changeSizes = [width/30, width/20, width/16, width/12, width/8, width/4]
@@ -69,12 +71,12 @@ def Evolve(elementsList, boxSize, population, calc):
     population.pop(0)
 
     # End if the best energy doesn't change much for several consecutive iterations.
-    while similarity < 5 and iterations < 100:
+    while similarity < 5 and iterations < 20:
         # New child molecules.
         for i in range(len(elementsList)):
             # Make some with random mutations.
-            _, _, _ = MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, changeSizes[1], boxSize, population, 2,
-                            False, False, calc)
+            refs, newEnergy = MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, changeSizes[1], boxSize,
+                                         population, 2, False, False, plot, pes, calc)
 
         # Selection.
         population = RankByE(population, 1)
@@ -83,8 +85,10 @@ def Evolve(elementsList, boxSize, population, calc):
         # Create some random molecules.
         for i in range(len(elementsList)):
             # Introduce some random strangers.
-            plot, pes, refs = MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, None, boxSize, population, 3, False,
-                            False, calc)
+            refs, newEnergy = MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, None, boxSize,
+                                                         population, 3, False, False, plot, pes, calc)
+            if newEnergy > worstEnergy:
+                worstEnergy = newEnergy
 
         # Selection.
         population = RankByE(population, 1)
@@ -100,9 +104,5 @@ def Evolve(elementsList, boxSize, population, calc):
 
     for member in population:
         bestMolecule = member[0]
-        theseAtoms = []
-        for atom in bestMolecule:
-            theseAtoms.append(atom)
-        returnPop.append(theseAtoms)
 
-    return bestMolecule, returnPop, plot, pes, refs
+    return bestMolecule, worstEnergy, newBestEnergy, plot, pes, refs

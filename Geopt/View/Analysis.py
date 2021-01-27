@@ -8,7 +8,7 @@ def StartAnalysis(elementsList):
     window = tk.Toplevel()
     SetUpWindow(window)
     window.geometry("+0+0")
-    bestMolecules, population, plot, pes, refs = DoTheAlgo(elementsList)
+    bestMolecules, energies, plot, pes, refs = DoTheAlgo(elementsList)
 
     imageTypes = ['structure', 'pes', 'positions']
     imageHolders = [[], [], []]
@@ -18,7 +18,7 @@ def StartAnalysis(elementsList):
         write(fileName, bestMolecules[i], rotation='10x,30y,0z')
 
         # The largest energy value is needed for scaling.
-        eMax = population[i][1]
+        eMax = energies[i][0]
 
         pesData = pes[i]
         pesData = np.array(pesData)
@@ -29,9 +29,9 @@ def StartAnalysis(elementsList):
         allAtomPlaces = np.array(allAtomPlaces)
         PositionPlot(allAtomPlaces, eMax, i)
 
-    colText = ['Best geometry found {:.4f} eV\nClick for more info'.format(population[0][2]),
-               '2nd best found {:.4f} eV\nClick for more info'.format(population[1][2]),
-               '3rd best found {:.4f} eV\nClick for more info'.format(population[2][2])]
+    colText = ['Best geometry found {:.4f} eV\nClick for more info'.format(energies[0][1]),
+               '2nd best found {:.4f} eV\nClick for more info'.format(energies[1][1]),
+               '3rd best found {:.4f} eV\nClick for more info'.format(energies[2][1])]
     rowText = ['', 'Structure', 'Potential energy surfaces found', 'All positions tested']
 
     gridFrame = Frame(window)
@@ -43,7 +43,7 @@ def StartAnalysis(elementsList):
             .grid(row=i, column=0, rowspan=1, columnspan=1, padx='5')
         for j in range(3):
             if i == 0:
-                Button(gridFrame, text=colText[j], command=(lambda j=j: ShowInfo(population[j], pes[j], refs[j],
+                Button(gridFrame, text=colText[j], command=(lambda j=j: ShowInfo(energies[j], pes[j], refs[j],
                                                                                  elementsList, len(allAtomPlaces), j)),
                        font=('Agency FB', 16), fg='#DDFFDD', bg='#555555').grid(row=i, column=j+1, rowspan=1, columnspan=1, padx='5')
             else:

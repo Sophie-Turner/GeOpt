@@ -18,8 +18,7 @@ def SetUpVasp():
     return calc
 
 
-def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, calc):
-    plot, pes, refs = [], [], []
+def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, plot, pes, calc):
     if cross is True:
         inCoordinates = Crossover(population)
     if permute is True:
@@ -41,27 +40,29 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     if childEnergy >= bestE * 100:
         MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, calc)
     population.append([childMolecule, childCoordinates, childEnergy])
-    numAtoms = len(childMolecule)
-    for each in range(numAtoms):
-        eachAtom = childMolecule[each]
-        coords = eachAtom.position
-        x, y, z = coords[0], coords[1], coords[2]
-        plot.append((childEnergy, x, y, z, eachAtom.symbol))
-        for other in range(numAtoms-1):
-            if each != other:
-                otherAtom = childMolecule[other]
-                distance = childMolecule.get_distance(each, other)
-                if numAtoms > 2 and each != other+1:
-                    nextAtom = childMolecule[other + 1]
-                    angle = childMolecule.get_angle(each, other, other+1)
-                    ref = (eachAtom.symbol + otherAtom.symbol + nextAtom.symbol)
-                else:
-                    angle = 0
-                    ref = (eachAtom.symbol + otherAtom.symbol)
-                pes.append((distance, childEnergy, angle, ref))
-                if ref not in refs:
-                    refs.append(ref)
-    return plot, pes, refs
+    if plot is not None:
+        refs = []
+        numAtoms = len(childMolecule)
+        for each in range(numAtoms):
+            eachAtom = childMolecule[each]
+            coords = eachAtom.position
+            x, y, z = coords[0], coords[1], coords[2]
+            plot.append((childEnergy, x, y, z, eachAtom.symbol))
+            for other in range(numAtoms-1):
+                if each != other:
+                    otherAtom = childMolecule[other]
+                    distance = childMolecule.get_distance(each, other)
+                    if numAtoms > 2 and each != other+1:
+                        nextAtom = childMolecule[other + 1]
+                        angle = childMolecule.get_angle(each, other, other+1)
+                        ref = (eachAtom.symbol + otherAtom.symbol + nextAtom.symbol)
+                    else:
+                        angle = 0
+                        ref = (eachAtom.symbol + otherAtom.symbol)
+                    pes.append((distance, childEnergy, angle, ref))
+                    if ref not in refs:
+                        refs.append(ref)
+        return refs, childEnergy
 
 
 def PrepareChild(elementsList, startCoordinates):
