@@ -1,6 +1,6 @@
 # functions associated with the analysis view
 from Controller.Shared import *
-# from Model.EAmanyMolecules import StartEA
+from Model.EAmanyMolecules import StartEA
 from Model.PerAtom import Start
 import tkinter
 import matplotlib.pyplot as plt

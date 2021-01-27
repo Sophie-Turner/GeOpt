@@ -1,15 +1,12 @@
 from Model.Algos import *
 from time import time
 
-global bestMolecules
-
 
 def StartEA(elementsList):
     startTime = time()
     # Set up and initialise our template molecule to start with.
     # calc = SetUpVasp()
     calc = EMT()
-    global bestMolecules
     thisPopulation = Population(elementsList)
     bestMolecules, returnPop, plot, pes, refs = [], [], [], [], []
     boxSize = thisPopulation.boxSize
