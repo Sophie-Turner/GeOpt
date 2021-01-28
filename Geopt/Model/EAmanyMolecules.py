@@ -30,6 +30,7 @@ def StartEA(elementsList):
     # Find the best permutation.
     population = RankByE(population, 1)
 
+    # Use multiprocessing to quickly compare results.
     if __name__ == 'Model.EAmanyMolecules':
         with futures.ProcessPoolExecutor() as executor:
             results = [executor.submit(Evolve, elementsList, boxSize, population, calc) for _ in range(4)]
