@@ -2,9 +2,12 @@ from ase.io import write
 from Controller.Analysis import *
 from View.Shared import SetUpWindow
 from View.Info import ShowInfo
+from time import time
 
 
 def StartAnalysis(elementsList):
+    startTime = time()
+
     window = tk.Toplevel()
     SetUpWindow(window)
     window.geometry("+0+0")
@@ -60,5 +63,8 @@ def StartAnalysis(elementsList):
     legend.grid(row=2, column=4, rowspan=1, columnspan=1, padx='5')
     gridFrame.pack()
     SurfaceLegend(legend, refData)
+
+    endTime = time()
+    print('Time taken = {} seconds'.format(round(endTime - startTime)))
 
     window.mainloop()

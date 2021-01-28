@@ -7,6 +7,14 @@ from numpy import random
 from concurrent import futures
 
 
+def SetUp(elementsList):
+    # calc = SetUpVasp()
+    calc = EMT()
+    thisPopulation = Population(elementsList)
+    boxSize = thisPopulation.boxSize
+    return calc, thisPopulation, boxSize
+
+
 def SetUpVasp():
     calc = Vasp(
         xc='pbe',  # exchange-correlation functional
@@ -18,7 +26,17 @@ def SetUpVasp():
     return calc
 
 
-def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, plot, pes, calc):
+def ProcessResults(results, population, plot, pes, refs):
+    for f in futures.as_completed(results):
+        thisResult = f.result()
+        population.append([thisResult[0], thisResult[1], thisResult[2]])
+        plot.append(thisResult[3])
+        pes.append(thisResult[4])
+        refs.append(thisResult[5])
+
+
+def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, plot,
+                    pes, calc):
     if cross is True:
         inCoordinates = Crossover(population)
     if permute is True:
@@ -38,7 +56,8 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     childEnergy = GetEnergy(childMolecule, calc)
     # Don't keep any extremely terrible structures.
     if childEnergy >= bestE * 100:
-        MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, calc)
+        MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute,
+                        plot, pes, calc)
     population.append([childMolecule, childCoordinates, childEnergy])
     if plot is not None:
         refs = []

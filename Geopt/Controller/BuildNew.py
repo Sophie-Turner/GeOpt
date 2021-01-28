@@ -1,7 +1,6 @@
 # Functions associated with the BuildNew View
 from tkinter import simpledialog, messagebox
 from Model.InteractWithData import GetXML
-import time
 from math import exp
 from Controller.Shared import *
 from View.Analysis import StartAnalysis
@@ -53,9 +52,8 @@ def Build(box):
         howMany = 0
 
         for i in range(len(boxText)):
-            numAtoms = len(elementsList)
             # Don't let the user make huge molecules!
-            if numAtoms > 20:
+            if len(elementsList) > 20:
                 messagebox.showerror(title='Large molecule',
                                      message='This molecule is too large to build! Cancelling...')
                 Clear(box)
@@ -89,8 +87,12 @@ def Build(box):
                     thisAtom = thisAtom + character
         elementsList.append(thisAtom)
         del elementsList[0]
-
-        sure = messagebox.askquestion(title='Build molecule', message='Estimated time = {} seconds. Proceed?'.format(round(0.6798 * exp(0.701 * numAtoms + 0.5))))
+        numAtoms = len(elementsList)
+        # How long the PerAtom algorithm takes.
+        estTimePA = round(0.6798 * exp(0.701 * numAtoms))
+        # How long the ManyMolecule EA takes.
+        estTimeMM = round(0.5967 * (numAtoms * numAtoms) - 1.3253 * numAtoms + 3.0362)
+        sure = messagebox.askquestion(title='Build molecule', message='Estimated time = {} seconds. Proceed?'.format(estTimeMM))
         if sure == 'yes':
             #try:
             StartAnalysis(elementsList)

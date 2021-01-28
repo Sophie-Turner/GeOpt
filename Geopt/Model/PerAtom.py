@@ -3,8 +3,9 @@ from Model.Algos import *
 
 def Start(elementsList):
     # Set up initial values & placeholders
-    # calc = SetUpVasp()
-    calc = EMT()
+    calc, thisPopulation, boxSize = SetUp(elementsList)
+    # Get the final cell movement size
+    covRads = thisPopulation.covRads
 
     # Move Hydrogens to the end of the list, as they can mess up the calculations at the start.
     moves = 0
@@ -16,25 +17,13 @@ def Start(elementsList):
             break
         moves += 1
 
-    # Get the final box size
-    thisPopulation = Population(elementsList)
-    boxSize = thisPopulation.boxSize
-    covRads = thisPopulation.covRads
-
     # These will become datasets for the potential energy plots etc.
     population, bestMolecules, plot, pes, refs, energies = [], [], [], [], [], []
 
     if __name__ == 'Model.PerAtom':
         with futures.ProcessPoolExecutor() as executor:
             results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc) for _ in range(6)]
-            for f in futures.as_completed(results):
-                thisResult = f.result()
-                population.append([thisResult[0], thisResult[1], thisResult[2]])
-                # Append separately from each process to prevent them being added in the wrong order by multiple process
-                # attempting to write at the same time. Long-winded but done to avoid corruption and unnecessary locks.
-                plot.append(thisResult[3])
-                pes.append(thisResult[4])
-                refs.append(thisResult[5])
+            ProcessResults(results, population, plot, pes, refs)
         population = RankByE(population, 3)
         for eachBest in population:
             newMolecule = Atoms(eachBest[0], cell=boxSize)

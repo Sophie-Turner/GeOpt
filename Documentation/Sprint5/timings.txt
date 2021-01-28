@@ -1,5 +1,4 @@
 PerAtom
-
 Num atoms     Time taken / s
 1              2
 2              2
@@ -12,7 +11,6 @@ Num atoms     Time taken / s
 if num atoms > 5 don't show graphs?
 
 ManyMolecule
-
 Num atoms     300 it 	    	100
 1		n/a		
 2		0
@@ -20,9 +18,45 @@ Num atoms     300 it 	    	100
 4		37		12
 5		57		19
 6		86		29
-7
-8
-9
-10
-11
-12
+
+ManyMolecule multithreaded
+Num atoms	real time / s
+1		2, 2, 2		
+2		3, 2, 2
+3		5, 3, 3
+4		8, 4, 7
+5		5, 9, 9
+6		8, 17, 17
+7		23, 17, 14
+8		18, 26, 32
+9		29, 30, 25
+10		26, 36, 30
+11		34, 45, 59
+12		73, 74, 58
+
+Fix: estimated time counting multiples of same element as 1
+
+Error: FIXED
+File "C:\Python38\lib\concurrent\futures\_base.py", line 388, in __get_result
+    raise self._exception
+TypeError: MakeNewMolecule() missing 2 required positional arguments: 'pes' and 'calc'
+
+NO2 
+CHONH
+C2H4
+COH4
+CHONCH
+H4O2
+HHHHOO
+HHHHHH
+C2H5
+C2H4O
+
+
+Error:
+  File "C:\Python38\lib\tkinter\__init__.py", line 4014, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+
+CH4
+C2H4
