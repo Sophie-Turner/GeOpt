@@ -1,14 +1,15 @@
 from ase import Atoms, Atom
 from ase.io import write
-from ase.calculators.emt import EMT
+#from ase.calculators.emt import EMT
 from ase.calculators.vasp import Vasp
+from Model.EmtCalculator import EMT
 from Model.Populations import Population
 from numpy import random
 from concurrent import futures
 
 
 def SetUp(elementsList):
-    # calc = SetUpVasp()
+    #calc = SetUpVasp()
     calc = EMT()
     thisPopulation = Population(elementsList)
     boxSize = thisPopulation.boxSize
