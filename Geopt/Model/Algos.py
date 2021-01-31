@@ -1,10 +1,19 @@
 from ase import Atoms, Atom
 from ase.io import write
-from ase.calculators.emt import EMT
+#from ase.calculators.emt import EMT
 from ase.calculators.vasp import Vasp
+from Model.EmtCalculator import EMT
 from Model.Populations import Population
 from numpy import random
 from concurrent import futures
+
+
+def SetUp(elementsList):
+    #calc = SetUpVasp()
+    calc = EMT()
+    thisPopulation = Population(elementsList)
+    boxSize = thisPopulation.boxSize
+    return calc, thisPopulation, boxSize
 
 
 def SetUpVasp():
@@ -18,7 +27,17 @@ def SetUpVasp():
     return calc
 
 
-def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, calc):
+def ProcessResults(results, population, plot, pes, refs):
+    for f in futures.as_completed(results):
+        thisResult = f.result()
+        population.append([thisResult[0], thisResult[1], thisResult[2]])
+        plot.append(thisResult[3])
+        pes.append(thisResult[4])
+        refs.append(thisResult[5])
+
+
+def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, plot,
+                    pes, calc):
     if cross is True:
         inCoordinates = Crossover(population)
     if permute is True:
@@ -38,8 +57,32 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     childEnergy = GetEnergy(childMolecule, calc)
     # Don't keep any extremely terrible structures.
     if childEnergy >= bestE * 100:
-        MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, calc)
+        MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute,
+                        plot, pes, calc)
     population.append([childMolecule, childCoordinates, childEnergy])
+    if plot is not None:
+        refs = []
+        numAtoms = len(childMolecule)
+        for each in range(numAtoms):
+            eachAtom = childMolecule[each]
+            coords = eachAtom.position
+            x, y, z = coords[0], coords[1], coords[2]
+            plot.append((childEnergy, x, y, z, eachAtom.symbol))
+            for other in range(numAtoms-1):
+                if each != other:
+                    otherAtom = childMolecule[other]
+                    distance = childMolecule.get_distance(each, other)
+                    if numAtoms > 2 and each != other+1:
+                        nextAtom = childMolecule[other + 1]
+                        angle = childMolecule.get_angle(each, other, other+1)
+                        ref = (eachAtom.symbol + otherAtom.symbol + nextAtom.symbol)
+                    else:
+                        angle = 0
+                        ref = (eachAtom.symbol + otherAtom.symbol)
+                    pes.append((distance, childEnergy, angle, ref))
+                    if ref not in refs:
+                        refs.append(ref)
+        return refs, childEnergy
 
 
 def PrepareChild(elementsList, startCoordinates):
@@ -138,7 +181,7 @@ def RankByE(population, numToKeep):
     while len(rankedPopulation) < numToKeep:
         bestEnergy = 1000
         for eachMember in population:
-            # Access the last item of population because different EAs have different types
+            # Access the last item of population because different algorithms have different types
             # of population and put low energy at the end.
             if eachMember[-1] < bestEnergy:
                 bestEnergy = eachMember[-1]

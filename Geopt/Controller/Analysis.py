@@ -1,22 +1,20 @@
 # functions associated with the analysis view
 from Controller.Shared import *
-# from Model.EAmanyMolecules import StartEA
-from Model.EAperAtom import StartEA
+from Model.EAmanyMolecules import StartEA
+from Model.PerAtom import Start
 import tkinter
 import matplotlib.pyplot as plt
 import numpy as np
 
 colours = ['deeppink', 'yellow', 'dodgerblue', 'limegreen', 'darkorange', 'purple', 'red', 'blue']
-global bestVersions
-global surfData, surfRefs
+global bestVersions, surfData, surfRefs
 
 
-def DoTheEA(elementsList):
+def DoTheAlgo(elementsList):
     plt.close('all')
-    bestMolecules, population, plot, pes, refs = StartEA(elementsList)
     global bestVersions
-    bestVersions = bestMolecules
-    return bestMolecules, population, plot, pes, refs
+    bestVersions, energies, plot, pes, refs = Start(elementsList)
+    return bestVersions, energies, plot, pes, refs
 
 
 def PositionPlot(allAtomPlaces, eMax, fileName):
@@ -42,13 +40,16 @@ def SurfacePlot(pesData, refs, size, fileName):
     surfFig = plt.figure(figsize=(size, size))
     pax = surfFig.gca(projection='3d')
     for i in range(len(refs)):
-        distances, energies, angles, group = GetGroup(i)
-        pax.plot_trisurf(distances, energies, angles, color=colours[i])
+        if i < 8:
+            distances, energies, angles, group = GetGroup(i)
+            pax.plot_trisurf(distances, energies, angles, color=colours[i])
+        else:
+            break
 
     pax.view_init(110, -90)
     pax.set_xlabel('Distance between atoms / \u00c5', fontsize='x-small')
     pax.set_ylabel('Potential energy of molecule / eV', fontsize='x-small')
-    pax.set_zlabel('Angle of atoms / \u00b0', fontsize='x-small')
+    pax.set_zlabel('Angle / \u00b0', fontsize='x-small')
     axes = [pax.xaxis, pax.yaxis, pax.zaxis]
     for ax in axes:
         for tick in ax.get_major_ticks():
@@ -61,27 +62,31 @@ def SurfacePlot(pesData, refs, size, fileName):
 def SurfaceInfo(infoBox):
     infoBox.insert(END, "Interaction energy minima:\n\n")
     for i in range(len(surfRefs)):
-        distances, energies, angles, group = GetGroup(i)
-        minE = min(energies)
-        minI = np.where(energies == minE)
-        atom1, atom2 = group[0], group[1]
-        distance = str(distances[minI])
-        angle = str(angles[minI])
-        txt = "Distance between {}{} {} \u00c5\nAngle over {} {}\u00b0\nPotential energy {} eV\n\n".format\
-            (atom1, atom2, distance, group, angle, minE)
-        txt = txt.replace("]", "")
-        txt = txt.replace("[", "")
-        infoBox.insert(END, txt)
+        if i < 8:
+            distances, energies, angles, group = GetGroup(i)
+            minE = min(energies)
+            minI = np.where(energies == minE)
+            atom1, atom2 = group[0], group[1]
+            distance = str(distances[minI])
+            angle = str(angles[minI])
+            txt = "Distance between {}{} {} \u00c5\nAngle over {} {}\u00b0\nPotential energy {} eV\n\n".format\
+                (atom1, atom2, distance, group, angle, minE)
+            txt = txt.replace("]", "")
+            txt = txt.replace("[", "")
+            infoBox.insert(END, txt)
+        else:
+            break
     infoBox.configure(state="disabled")
 
 
 def SurfaceLegend(legendBox, refData):
     legendBox.insert(END, 'Legend')
     for i in range(len(refData)):
-        string = (refData[i])
-        legendBox.tag_configure(string, foreground=colours[i], font=('Agency FB', 14, 'bold'))
-        legendBox.insert(END, string + '\n', string)
-        if i == 7:
+        if i < 8:
+            string = (refData[i])
+            legendBox.tag_configure(string, foreground=colours[i], font=('Agency FB', 14, 'bold'))
+            legendBox.insert(END, string + '\n', string)
+        else:
             break
     legendBox.configure(state="disabled")
 
@@ -126,8 +131,6 @@ def GetBestInfo(rank, txtBox):
 
 
 def GetGroup(n):
-    if n > 7:
-        return
     group = surfRefs[n]
     grouped = np.where(surfData[:, 3] == group)
     distances = (surfData[grouped, 0].astype('float64'))[0]
