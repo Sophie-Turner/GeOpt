@@ -3,7 +3,7 @@ from Controller.Analysis import *
 
 
 def ShowInfo(version, pes, refs, atoms, numTests, rank):
-    if numTests == 300:
+    if numTests >= 300:
         numTests = '> 300'
     pesData = np.array(pes)
     imageHolders = []
