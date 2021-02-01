@@ -1,3 +1,4 @@
+# Modified by Sophie Turner on 01/02/2021.
 # This is not my own code. I did not write it.
 # I have added my own code to this class, which is on lines 45 to 101.
 # It is under the GNU Lesser General Public License.
