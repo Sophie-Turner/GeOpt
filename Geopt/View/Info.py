@@ -3,6 +3,8 @@ from Controller.Analysis import *
 
 
 def ShowInfo(version, pes, refs, atoms, numTests, rank):
+    if numTests == 300:
+        numTests = '> 300'
     pesData = np.array(pes)
     imageHolders = []
 
@@ -23,7 +25,7 @@ def ShowInfo(version, pes, refs, atoms, numTests, rank):
 
     Label(topGrid, text='Geometric structure', font=('Agency FB', 16), fg='#EEFFEE', bg='#222222') \
         .grid(row=0, column=0, columnspan=2, padx='5')
-    Label(topGrid, text='All positions tested', font=('Agency FB', 16), fg='#EEFFEE', bg='#222222') \
+    Label(topGrid, text='First 300 positions tested', font=('Agency FB', 16), fg='#EEFFEE', bg='#222222') \
         .grid(row=0, column=2, columnspan=2, padx='5')
 
     imageHolders.append(PhotoImage(file="Images/structure{num}.png".format(num=rank)))
@@ -42,7 +44,7 @@ def ShowInfo(version, pes, refs, atoms, numTests, rank):
     canvas.grid(row=1, column=2, padx='5')
     canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
 
-    Label(topGrid, text='Configurations tested = {}'.format(numTests), fg='#EEFFEE', bg='#222222') \
+    Label(topGrid, text='Configurations tested: {}'.format(numTests), fg='#EEFFEE', bg='#222222') \
         .grid(row=1, column=3, columnspan=1, padx='5')
 
     topGrid.pack()

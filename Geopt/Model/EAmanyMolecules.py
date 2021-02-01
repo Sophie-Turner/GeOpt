@@ -3,6 +3,7 @@ from time import time
 
 
 def StartEA(elementsList):
+    print('EA about to start')
     # Set up and initialise our template molecule to start with.
     calc, thisPopulation, boxSize = SetUp(elementsList)
     bestMolecules, energies, plot, pes, refs, finalists = [], [], [], [], [], []
@@ -40,11 +41,12 @@ def StartEA(elementsList):
         bestMolecules.append(eachMolecule[0])
         energies.append([eachMolecule[1], eachMolecule[2]])
 
-
+    print('EA has finished')
     return bestMolecules, energies, plot, pes, refs
 
 
 def Evolve(elementsList, boxSize, population, calc):
+    print('Evolving the populations')
     # These will be private to each thread.
     plot, pes = [], []
     worstEnergy = 0
@@ -63,12 +65,12 @@ def Evolve(elementsList, boxSize, population, calc):
 
     # End if the best energy doesn't change much for several consecutive iterations.
     while similarity < 5 and iterations < 20:
+
         # New child molecules.
         for i in range(len(elementsList)):
             # Make some with random mutations.
-            refs, newEnergy = MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, changeSizes[1], boxSize,
-                                              population, 2, False, False, plot, pes, calc)
-
+            _, _ = MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, changeSizes[1], boxSize,
+                                   population, 2, False, False, plot, pes, calc)
         # Selection.
         population = RankByE(population, 1)
         bestCoordinates = population[0][1]
@@ -76,10 +78,12 @@ def Evolve(elementsList, boxSize, population, calc):
         # Create some random molecules.
         for i in range(len(elementsList)):
             # Introduce some random strangers.
-            refs, newEnergy = MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, None, boxSize,
-                                              population, 3, False, False, plot, pes, calc)
-            if newEnergy > worstEnergy:
-                worstEnergy = newEnergy
+            outRefs, outNewEnergy = MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, None, boxSize,
+                                                    population, 3, False, False, plot, pes, calc)
+            if outRefs is not None:
+                refs, newEnergy = outRefs, outNewEnergy
+                if newEnergy > worstEnergy:
+                    worstEnergy = newEnergy
 
         # Selection.
         population = RankByE(population, 1)
@@ -95,5 +99,7 @@ def Evolve(elementsList, boxSize, population, calc):
 
     for member in population:
         bestMolecule = member[0]
+
+    print(iterations, 'iterations')
 
     return bestMolecule, worstEnergy, newBestEnergy, plot, pes, refs

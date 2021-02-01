@@ -12,6 +12,8 @@ def StartAnalysis(elementsList):
     SetUpWindow(window)
     window.geometry("+0+0")
     bestMolecules, energies, plot, pes, refs = DoTheAlgo(elementsList)
+    print('length of plot[0] =', len(plot[0]))
+    print('length of pes[0] =', len(pes[0]))
 
     imageTypes = ['structure', 'pes', 'positions']
     imageHolders = [[], [], []]
@@ -35,7 +37,7 @@ def StartAnalysis(elementsList):
     colText = ['Best geometry found {:.4f} eV\nClick for more info'.format(energies[0][1]),
                '2nd best found {:.4f} eV\nClick for more info'.format(energies[1][1]),
                '3rd best found {:.4f} eV\nClick for more info'.format(energies[2][1])]
-    rowText = ['', 'Structure', 'Potential energy surfaces found', 'All positions tested']
+    rowText = ['', 'Structure', 'Potential energy surfaces found', 'First 300 positions tested']
 
     gridFrame = Frame(window)
     SetColours(gridFrame)

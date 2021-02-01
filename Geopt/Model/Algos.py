@@ -9,6 +9,7 @@ from concurrent import futures
 
 
 def SetUp(elementsList):
+    print('setting up calculator and cell')
     #calc = SetUpVasp()
     calc = EMT()
     thisPopulation = Population(elementsList)
@@ -34,6 +35,7 @@ def ProcessResults(results, population, plot, pes, refs):
         plot.append(thisResult[3])
         pes.append(thisResult[4])
         refs.append(thisResult[5])
+    print('processing results from multiprocessing')
 
 
 def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, plot,
@@ -57,32 +59,36 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     childEnergy = GetEnergy(childMolecule, calc)
     # Don't keep any extremely terrible structures.
     if childEnergy >= bestE * 100:
+        print('Energy too high. Recursing')
         MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute,
                         plot, pes, calc)
     population.append([childMolecule, childCoordinates, childEnergy])
     if plot is not None:
-        refs = []
-        numAtoms = len(childMolecule)
-        for each in range(numAtoms):
-            eachAtom = childMolecule[each]
-            coords = eachAtom.position
-            x, y, z = coords[0], coords[1], coords[2]
-            plot.append((childEnergy, x, y, z, eachAtom.symbol))
-            for other in range(numAtoms-1):
-                if each != other:
-                    otherAtom = childMolecule[other]
-                    distance = childMolecule.get_distance(each, other)
-                    if numAtoms > 2 and each != other+1:
-                        nextAtom = childMolecule[other + 1]
-                        angle = childMolecule.get_angle(each, other, other+1)
-                        ref = (eachAtom.symbol + otherAtom.symbol + nextAtom.symbol)
-                    else:
-                        angle = 0
-                        ref = (eachAtom.symbol + otherAtom.symbol)
-                    pes.append((distance, childEnergy, angle, ref))
-                    if ref not in refs:
-                        refs.append(ref)
-        return refs, childEnergy
+        if len(plot) < 300:
+            refs = []
+            numAtoms = len(childMolecule)
+            for each in range(numAtoms):
+                eachAtom = childMolecule[each]
+                coords = eachAtom.position
+                x, y, z = coords[0], coords[1], coords[2]
+                plot.append((childEnergy, x, y, z, eachAtom.symbol))
+                for other in range(numAtoms-1):
+                    if each != other:
+                        otherAtom = childMolecule[other]
+                        distance = childMolecule.get_distance(each, other)
+                        if numAtoms > 2 and each != other+1:
+                            nextAtom = childMolecule[other + 1]
+                            angle = childMolecule.get_angle(each, other, other+1)
+                            ref = (eachAtom.symbol + otherAtom.symbol + nextAtom.symbol)
+                        else:
+                            angle = 0
+                            ref = (eachAtom.symbol + otherAtom.symbol)
+                        pes.append((distance, childEnergy, angle, ref))
+                        if ref not in refs:
+                            refs.append(ref)
+            return refs, childEnergy
+        else:
+            return None, childEnergy
 
 
 def PrepareChild(elementsList, startCoordinates):
