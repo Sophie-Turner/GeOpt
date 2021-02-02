@@ -37,7 +37,7 @@ def StartAnalysis(elementsList):
     colText = ['Best geometry found {:.4f} eV\nClick for more info'.format(energies[0][1]),
                '2nd best found {:.4f} eV\nClick for more info'.format(energies[1][1]),
                '3rd best found {:.4f} eV\nClick for more info'.format(energies[2][1])]
-    rowText = ['', 'Structure', 'Potential energy surfaces found', 'First 300 positions tested']
+    rowText = ['', 'Structure', 'Potential energy surfaces found', 'Positions tested']
 
     gridFrame = Frame(window)
     SetColours(gridFrame)

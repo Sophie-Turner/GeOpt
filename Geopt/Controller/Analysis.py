@@ -13,7 +13,7 @@ global bestVersions, surfData, surfRefs
 def DoTheAlgo(elementsList):
     plt.close('all')
     global bestVersions
-    bestVersions, energies, plot, pes, refs = StartEA(elementsList)
+    bestVersions, energies, plot, pes, refs = Start(elementsList)
     return bestVersions, energies, plot, pes, refs
 
 

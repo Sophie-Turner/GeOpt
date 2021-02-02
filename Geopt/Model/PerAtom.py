@@ -97,23 +97,24 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
                     # Now we need to maintain a dataset of all possible positions and their associated energies to
                     # show the energy plot but we only want to do this when all atoms are in the molecule.
                     if plot is not None:
-                        # Find distances and angles for PES plot.
-                        if numSoFar > 1 and eachAtomFixed != eachAtomToMove:
-                            distance = newMolecule.get_distance(eachAtomToMove, eachAtomFixed)
-                            if move != buildUp[-1]:
-                                otherAtom = eachAtomToMove + 1
-                                if otherAtom != eachAtomFixed:
-                                    angle = newMolecule.get_angle(eachAtomToMove, eachAtomFixed, otherAtom)
-                                    otherSymbol = buildUp[otherAtom].symbol
-                                else:
-                                    angle = 0
-                                    otherSymbol = ''
-                                reference = move.symbol + fixed.symbol + otherSymbol
-                                pes.append((distance, currentEnergy, angle, reference))
-                                if reference not in refs:
-                                    refs.append(reference)
-                        # Separate the arrays for fewer iterations and less indexing later on.
-                        plot.append((currentEnergy, x, y, z, move.symbol))
+                        if len(plot) < 300:
+                            # Find distances and angles for PES plot.
+                            if numSoFar > 1 and eachAtomFixed != eachAtomToMove:
+                                distance = newMolecule.get_distance(eachAtomToMove, eachAtomFixed)
+                                if move != buildUp[-1]:
+                                    otherAtom = eachAtomToMove + 1
+                                    if otherAtom != eachAtomFixed:
+                                        angle = newMolecule.get_angle(eachAtomToMove, eachAtomFixed, otherAtom)
+                                        otherSymbol = buildUp[otherAtom].symbol
+                                    else:
+                                        angle = 0
+                                        otherSymbol = ''
+                                    reference = move.symbol + fixed.symbol + otherSymbol
+                                    pes.append((distance, currentEnergy, angle, reference))
+                                    if reference not in refs:
+                                        refs.append(reference)
+                            # Separate the arrays for fewer iterations and less indexing later on.
+                            plot.append((currentEnergy, x, y, z, move.symbol))
                     # Clean up to avoid leaving molecules lying around all over the place.
                     del newMolecule
                     if currentEnergy < bestEnergy:
