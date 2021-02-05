@@ -1,6 +1,5 @@
 from ase import Atoms, Atom
 from ase.io import write
-#from ase.calculators.emt import EMT
 from ase.calculators.vasp import Vasp
 from Model.EmtCalculator import EMT
 from Model.Populations import Population
