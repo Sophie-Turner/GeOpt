@@ -38,7 +38,7 @@ def ProcessResults(results, population, plot, pes, refs):
 
 
 def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, plot,
-                    pes, calc):
+                    pes, calc, pbc):
     if cross is True:
         inCoordinates = Crossover(population)
     if permute is True:
@@ -55,7 +55,7 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     elif mutate == 5:
         MoveHydrogen(atomsObject, boxSize)
     childMolecule = GenerateChild(atomsObject, boxSize)
-    childEnergy = GetEnergy(childMolecule, calc)
+    childEnergy = GetEnergy(childMolecule, calc, pbc)
     # Don't keep any extremely terrible structures.
     if childEnergy >= bestE * 100:
         print('Energy too high. Recursing')
@@ -106,9 +106,9 @@ def GenerateChild(childAtomsObject, boxSize):
     return child
 
 
-def GetEnergy(molecule, calc):
+def GetEnergy(molecule, calc, pbc):
     # Set up the ase force calculator for finding energies.
-    molecule.set_pbc(True)
+    molecule.set_pbc(pbc)
     molecule.calc = calc
     energy = molecule.get_potential_energy()
     return energy

@@ -1,7 +1,6 @@
 from Model.Algos import *
 
-
-def Start(elementsList):
+def Start(elementsList, pbc):
     # Set up initial values & placeholders
     calc, thisPopulation, boxSize = SetUp(elementsList)
     # Get the final cell movement size
@@ -22,7 +21,7 @@ def Start(elementsList):
 
     if __name__ == 'Model.PerAtom':
         with futures.ProcessPoolExecutor() as executor:
-            results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc) for _ in range(6)]
+            results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc, pbc) for _ in range(6)]
             ProcessResults(results, population, plot, pes, refs)
         population = RankByE(population, 3)
         for eachBest in population:
@@ -34,7 +33,7 @@ def Start(elementsList):
     return bestMolecules, energies, plot, pes, refs
 
 
-def Evolve(elementsList, boxSize, covRads, calc):
+def Evolve(elementsList, boxSize, covRads, calc, pbc):
     plot, pes, refs, buildUp = [], [], [], []
     buildUpBestStructure = buildUp
     worstEnergy = 0
@@ -55,7 +54,7 @@ def Evolve(elementsList, boxSize, covRads, calc):
         buildUpBestEnergy, buildUpBestStructure, worstEnergy = TestAllPlaces(buildUp, buildUpBestEnergy,
                                                                              buildUpBestStructure, onlyH,
                                                                              covRads, boxSize, calc, None, None, None,
-                                                                             worstEnergy)
+                                                                             worstEnergy, pbc)
 
     similarity = 0
     iterations = 1
@@ -64,7 +63,7 @@ def Evolve(elementsList, boxSize, covRads, calc):
         # Move each atom around every atom.
         newBestEnergy, newBestStructure, worstEnergy = TestAllPlaces(buildUp, buildUpBestEnergy, buildUpBestStructure,
                                                                      onlyH, covRads, boxSize, calc, plot, pes, refs,
-                                                                     worstEnergy)
+                                                                     worstEnergy, pbc)
         if abs(newBestEnergy - buildUpBestEnergy) < 0.5:
             similarity += 1
         else:
@@ -77,7 +76,7 @@ def Evolve(elementsList, boxSize, covRads, calc):
     return buildUp, worstEnergy, buildUpBestEnergy, plot, pes, refs
 
 
-def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, plot, pes, refs, worstEnergy):
+def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, plot, pes, refs, worstEnergy, pbc):
     # Move each atom around every atom.
     numSoFar = len(buildUp)
     for eachAtomToMove in range(numSoFar):
@@ -92,7 +91,7 @@ def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, c
                     x, y, z = MoveOneAtomTight(fixed, move, moveRange)
                     newMolecule = Atoms(buildUp, cell=boxSize)
                     newMolecule.center()
-                    currentEnergy = GetEnergy(newMolecule, calc)
+                    currentEnergy = GetEnergy(newMolecule, calc, pbc)
 
                     # Now we need to maintain a dataset of all possible positions and their associated energies to
                     # show the energy plot but we only want to do this when all atoms are in the molecule.

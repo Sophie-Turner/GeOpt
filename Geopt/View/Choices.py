@@ -13,9 +13,6 @@ def ChooseFeatures(elementsList, boxText):
     window = tk.Toplevel()
     window.attributes('-topmost', 'true')
     SetUpWindow(window)
-    # Algorithms for the user to choose from.
-    algos = [('Many-molecule evolution', 0),
-             ('Per-atom exhaustive test', 1)]
     # Show the user their chosen formula.
     lblHelp = Label(window, text=boxText, font=('Agency FB', 18), fg='white', bg='#222222')
     lblHelp.pack(pady=10)
@@ -35,27 +32,42 @@ def ChooseFeatures(elementsList, boxText):
                              'total potential energy. The amount of processing required\n'
                              'is proportional to the number of atoms factorial and it\n'
                              'is recommended for molecules with two or three atoms.')\
-        .grid(row=4, column=0, rowspan=3)
+        .grid(row=3, column=0, rowspan=3)
+    Label(optionsFrame, text='Periodic boundary conditions are used to approximate\n'
+                             'a larger system from repeating the unit cell.') \
+        .grid(row=6, column=0, rowspan=3)
 
 
     # The place where options will be chosen.
     Label(optionsFrame, text='Optimisation algorithm', font=('Agency FB', 14)).grid(row=0, column=1)
     # Set up radio buttons.
+    # Algorithms for the user to choose from.
+    algos = [('Many-molecule evolution', 0),
+             ('Per-atom exhaustive test', 1)]
     algo = tk.IntVar()
     # Default MMEA algo.
     algo.set(0)
     for name, value in algos:
         tk.Radiobutton(optionsFrame, text=name, variable=algo, value=value).grid(row=value+1, column=1)
+    # Periodic boundary conditions.
+    Label(optionsFrame, text='Periodic boundary conditions', font=('Agency FB', 14)).grid(row=3, column=1)
+    pbcs = [('Off', False), ('On', True)]
+    pbc = tk.BooleanVar()
+    pbc.set(False)
+    for name, value in pbcs:
+        tk.Radiobutton(optionsFrame, text=name, variable=pbc, value=value).grid(row=value+4, column=1)
 
-    btnBuild = Button(optionsFrame, text='Build molecule', command=(lambda: ProceedToAlgo(elementsList, algo.get())),
+
+    btnBuild = Button(optionsFrame, text='Build molecule', command=(lambda: ProceedToAlgo(elementsList, algo.get(),
+                                                                                          pbc.get())),
                       font=('Agency FB', 14))
-    btnBuild.grid(row=2, column=2)
+    btnBuild.grid(row=5, column=2)
     #SetColours(optionsFrame)
     optionsFrame.pack()
     window.mainloop()
 
 
-def ProceedToAlgo(elementsList, algo):
+def ProceedToAlgo(elementsList, algo, pbc):
     numAtoms = len(elementsList)
     if algo == 0:
         # How long the ManyMolecule EA takes.
@@ -66,7 +78,7 @@ def ProceedToAlgo(elementsList, algo):
     sure = messagebox.askquestion(title='Build molecule',
                                   message='Estimated time = {} seconds. Proceed?'.format(estTime))
     if sure == 'yes':
-        StartAnalysis(elementsList, algo)
+        StartAnalysis(elementsList, algo, pbc)
 
 
 

@@ -5,13 +5,13 @@ from View.Info import ShowInfo
 from time import time
 
 
-def StartAnalysis(elementsList, algo):
+def StartAnalysis(elementsList, algo, pbc):
     startTime = time()
 
     window = tk.Toplevel()
     SetUpWindow(window)
     window.geometry("+0+0")
-    bestMolecules, energies, plot, pes, refs = DoTheAlgo(elementsList, algo)
+    bestMolecules, energies, plot, pes, refs = DoTheAlgo(elementsList, algo, pbc)
     print('length of plot[0] =', len(plot[0]))
     print('length of pes[0] =', len(pes[0]))
 
