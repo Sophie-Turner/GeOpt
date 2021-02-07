@@ -16,6 +16,10 @@ txtPerAtom = ('The per-atom exhaustive test is an algorithm which moves\n'
               'total potential energy. The amount of processing required\n'
               'is proportional to the number of atoms factorial and it\n'
               'is recommended for molecules with two or three atoms.')
+txtPopSize = ('The population size is the number of versions of the\n'
+              'molecule that will exist at the same time at each step in\n'
+              'the algorithm. A larger population makes the algorithm take\n'
+              'longer to complete but may find more potential configurations.')
 
 
 def ShowTxtPbc(window):
@@ -28,3 +32,20 @@ def ShowTxtManyMolecule(window):
 
 def ShowTxtPerAtom(window):
     messagebox.showinfo(parent=window, title='Per-atom Exhaustive Test', message=txtPerAtom)
+
+
+def ShowTxtPopSize(window):
+    messagebox.showinfo(parent=window, title='Population size', message=txtPopSize)
+
+
+def EnableEA():
+    pass
+
+
+def DisableEA():
+    pass
+
+
+
+
+
