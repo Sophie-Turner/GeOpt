@@ -19,7 +19,7 @@ txtPerAtom = ('The per-atom exhaustive test is an algorithm which moves\n'
 txtPopSize = ('The population size is the number of versions of the\n'
               'molecule that will exist at the same time at each step in\n'
               'the algorithm. A larger population makes the algorithm take\n'
-              'longer to complete but may find more potential configurations.')
+              'longer to complete but may offer more potential configurations.')
 
 
 def ShowTxtPbc(window):
@@ -27,7 +27,7 @@ def ShowTxtPbc(window):
 
 
 def ShowTxtManyMolecule(window):
-    messagebox.showinfo(parent=window, title='Many Molecule Evolution', message=txtManyMolecule)
+    messagebox.showinfo(parent=window, title='Many-molecule Evolution', message=txtManyMolecule)
 
 
 def ShowTxtPerAtom(window):

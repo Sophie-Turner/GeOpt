@@ -2,7 +2,7 @@ from Model.Algos import *
 
 def Start(elementsList, pbc):
     # Set up initial values & placeholders
-    calc, thisPopulation, boxSize = SetUp(elementsList)
+    calc, thisPopulation, boxSize, cores = SetUp(elementsList)
     # Get the final cell movement size
     covRads = thisPopulation.covRads
 
@@ -21,7 +21,7 @@ def Start(elementsList, pbc):
 
     if __name__ == 'Model.PerAtom':
         with futures.ProcessPoolExecutor() as executor:
-            results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc, pbc) for _ in range(6)]
+            results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc, pbc) for _ in range(cores)]
             ProcessResults(results, population, plot, pes, refs)
         population = RankByE(population, 3)
         for eachBest in population:

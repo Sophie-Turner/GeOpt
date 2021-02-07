@@ -63,7 +63,6 @@ def ChooseFeatures(elementsList, boxText):
     Button(optionsFrame, text='Build molecule', font=('Agency FB', 14),
            command=(lambda: ProceedToAlgo(elementsList, algo.get(), pbc.get(), popSize.get()))).grid(row=5, column=2)
 
-    #SetColours(optionsFrame)
     optionsFrame.pack()
     window.mainloop()
 

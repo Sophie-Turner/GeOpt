@@ -4,7 +4,7 @@ from time import time
 
 def StartEA(elementsList, pbc, popSize):
     # Set up and initialise our template molecule to start with.
-    calc, thisPopulation, boxSize = SetUp(elementsList)
+    calc, thisPopulation, boxSize, cores = SetUp(elementsList)
     bestMolecules, energies, plot, pes, refs, finalists = [], [], [], [], [], []
     firstCoordinates = thisPopulation.initPositions
     atomObjectList = thisPopulation.initAtomsObject
@@ -33,7 +33,7 @@ def StartEA(elementsList, pbc, popSize):
     # Use multiprocessing to quickly compare results.
     if __name__ == 'Model.EAmanyMolecules':
         with futures.ProcessPoolExecutor() as executor:
-            results = [executor.submit(Evolve, elementsList, boxSize, population, calc, pbc, popSize) for _ in range(4)]
+            results = [executor.submit(Evolve, elementsList, boxSize, population, calc, pbc, popSize) for _ in range(cores)]
             ProcessResults(results, finalists, plot, pes, refs)
     finalists = RankByE(finalists, 3)
     for eachMolecule in finalists:
