@@ -1,8 +1,10 @@
 from Model.Algos import *
 
-def Start(elementsList, pbc):
+
+def Start(elementsList, pbc, cores):
+    print('Starting Per-atom algorithm.')
     # Set up initial values & placeholders
-    calc, thisPopulation, boxSize, cores = SetUp(elementsList)
+    calc, thisPopulation, boxSize = SetUp(elementsList)
     # Get the final cell movement size
     covRads = thisPopulation.covRads
 

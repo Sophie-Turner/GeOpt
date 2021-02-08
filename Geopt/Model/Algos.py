@@ -5,20 +5,15 @@ from Model.EmtCalculator import EMT
 from Model.Populations import Population
 from numpy import random
 from concurrent import futures
-from os import cpu_count
 
 
 def SetUp(elementsList):
     print('setting up calculator and cell')
-    cores = cpu_count()
-    if cores is None:
-        cores = 1
-    print('number of CPU cores:', cores)
-    #calc = SetUpVasp()
+    # calc = SetUpVasp()
     calc = EMT()
     thisPopulation = Population(elementsList)
     boxSize = thisPopulation.boxSize
-    return calc, thisPopulation, boxSize, cores
+    return calc, thisPopulation, boxSize
 
 
 def SetUpVasp():

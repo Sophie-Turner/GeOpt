@@ -2,9 +2,10 @@ from Model.Algos import *
 from time import time
 
 
-def StartEA(elementsList, pbc, popSize):
+def StartEA(elementsList, pbc, popSize, cores):
+    print('Starting Many-molecule EA with a population size of', popSize)
     # Set up and initialise our template molecule to start with.
-    calc, thisPopulation, boxSize, cores = SetUp(elementsList)
+    calc, thisPopulation, boxSize = SetUp(elementsList)
     bestMolecules, energies, plot, pes, refs, finalists = [], [], [], [], [], []
     firstCoordinates = thisPopulation.initPositions
     atomObjectList = thisPopulation.initAtomsObject
