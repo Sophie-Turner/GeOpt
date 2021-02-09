@@ -3,7 +3,7 @@ from tkinter import simpledialog, messagebox
 from Model.InteractWithData import GetXML
 from math import exp
 from Controller.Shared import *
-from View.Analysis import StartAnalysis
+from View.Choices import ChooseFeatures
 
 formula = []
 subscript = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
@@ -87,20 +87,12 @@ def Build(box):
                     thisAtom = thisAtom + character
         elementsList.append(thisAtom)
         del elementsList[0]
-        numAtoms = len(elementsList)
-        # How long the PerAtom algorithm takes.
-        estTimePA = round(0.6798 * exp(0.701 * numAtoms))
-        # How long the ManyMolecule EA takes.
-        estTimeMM = round(0.5967 * (numAtoms * numAtoms) - 1.3253 * numAtoms + 3.0362)
-        sure = messagebox.askquestion(title='Build molecule', message='Estimated time = {} seconds. Proceed?'.format(estTimeMM))
-        if sure == 'yes':
-            #try:
-            StartAnalysis(elementsList)
-            #except:
-                #messagebox.showerror(title="Invalid input", message="Please enter a valid molecular formula, e.g. H2O")
-                #elementsList.clear()
-                #Clear(box)
-
+        # try:
+        ChooseFeatures(elementsList, boxText)
+        # except:
+        # messagebox.showerror(title="Invalid input", message="Please enter a valid molecular formula, e.g. H2O")
+        # elementsList.clear()
+        # Clear(box)
 
 
 def Clear(box):

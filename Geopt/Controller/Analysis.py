@@ -2,18 +2,23 @@
 from Controller.Shared import *
 from Model.EAmanyMolecules import StartEA
 from Model.PerAtom import Start
-import tkinter
 import matplotlib.pyplot as plt
 import numpy as np
+import tkinter
 
 colours = ['deeppink', 'yellow', 'dodgerblue', 'limegreen', 'darkorange', 'purple', 'red', 'blue']
 global bestVersions, surfData, surfRefs
 
 
-def DoTheAlgo(elementsList):
+def DoTheAlgo(elementsList, algo, pbc, popSize, numCores):
     plt.close('all')
     global bestVersions
-    bestVersions, energies, plot, pes, refs = Start(elementsList)
+    if algo == 0:
+        print("starting many-molecule EA")
+        bestVersions, energies, plot, pes, refs = StartEA(elementsList, pbc, popSize, numCores)
+    else:
+        print("starting per-atom algo")
+        bestVersions, energies, plot, pes, refs = Start(elementsList, pbc, numCores)
     return bestVersions, energies, plot, pes, refs
 
 

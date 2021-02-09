@@ -1,7 +1,6 @@
 from Controller.Shared import *
 
-# To do: When the user clicks the red cross all molecule instances etc. should be deleted.
-
+# When the user clicks the red cross all molecule instances etc. should be deleted.
 
 def SetUpWindow(window):
     # Get the value of the screen width.

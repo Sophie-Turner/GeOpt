@@ -1,6 +1,5 @@
 from ase import Atoms, Atom
 from ase.io import write
-#from ase.calculators.emt import EMT
 from ase.calculators.vasp import Vasp
 from Model.EmtCalculator import EMT
 from Model.Populations import Population
@@ -9,7 +8,8 @@ from concurrent import futures
 
 
 def SetUp(elementsList):
-    #calc = SetUpVasp()
+    print('setting up calculator and cell')
+    # calc = SetUpVasp()
     calc = EMT()
     thisPopulation = Population(elementsList)
     boxSize = thisPopulation.boxSize
@@ -34,10 +34,11 @@ def ProcessResults(results, population, plot, pes, refs):
         plot.append(thisResult[3])
         pes.append(thisResult[4])
         refs.append(thisResult[5])
+    print('processing results from multiprocessing')
 
 
 def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, plot,
-                    pes, calc):
+                    pes, calc, pbc):
     if cross is True:
         inCoordinates = Crossover(population)
     if permute is True:
@@ -54,35 +55,39 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     elif mutate == 5:
         MoveHydrogen(atomsObject, boxSize)
     childMolecule = GenerateChild(atomsObject, boxSize)
-    childEnergy = GetEnergy(childMolecule, calc)
+    childEnergy = GetEnergy(childMolecule, calc, pbc)
     # Don't keep any extremely terrible structures.
     if childEnergy >= bestE * 100:
+        print('Energy too high. Recursing')
         MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute,
-                        plot, pes, calc)
+                        plot, pes, calc, pbc)
     population.append([childMolecule, childCoordinates, childEnergy])
     if plot is not None:
-        refs = []
-        numAtoms = len(childMolecule)
-        for each in range(numAtoms):
-            eachAtom = childMolecule[each]
-            coords = eachAtom.position
-            x, y, z = coords[0], coords[1], coords[2]
-            plot.append((childEnergy, x, y, z, eachAtom.symbol))
-            for other in range(numAtoms-1):
-                if each != other:
-                    otherAtom = childMolecule[other]
-                    distance = childMolecule.get_distance(each, other)
-                    if numAtoms > 2 and each != other+1:
-                        nextAtom = childMolecule[other + 1]
-                        angle = childMolecule.get_angle(each, other, other+1)
-                        ref = (eachAtom.symbol + otherAtom.symbol + nextAtom.symbol)
-                    else:
-                        angle = 0
-                        ref = (eachAtom.symbol + otherAtom.symbol)
-                    pes.append((distance, childEnergy, angle, ref))
-                    if ref not in refs:
-                        refs.append(ref)
-        return refs, childEnergy
+        if len(plot) < 300:
+            refs = []
+            numAtoms = len(childMolecule)
+            for each in range(numAtoms):
+                eachAtom = childMolecule[each]
+                coords = eachAtom.position
+                x, y, z = coords[0], coords[1], coords[2]
+                plot.append((childEnergy, x, y, z, eachAtom.symbol))
+                for other in range(numAtoms-1):
+                    if each != other:
+                        otherAtom = childMolecule[other]
+                        distance = childMolecule.get_distance(each, other)
+                        if numAtoms > 2 and each != other+1:
+                            nextAtom = childMolecule[other + 1]
+                            angle = childMolecule.get_angle(each, other, other+1)
+                            ref = (eachAtom.symbol + otherAtom.symbol + nextAtom.symbol)
+                        else:
+                            angle = 0
+                            ref = (eachAtom.symbol + otherAtom.symbol)
+                        pes.append((distance, childEnergy, angle, ref))
+                        if ref not in refs:
+                            refs.append(ref)
+            return refs, childEnergy
+        else:
+            return None, childEnergy
 
 
 def PrepareChild(elementsList, startCoordinates):
@@ -101,9 +106,9 @@ def GenerateChild(childAtomsObject, boxSize):
     return child
 
 
-def GetEnergy(molecule, calc):
+def GetEnergy(molecule, calc, pbc):
     # Set up the ase force calculator for finding energies.
-    molecule.set_pbc(True)
+    molecule.set_pbc(pbc)
     molecule.calc = calc
     energy = molecule.get_potential_energy()
     return energy
@@ -201,7 +206,4 @@ def Crossover(population):
         thisPoint = population[whichParent][1][i]
         childCoordinates.append(thisPoint)
     return childCoordinates
-
-
-
 
