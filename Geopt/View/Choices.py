@@ -1,4 +1,3 @@
-from tkinter import messagebox
 from math import exp
 from Controller.Choices import *
 from View.Shared import SetUpWindow
@@ -73,7 +72,7 @@ def ChooseFeatures(elementsList, boxText):
     # Info buttons.
     infoBtns = [(1, 1, 0), (2, 1, 1), (3, 1, 2), (0, 3, 3), (3, 3, 4)]
     for row, col, which in infoBtns:
-        Button(optionsFrame, text='?', font=('Agency FB bold', 10), command=lambda:ShowMessage(window, which),
+        Button(optionsFrame, text='?', font=('Agency FB bold', 10), command=lambda which=which: ShowMessage(window, which),
                bg='yellow').grid(row=row, column=col)
 
     # Finish buttons.

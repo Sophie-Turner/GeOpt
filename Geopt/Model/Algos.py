@@ -60,7 +60,7 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     if childEnergy >= bestE * 100:
         print('Energy too high. Recursing')
         MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute,
-                        plot, pes, calc)
+                        plot, pes, calc, pbc)
     population.append([childMolecule, childCoordinates, childEnergy])
     if plot is not None:
         if len(plot) < 300:
@@ -206,7 +206,4 @@ def Crossover(population):
         thisPoint = population[whichParent][1][i]
         childCoordinates.append(thisPoint)
     return childCoordinates
-
-
-
 

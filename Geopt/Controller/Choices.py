@@ -38,7 +38,7 @@ titleCoreErr = 'Unable to detect CPU cores'
 txtCoreErr = ('Unable to detect the number of CPU cores in your computer.\n'
               'Setting default processes to one.')
 
-messages = [(titlePbc, txtPbc), (titleManyMolecule, txtManyMolecule), (titlePerAtom, txtPerAtom),
+messages = [(titleManyMolecule, txtManyMolecule), (titlePerAtom, txtPerAtom), (titlePbc, txtPbc),
             (titlePopSize, txtPopSize), (titleCores, txtCores), (titleCoreErr, txtCoreErr)]
 
 
