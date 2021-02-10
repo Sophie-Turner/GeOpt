@@ -31,7 +31,7 @@ def ChooseFeatures(elementsList, boxText):
         tk.Radiobutton(optionsFrame, text=name, variable=algo, value=value).grid(row=value+1, column=0)
 
     # Periodic boundary conditions.
-    Label(optionsFrame, text='Periodic boundary conditions', font=('Agency FB', 14)).grid(row=3, column=0)
+    Label(optionsFrame, text='Periodic boundary conditions', font=('Agency FB', 14)).grid(row=3, column=0, pady=(10, 0))
     pbcs = [('Off', False), ('On', True)]
     pbc = tk.BooleanVar()
     pbc.set(False)
@@ -63,7 +63,7 @@ def ChooseFeatures(elementsList, boxText):
     elif cores > 6:
         max = cores
     numCores.set(cores)
-    Label(optionsFrame, text='Parallel processes', font=('Agency FB', 14)).grid(row=3, column=2)
+    Label(optionsFrame, text='Parallel processes', font=('Agency FB', 14)).grid(row=3, column=2, pady=(10, 0))
     proSlider = Scale(optionsFrame, from_=1, to=max, orient=tk.HORIZONTAL, showvalue=0, tickinterval=1,
                    state="disabled", variable=numCores)
     proSlider.grid(row=5, column=2)
@@ -88,14 +88,14 @@ def ChooseFeatures(elementsList, boxText):
     infoBtns = [(1, 1, 0), (2, 1, 1), (3, 1, 2), (0, 3, 3), (3, 3, 4), (3, 5, 5)]
     for row, col, which in infoBtns:
         Button(optionsFrame, text='?', font=('Agency FB bold', 10), command=lambda which=which: ShowMessage(window, which),
-               bg='yellow').grid(row=row, column=col)
+               bg='yellow').grid(row=row, column=col, padx=(0, 10))
 
     # Finish buttons.
     Button(optionsFrame, text='Build molecule', font=('Agency FB', 14),
            command=(lambda: ProceedToAlgo(elementsList, algo.get(), pbc.get(), popSize.get(), numCores.get(),
                                           showPosPlot.get(), showPesPlot.get(), numPoints.get())))\
-        .grid(row=6, column=2)
-    Button(optionsFrame, text='Cancel', font=('Agency FB', 14), command=Close).grid(row=6, column=3)
+        .grid(row=6, column=4, pady=(10, 0))
+    Button(optionsFrame, text='Cancel', font=('Agency FB', 14), command=Close).grid(row=6, column=5, padx=(0, 10), pady=(10, 0))
 
     optionsFrame.pack()
     window.mainloop()
@@ -127,8 +127,11 @@ def ProceedToAlgo(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
                                   message='Estimated time: up to {} seconds. Proceed?'.format(estTime))
     if sure == 'yes':
         Close()
-        StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints)
-
+        try:
+            StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints)
+        except:
+            messagebox.showerror(title="Unsupported element", message="Some heavy elements are not yet supported by the energy calculator.\n"
+                                                                      "Please try again when the project is finished.")
 
 
 

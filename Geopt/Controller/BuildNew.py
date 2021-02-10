@@ -1,5 +1,6 @@
 # Functions associated with the BuildNew View
 from tkinter import simpledialog, messagebox
+from ase import Atom
 from Model.InteractWithData import GetXML
 from math import exp
 from Controller.Shared import *
@@ -53,9 +54,10 @@ def Build(box):
 
         for i in range(len(boxText)):
             # Don't let the user make huge molecules!
-            if len(elementsList) > 20:
+            if len(elementsList) > 12:
                 messagebox.showerror(title='Large molecule',
-                                     message='This molecule is too large to build! Cancelling...')
+                                     message='This molecule is too large to build!\n'
+                                             'Please select up to 12 atoms.')
                 Clear(box)
                 return
             # Skip a loop iteration if the last character was 2-digit to prevent overwriting.
@@ -87,12 +89,23 @@ def Build(box):
                     thisAtom = thisAtom + character
         elementsList.append(thisAtom)
         del elementsList[0]
-        # try:
-        ChooseFeatures(elementsList, boxText)
-        # except:
-        # messagebox.showerror(title="Invalid input", message="Please enter a valid molecular formula, e.g. H2O")
-        # elementsList.clear()
-        # Clear(box)
+        if len(elementsList) > 0:
+            ValidateInput(elementsList, box, boxText)
+        else:
+            ShowError()
+            elementsList.clear()
+            Clear(box)
+
+
+def ValidateInput(elementsList, box, boxText):
+    try:
+        for element in elementsList:
+            testAtom = Atom(element)
+    except:
+        ShowError()
+        Clear(box)
+        return
+    ChooseFeatures(elementsList, boxText)
 
 
 def Clear(box):
@@ -100,13 +113,9 @@ def Clear(box):
     box.delete(0, END)
 
 
-# How to remove all labels from a frame
-# def ClearLabels(frame):
-#     try:
-#         for label in frame.children.values():
-#             label.destroy()
-#             ClearLabels(frame)
-#     except:
-#         frame.pack_forget()
+def ShowError():
+    messagebox.showerror(title="Invalid input", message="This molecule is not supported by the energy calculator.\n"
+                                                        "Please enter a valid molecular formula, e.g. H₂O (or H2O).")
+
 
 
