@@ -34,12 +34,17 @@ txtCores = ('The number of parallel processes is how many times the entire '
             'configurations, but you are strongly advised to avoid setting '
             'this to a higher number than the number of CPU cores for molecules '
             'with more than two atoms.')
+titlePlotLimit = 'Plot data size limit'
+txtPlotLimit = ('This is the maximum number of data points in the datasets used to '
+                'create plots. A smaller number will speed up execution time and '
+                'may also create clearer graphs.')
 titleCoreErr = 'Unable to detect CPU cores'
 txtCoreErr = ('Unable to detect the number of CPU cores in your computer.\n'
               'Setting default processes to one.')
 
 messages = [(titleManyMolecule, txtManyMolecule), (titlePerAtom, txtPerAtom), (titlePbc, txtPbc),
-            (titlePopSize, txtPopSize), (titleCores, txtCores), (titleCoreErr, txtCoreErr)]
+            (titlePopSize, txtPopSize), (titleCores, txtCores), (titlePlotLimit, txtPlotLimit),
+            (titleCoreErr, txtCoreErr)]
 
 
 def ShowMessage(window, which):

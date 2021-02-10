@@ -11,15 +11,15 @@ colours = ['deeppink', 'yellow', 'dodgerblue', 'limegreen', 'darkorange', 'purpl
 global bestVersions, surfData, surfRefs
 
 
-def DoTheAlgo(elementsList, algo, pbc, popSize, numCores):
+def DoTheAlgo(elementsList, algo, pbc, popSize, numCores, numPoints):
     plt.close('all')
     global bestVersions
     if algo == 0:
         print("starting many-molecule EA")
-        bestVersions, energies, plot, pes, refs = StartEA(elementsList, pbc, popSize, numCores)
+        bestVersions, energies, plot, pes, refs = StartEA(elementsList, pbc, popSize, numCores, numPoints)
     else:
         print("starting per-atom algo")
-        bestVersions, energies, plot, pes, refs = Start(elementsList, pbc, numCores)
+        bestVersions, energies, plot, pes, refs = Start(elementsList, pbc, numCores, numPoints)
     return bestVersions, energies, plot, pes, refs
 
 

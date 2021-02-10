@@ -5,33 +5,37 @@ from View.Info import ShowInfo
 from time import time
 
 
-def StartAnalysis(elementsList, algo, pbc, popSize, numCores):
+def StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints):
     startTime = time()
     window = tk.Toplevel()
     SetUpWindow(window)
     window.geometry("+0+0")
-    bestMolecules, energies, plot, pes, refs = DoTheAlgo(elementsList, algo, pbc, popSize, numCores)
-    print('length of plot[0] =', len(plot[0]))
-    print('length of pes[0] =', len(pes[0]))
+    bestMolecules, energies, plot, pes, refs = DoTheAlgo(elementsList, algo, pbc, popSize, numCores, numPoints)
 
     imageTypes = ['structure', 'pes', 'positions']
+    if showPesPlot is False:
+        imageTypes[1] = 'noPlot'
+    if showPosPlot is False:
+        imageTypes[2] = 'noPlot'
     imageHolders = [[], [], []]
 
     for i in range(3):
         fileName = "Images/structure{num}.png".format(num=i)
         write(fileName, bestMolecules[i], rotation='10x,30y,0z')
 
-        # The largest energy value is needed for scaling.
-        eMax = energies[i][0]
+        if showPesPlot is True:
+            pesData = pes[i]
+            pesData = np.array(pesData)
+            refData = refs[i]
+            SurfacePlot(pesData, refData, 2.6, i)
 
-        pesData = pes[i]
-        pesData = np.array(pesData)
-        refData = refs[i]
-        SurfacePlot(pesData, refData, 2.6, i)
-
-        allAtomPlaces = plot[i]
-        allAtomPlaces = np.array(allAtomPlaces)
-        PositionPlot(allAtomPlaces, eMax, i)
+        allAtomPlaces = ()
+        if showPosPlot is True:
+            # The largest energy value is needed for scaling.
+            eMax = energies[i][0]
+            allAtomPlaces = plot[i]
+            allAtomPlaces = np.array(allAtomPlaces)
+            PositionPlot(allAtomPlaces, eMax, i)
 
     colText = ['Best geometry found {:.4f} eV\nClick for more info'.format(energies[0][1]),
                '2nd best found {:.4f} eV\nClick for more info'.format(energies[1][1]),
@@ -48,7 +52,8 @@ def StartAnalysis(elementsList, algo, pbc, popSize, numCores):
         for j in range(3):
             if i == 0:
                 Button(gridFrame, text=colText[j], command=(lambda j=j: ShowInfo(energies[j], pes[j], refs[j],
-                                                                                 elementsList, len(allAtomPlaces), j)),
+                                                                                 elementsList, len(allAtomPlaces), j,
+                                                                                 showPosPlot, showPesPlot, numPoints)),
                        font=('Agency FB', 16), fg='#DDFFDD', bg='#555555').grid(row=i, column=j+1, rowspan=1, columnspan=1, padx='5')
             else:
                 sizex = 300
@@ -60,10 +65,13 @@ def StartAnalysis(elementsList, algo, pbc, popSize, numCores):
                 canvas.grid(row=i, column=j+1, rowspan=1, columnspan=1, padx='5')
                 canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
     # Show a legend for the PES plots.
-    legend = Text(gridFrame, fg='#EEFFEE', bg="#222222", width="6", height="11")
-    legend.grid(row=2, column=4, rowspan=1, columnspan=1, padx='5')
-    gridFrame.pack()
-    SurfaceLegend(legend, refData)
+    if showPesPlot is True:
+        legend = Text(gridFrame, fg='#EEFFEE', bg="#222222", width="6", height="11")
+        legend.grid(row=2, column=4, rowspan=1, columnspan=1, padx='5')
+        gridFrame.pack()
+        SurfaceLegend(legend, refData)
+    else:
+        gridFrame.pack()
 
     endTime = time()
     print('Time taken = {} seconds'.format(round(endTime - startTime)))

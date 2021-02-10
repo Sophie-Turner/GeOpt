@@ -38,7 +38,7 @@ def ProcessResults(results, population, plot, pes, refs):
 
 
 def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute, plot,
-                    pes, calc, pbc):
+                    pes, calc, pbc, numPoints):
     if cross is True:
         inCoordinates = Crossover(population)
     if permute is True:
@@ -60,10 +60,10 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     if childEnergy >= bestE * 100:
         print('Energy too high. Recursing')
         MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute,
-                        plot, pes, calc, pbc)
+                        plot, pes, calc, pbc, numPoints)
     population.append([childMolecule, childCoordinates, childEnergy])
     if plot is not None:
-        if len(plot) < 300:
+        if len(plot) < numPoints:
             refs = []
             numAtoms = len(childMolecule)
             for each in range(numAtoms):
