@@ -85,7 +85,7 @@ EMT was originally only intended for use with solid crystal structures.</p>
  Steen Lysgaard, Jón Bergmann Maronsson, Tristan Maxson, Thomas Olsen,
  Lars Pastewka, Andrew Peterson, Carsten Rostgaard, Jakob Schiøtz,
  Ole Schütt, Mikkel Strange, Kristian S. Thygesen, Tejs Vegge,
- Lasse Vilhelmsen, Michael Walter, Zhenhua Zeng, Karsten Wedel Jacobsen
+ Lasse Vilhelmsen, Michael Walter, Zhenhua Zeng, Karsten Wedel Jacobsen.
  The Atomic Simulation Environment—A Python library for working with atoms
  J. Phys.: Condens. Matter Vol. 29 273002, 2017</p>
  
