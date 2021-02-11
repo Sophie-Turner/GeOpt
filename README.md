@@ -68,5 +68,35 @@ EMT was originally only intended for use with solid crystal structures.</p>
 <h3></h3>
 <p></p>
 
-<h2>References</h2>
-<p></p>
+<h2>References & Other Documentation</h2>
+
+<h3>Atomic Simulation Environment</h3>
+<a href="url">https://wiki.fysik.dtu.dk/ase/</a>
+
+<h3>Effective Medium Theory testing calculator source</h3>
+<a href="url">https://wiki.fysik.dtu.dk/ase/_modules/ase/calculators/emt.html#EMT</a>
+
+<h3>Original Authors of the research used to create the above packages</h3>
+<p>Ask Hjorth Larsen, Jens Jørgen Mortensen, Jakob Blomqvist,
+ Ivano E. Castelli, Rune Christensen, Marcin Dułak, Jesper Friis,
+ Michael N. Groves, Bjørk Hammer, Cory Hargus, Eric D. Hermes,
+ Paul C. Jennings, Peter Bjerre Jensen, James Kermode, John R. Kitchin,
+ Esben Leonhard Kolsbjerg, Joseph Kubal, Kristen Kaasbjerg,
+ Steen Lysgaard, Jón Bergmann Maronsson, Tristan Maxson, Thomas Olsen,
+ Lars Pastewka, Andrew Peterson, Carsten Rostgaard, Jakob Schiøtz,
+ Ole Schütt, Mikkel Strange, Kristian S. Thygesen, Tejs Vegge,
+ Lasse Vilhelmsen, Michael Walter, Zhenhua Zeng, Karsten Wedel Jacobsen
+ The Atomic Simulation Environment—A Python library for working with atoms
+ J. Phys.: Condens. Matter Vol. 29 273002, 2017</p>
+ 
+ <h3>Geopt planner</h3>
+ <a href="url">https://tasks.office.com/live.plymouth.ac.uk/en-GB/Home/Planner/#/plantaskboard?groupId=94cc8cbf-c90e-473e-a3f2-7d7d5dee52d9&planId=VmtMkciqc0GG6F--BwFrqpYAESf1</a>
+ 
+ <h3>YouTube demonstration (January 2021)</h3>
+ <a href="url">https://youtu.be/ylv4J85m95Y</a>
+ 
+ <h3>YouTube demonstration (February 2021)</h3>
+ <a href="url">https://youtu.be/llvHbYyEO6Q</a> 
+ 
+ <h3>Fortnightly blog</h3>
+ <a href="url">https://dle.plymouth.ac.uk/mod/oublog/view.php?id=922745</a> 
