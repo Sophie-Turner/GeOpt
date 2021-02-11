@@ -2,14 +2,12 @@ from View.Shared import SetUpWindow
 from Controller.Analysis import *
 
 
-def ShowInfo(version, pes, refs, atoms, numTests, rank):
-    if numTests >= 300:
-        numTests = '> 300'
-    pesData = np.array(pes)
+def ShowInfo(version, pes, refs, atoms, numTests, rank, showPosPlot, showPesPlot, numPoints):
+    if numTests >= numPoints:
+        numTests = '> {}'.format(numPoints)
+    elif numTests == 0:
+        numTests = 'not recorded.'
     imageHolders = []
-
-    # Make a larger copy of the PES for a clearer view.
-    SurfacePlot(pesData, refs, 3.5, rank)
 
     window = tk.Toplevel()
     SetUpWindow(window)
@@ -38,13 +36,16 @@ def ShowInfo(version, pes, refs, atoms, numTests, rank):
     bestInfoBox = Text(topGrid, fg='#EEFFEE', bg="#222222", width="20", height="10")
     bestInfoBox.grid(row=1, column=1, columnspan=1, padx='5')
 
-    imageHolders.append(PhotoImage(file="Images/positions{num}.png".format(num=rank)))
+    if showPosPlot is True:
+        imageHolders.append(PhotoImage(file="Images/positions{num}.png".format(num=rank)))
+    else:
+        imageHolders.append(PhotoImage(file="Images/noPlot0.png"))
     thisImage = imageHolders[-1]
     canvas = tkinter.Canvas(topGrid, width=sizex, height=sizey)
     canvas.grid(row=1, column=2, padx='5')
     canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
 
-    Label(topGrid, text='Configurations tested: {}\n(limited to show max 300)'.format(numTests), fg='#EEFFEE', bg='#222222') \
+    Label(topGrid, text='Configurations tested: {}\n(limited to show max {})'.format(numTests, numPoints), fg='#EEFFEE', bg='#222222') \
         .grid(row=1, column=3, columnspan=1, padx='5')
 
     topGrid.pack()
@@ -63,19 +64,24 @@ def ShowInfo(version, pes, refs, atoms, numTests, rank):
     pesInfoBox = Text(bottomGrid, fg='#EEFFEE', bg="#222222", width="27", height="18")
     pesInfoBox.grid(row=1, column=0, columnspan=1, padx='5')
 
-    imageHolders.append(PhotoImage(file="Images/pes{num}.png".format(num=rank)))
+    if showPesPlot is True:
+        pesData = np.array(pes)
+        # Make a larger copy of the PES for a clearer view.
+        SurfacePlot(pesData, refs, 3.5, rank)
+        imageHolders.append(PhotoImage(file="Images/pes{num}.png".format(num=rank)))
+        SurfaceInfo(pesInfoBox)
+        # Show a legend for the PES plot.
+        legend = Text(bottomGrid, fg='#EEFFEE', bg="#222222", width="6", height="18")
+        legend.grid(row=1, column=3, columnspan=1, padx='5')
+        bottomGrid.pack()
+        SurfaceLegend(legend, refs)
+    else:
+        imageHolders.append(PhotoImage(file="Images/noPlot0.png"))
+        pesInfoBox.insert(END, "Potential energy surface\ndata not recorded.")
+        bottomGrid.pack()
     thisImage = imageHolders[-1]
     canvas = tkinter.Canvas(bottomGrid, width=sizex, height=sizey)
     canvas.grid(row=1, column=1, padx='5')
     canvas.create_image(sizex/2, sizey/2, image=thisImage)
-
-    # Show a legend for the PES plot.
-    legend = Text(bottomGrid, fg='#EEFFEE', bg="#222222", width="6", height="18")
-    legend.grid(row=1, column=3, columnspan=1, padx='5')
-
-    bottomGrid.pack()
-
-    SurfaceInfo(pesInfoBox)
-    SurfaceLegend(legend, refs)
 
     window.mainloop()

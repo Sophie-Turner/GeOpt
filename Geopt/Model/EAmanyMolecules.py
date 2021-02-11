@@ -2,7 +2,7 @@ from Model.Algos import *
 from time import time
 
 
-def StartEA(elementsList, pbc, popSize, cores):
+def StartEA(elementsList, pbc, popSize, cores, numPoints):
     print('Starting Many-molecule EA with a population size of', popSize)
     # Set up and initialise our template molecule to start with.
     calc, thisPopulation, boxSize = SetUp(elementsList)
@@ -27,14 +27,14 @@ def StartEA(elementsList, pbc, popSize, cores):
     for i in range(popSize):
         # Make some permutations.
         MakeNewMolecule(elementsList, firstCoordinates, lastBestEnergy, None, boxSize, population,
-                        False, False, True, None, None, calc, pbc)
+                        False, False, True, None, None, calc, pbc, numPoints)
     # Find the best permutation.
     population = RankByE(population, 1)
 
     # Use multiprocessing to quickly compare results.
     if __name__ == 'Model.EAmanyMolecules':
         with futures.ProcessPoolExecutor() as executor:
-            results = [executor.submit(Evolve, elementsList, boxSize, population, calc, pbc, popSize) for _ in range(cores)]
+            results = [executor.submit(Evolve, elementsList, boxSize, population, calc, pbc, popSize, numPoints) for _ in range(cores)]
             ProcessResults(results, finalists, plot, pes, refs)
     finalists = RankByE(finalists, 3)
     for eachMolecule in finalists:
@@ -45,7 +45,7 @@ def StartEA(elementsList, pbc, popSize, cores):
     return bestMolecules, energies, plot, pes, refs
 
 
-def Evolve(elementsList, boxSize, population, calc, pbc, popSize):
+def Evolve(elementsList, boxSize, population, calc, pbc, popSize, numPoints):
     print('Evolving the populations')
     # These will be private to each thread.
     plot, pes = [], []
@@ -70,7 +70,7 @@ def Evolve(elementsList, boxSize, population, calc, pbc, popSize):
         for i in range(popSize):
             # Make some with random mutations.
             _, _ = MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, changeSizes[1], boxSize,
-                                   population, 2, False, False, plot, pes, calc, pbc)
+                                   population, 2, False, False, plot, pes, calc, pbc, numPoints)
         # Selection.
         population = RankByE(population, 1)
         bestCoordinates = population[0][1]
@@ -79,7 +79,7 @@ def Evolve(elementsList, boxSize, population, calc, pbc, popSize):
         for i in range(popSize):
             # Introduce some random strangers.
             outRefs, outNewEnergy = MakeNewMolecule(elementsList, bestCoordinates, lastBestEnergy, None, boxSize,
-                                                    population, 3, False, False, plot, pes, calc, pbc)
+                                                    population, 3, False, False, plot, pes, calc, pbc, numPoints)
             if outRefs is not None:
                 refs, newEnergy = outRefs, outNewEnergy
                 if newEnergy > worstEnergy:

@@ -31,7 +31,7 @@ def ChooseFeatures(elementsList, boxText):
         tk.Radiobutton(optionsFrame, text=name, variable=algo, value=value).grid(row=value+1, column=0)
 
     # Periodic boundary conditions.
-    Label(optionsFrame, text='Periodic boundary conditions', font=('Agency FB', 14)).grid(row=3, column=0)
+    Label(optionsFrame, text='Periodic boundary conditions', font=('Agency FB', 14)).grid(row=3, column=0, pady=(10, 0))
     pbcs = [('Off', False), ('On', True)]
     pbc = tk.BooleanVar()
     pbc.set(False)
@@ -58,28 +58,44 @@ def ChooseFeatures(elementsList, boxText):
     max = 6
     cores = cpu_count()
     if cores is None:
+        ShowMessage(window, 6)
         cores = 1
     elif cores > 6:
         max = cores
     numCores.set(cores)
-    Label(optionsFrame, text='Parallel processes', font=('Agency FB', 14)).grid(row=3, column=2)
+    Label(optionsFrame, text='Parallel processes', font=('Agency FB', 14)).grid(row=3, column=2, pady=(10, 0))
     proSlider = Scale(optionsFrame, from_=1, to=max, orient=tk.HORIZONTAL, showvalue=0, tickinterval=1,
                    state="disabled", variable=numCores)
     proSlider.grid(row=5, column=2)
     Checkbutton(optionsFrame, text='Default', variable=findCores, onvalue=True, offvalue=False,
                 command=lambda: DisableSlider(findCores.get(), proSlider, numCores, 1)).grid(row=4, column=2)
 
+    # Graph detail chooser.
+    showPosPlot, showPesPlot = tk.BooleanVar(), tk.BooleanVar()
+    numPoints = tk.IntVar()
+    numPoints.set(300)
+    showPlots = [(showPosPlot, 'Show positions tested', 1), (showPesPlot, 'Potential energy surface', 2)]
+    Label(optionsFrame, text='Analytical display', font=('Agency FB', 14)).grid(row=0, column=4)
+    for plot, text, row in showPlots:
+        plot.set(True)
+        Checkbutton(optionsFrame, text=text, variable=plot, onvalue=True, offvalue=False,
+                    ).grid(row=row, column=4)
+    Label(optionsFrame, text='Data points limit').grid(row=3, column=4)
+    Scale(optionsFrame, from_=100, to=800, orient=tk.HORIZONTAL, length=200, tickinterval=100,
+          variable=numPoints).grid(row=4, column=4, columnspan=2, rowspan=2)
+
     # Info buttons.
-    infoBtns = [(1, 1, 0), (2, 1, 1), (3, 1, 2), (0, 3, 3), (3, 3, 4)]
+    infoBtns = [(1, 1, 0), (2, 1, 1), (3, 1, 2), (0, 3, 3), (3, 3, 4), (3, 5, 5)]
     for row, col, which in infoBtns:
         Button(optionsFrame, text='?', font=('Agency FB bold', 10), command=lambda which=which: ShowMessage(window, which),
-               bg='yellow').grid(row=row, column=col)
+               bg='yellow').grid(row=row, column=col, padx=(0, 10))
 
     # Finish buttons.
     Button(optionsFrame, text='Build molecule', font=('Agency FB', 14),
-           command=(lambda: ProceedToAlgo(elementsList, algo.get(), pbc.get(), popSize.get(), numCores.get())))\
-        .grid(row=6, column=2)
-    Button(optionsFrame, text='Cancel', font=('Agency FB', 14), command=Close).grid(row=6, column=3)
+           command=(lambda: ProceedToAlgo(elementsList, algo.get(), pbc.get(), popSize.get(), numCores.get(),
+                                          showPosPlot.get(), showPesPlot.get(), numPoints.get())))\
+        .grid(row=6, column=4, pady=(10, 0))
+    Button(optionsFrame, text='Cancel', font=('Agency FB', 14), command=Close).grid(row=6, column=5, padx=(0, 10), pady=(10, 0))
 
     optionsFrame.pack()
     window.mainloop()
@@ -100,7 +116,7 @@ def Close():
     window.destroy()
 
 
-def ProceedToAlgo(elementsList, algo, pbc, popSize, numCores):
+def ProceedToAlgo(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints):
     if algo == 0:
         # How long the ManyMolecule EA takes.
         estTime = round(0.5967 * (numAtoms * numAtoms) - 1.3253 * numAtoms + 3.0362)
@@ -108,11 +124,14 @@ def ProceedToAlgo(elementsList, algo, pbc, popSize, numCores):
         # How long the PerAtom algorithm takes.
         estTime = round(0.6798 * exp(0.701 * numAtoms))
     sure = messagebox.askquestion(parent=window, title='Build molecule',
-                                  message='Estimated time = {} seconds. Proceed?'.format(estTime))
+                                  message='Estimated time: up to {} seconds. Proceed?'.format(estTime))
     if sure == 'yes':
         Close()
-        StartAnalysis(elementsList, algo, pbc, popSize, numCores)
-
+        try:
+            StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints)
+        except:
+            messagebox.showerror(title="Unsupported element", message="Some heavy elements are not yet supported by the energy calculator.\n"
+                                                                      "Please try again when the project is finished.")
 
 
 

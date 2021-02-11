@@ -4,21 +4,22 @@ from Model.EAmanyMolecules import StartEA
 from Model.PerAtom import Start
 import matplotlib.pyplot as plt
 import numpy as np
+from statistics import mean
 import tkinter
 
 colours = ['deeppink', 'yellow', 'dodgerblue', 'limegreen', 'darkorange', 'purple', 'red', 'blue']
 global bestVersions, surfData, surfRefs
 
 
-def DoTheAlgo(elementsList, algo, pbc, popSize, numCores):
+def DoTheAlgo(elementsList, algo, pbc, popSize, numCores, numPoints):
     plt.close('all')
     global bestVersions
     if algo == 0:
         print("starting many-molecule EA")
-        bestVersions, energies, plot, pes, refs = StartEA(elementsList, pbc, popSize, numCores)
+        bestVersions, energies, plot, pes, refs = StartEA(elementsList, pbc, popSize, numCores, numPoints)
     else:
         print("starting per-atom algo")
-        bestVersions, energies, plot, pes, refs = Start(elementsList, pbc, numCores)
+        bestVersions, energies, plot, pes, refs = Start(elementsList, pbc, numCores, numPoints)
     return bestVersions, energies, plot, pes, refs
 
 
@@ -70,10 +71,12 @@ def SurfaceInfo(infoBox):
         if i < 8:
             distances, energies, angles, group = GetGroup(i)
             minE = min(energies)
+            # Get the index of the values which are from the lowest energies.
             minI = np.where(energies == minE)
             atom1, atom2 = group[0], group[1]
-            distance = str(distances[minI])
-            angle = str(angles[minI])
+            # Sometimes, there can be several possibilities for arrangements with low energies, so just show an average.
+            distance = str(mean(distances[minI]))
+            angle = str(mean(angles[minI]))
             txt = "Distance between {}{} {} \u00c5\nAngle over {} {}\u00b0\nPotential energy {} eV\n\n".format\
                 (atom1, atom2, distance, group, angle, minE)
             txt = txt.replace("]", "")
