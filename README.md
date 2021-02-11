@@ -1,5 +1,5 @@
 # COMP3000
-<h1>Molecular Geometry Optimisation Using Machine Learning</h1>
+<h1>Molecular Geometry Optimisation Using Evolutionary Computation</h1>
 <p>Sophie Turner's final year project</p>
 
 <h2>Vision</h2>
