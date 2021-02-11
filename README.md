@@ -22,7 +22,7 @@ EMT was originally only intended for use with solid crystal structures.</p>
 <p>Choose elements by either typing the molecular formula or selecting elements from the periodic table. 
   Use correct capitalisation for element symbols.</p>
 
-<h3>Many-molecule Evolution</h3>
+<h3>Many-molecule evolution</h3>
 <p>The many-molecule algorithm is an evolutionary algorithm 
                    which creates a population of versions of the molecule 
                    with different configurations, applies mutations to 
@@ -30,7 +30,7 @@ EMT was originally only intended for use with solid crystal structures.</p>
                    based on the lowest total potential energy. It is 
                    recommended for molecules with three to twelve atoms.</p>
 
-<h3>Per-atom Exhaustive Test</h3>
+<h3>Per-atom exhaustive test</h3>
 <p>The per-atom exhaustive test is an algorithm which moves 
               each atom in the molecule around each other atom, 
               constantly testing for the configuration with the lowest 
