@@ -76,7 +76,7 @@ EMT was originally only intended for use with solid crystal structures.</p>
 <h3>Effective Medium Theory testing calculator source</h3>
 <a href="url">https://wiki.fysik.dtu.dk/ase/_modules/ase/calculators/emt.html#EMT</a>
 
-<h3>Original Authors of the research used to create the above packages</h3>
+<h3>Authors of the research and creators of the above packages</h3>
 <p>Ask Hjorth Larsen, Jens Jørgen Mortensen, Jakob Blomqvist,
  Ivano E. Castelli, Rune Christensen, Marcin Dułak, Jesper Friis,
  Michael N. Groves, Bjørk Hammer, Cory Hargus, Eric D. Hermes,
