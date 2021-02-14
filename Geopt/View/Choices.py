@@ -186,12 +186,12 @@ def ProceedToAlgo(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
                                   message='Estimated time: up to {} seconds. Proceed?'.format(estTime))
     if sure == 'yes':
         Close()
-        #try:
-        StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints, mutDist,
-                      mutSize, permute, cross)
-        #except:
-            #messagebox.showerror(title="Unsupported element", message="Some heavy elements are not yet supported by the energy calculator.\n"
-                                                                      #"Please try again when the project is finished.")
+        try:
+            StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints, mutDist,
+                          mutSize, permute, cross)
+        except:
+            messagebox.showerror(title="Unsupported element", message="Some heavy elements are not yet supported by the energy calculator.\n"
+                                                                      "Please try again when the project is finished.")
 
 
 

@@ -39,7 +39,7 @@ txtPlotLimit = ('This is the maximum number of data points in the datasets used 
                 'create plots.\nA smaller number will speed up execution time and '
                 'may also create clearer graphs.')
 titleMutate = 'Radial mutation distribution'
-txtMutate = 'This alters the position of atoms and moves them randomly according to' \
+txtMutate = 'This alters the position of atoms and moves them randomly according to ' \
             'a distribution around other atoms or themselves.\nThe distribution' \
             'size determines how far apart atoms can move from one another.\nMoving atoms too far ' \
             'apart can cause the energy calculator to treat each atom as a standalone system.\n' \
