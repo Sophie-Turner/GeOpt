@@ -106,7 +106,7 @@ def ChooseFeatures(elementsList, boxText):
     # Permutation option.
     Label(optionsFrame, text='Permutation', font=('Agency FB', 14)).grid(row=6, column=2)
     permute = tk.BooleanVar()
-    permute.set(True)
+    permute.set(False)
     permuteOff = tk.Radiobutton(optionsFrame, text='Off', variable=permute, value=False)
     permuteOff.grid(row=7, column=2)
     permuteOn = tk.Radiobutton(optionsFrame, text='On', variable=permute, value=True)

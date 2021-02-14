@@ -4,6 +4,7 @@ from ase.calculators.vasp import Vasp
 from Model.EmtCalculator import EMT
 from Model.Populations import Population
 from numpy import random
+from numpy.random import randint
 from concurrent import futures
 
 
