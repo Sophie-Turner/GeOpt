@@ -49,9 +49,9 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     elif mutate == 2:
         MoveAtomsGauss(atomsObject, 0, changeSize)
     elif mutate == 3:
-        FillCellGauss(atomsObject, boxSize)
-    elif mutate == 4:
         FillCellUniform(atomsObject, boxSize)
+    elif mutate == 4:
+        FillCellGauss(atomsObject, boxSize)
     elif mutate == 5:
         MoveHydrogen(atomsObject, boxSize)
     childMolecule = GenerateChild(atomsObject, boxSize)
@@ -133,7 +133,7 @@ def MoveOneAtomGauss(fixedAtom, atomToMove, sigma):
 
 def MoveAtomsUniform(itsAtoms, changeSize):
     for eachAtom in itsAtoms:
-        eachAtom.position += ((random.randint(-changeSize, changeSize, 3)) / 100)
+        eachAtom.position += ((random.randint(-changeSize-1, changeSize+1, 3)) / 100)
 
 
 def MoveAtomsGauss(itsAtoms, mean, sigma):

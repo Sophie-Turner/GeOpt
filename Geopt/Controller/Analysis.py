@@ -20,7 +20,7 @@ def DoTheAlgo(elementsList, algo, pbc, popSize, numCores, numPoints, mutDist, mu
                                                           mutSize, permute, cross)
     else:
         print("starting per-atom algo")
-        bestVersions, energies, plot, pes, refs = Start(elementsList, pbc, numCores, numPoints, mutDist, mutSize)
+        bestVersions, energies, plot, pes, refs = Start(elementsList, pbc, numCores, numPoints, mutSize)
     return bestVersions, energies, plot, pes, refs
 
 
