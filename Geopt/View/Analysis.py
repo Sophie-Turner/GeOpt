@@ -5,12 +5,14 @@ from View.Info import ShowInfo
 from time import time
 
 
-def StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints):
+def StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints, mutDist, mutSize,
+                  permute, cross):
     startTime = time()
     window = tk.Toplevel()
     SetUpWindow(window)
     window.geometry("+0+0")
-    bestMolecules, energies, plot, pes, refs = DoTheAlgo(elementsList, algo, pbc, popSize, numCores, numPoints)
+    bestMolecules, energies, plot, pes, refs = DoTheAlgo(elementsList, algo, pbc, popSize, numCores, numPoints, mutDist,
+                                                         mutSize, permute, cross)
 
     imageTypes = ['structure', 'pes', 'positions']
     if showPesPlot is False:

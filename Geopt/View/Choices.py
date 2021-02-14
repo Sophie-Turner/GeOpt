@@ -28,7 +28,8 @@ def ChooseFeatures(elementsList, boxText):
     # Default MMEA algo.
     algo.set(0)
     for name, value in algos:
-        tk.Radiobutton(optionsFrame, text=name, variable=algo, value=value).grid(row=value+1, column=0)
+        tk.Radiobutton(optionsFrame, text=name, variable=algo, value=value, command=lambda: EnableButtons(buttons))\
+            .grid(row=value+1, column=0)
 
     # Periodic boundary conditions.
     Label(optionsFrame, text='Periodic boundary conditions', font=('Agency FB', 14)).grid(row=3, column=0, pady=(10, 0))
@@ -58,7 +59,7 @@ def ChooseFeatures(elementsList, boxText):
     max = 6
     cores = cpu_count()
     if cores is None:
-        ShowMessage(window, 6)
+        ShowMessage(window, -1)
         cores = 1
     elif cores > 6:
         max = cores
@@ -84,18 +85,60 @@ def ChooseFeatures(elementsList, boxText):
     Scale(optionsFrame, from_=100, to=800, orient=tk.HORIZONTAL, length=200, tickinterval=100,
           variable=numPoints).grid(row=4, column=4, columnspan=2, rowspan=2)
 
+    # Mutation options.
+    Label(optionsFrame, text='Radial mutation', font=('Agency FB', 14)).grid(row=6, column=0)
+    # Types of mutation distribution.
+    mutations = [('Uniform', 0), ('Gaussian', 1)]
+    # Sizes of mutation distributions.
+    sizes = [('Small', -1), ('Medium', 0), ('Large', 1)]
+    mutDist, mutSize = tk.IntVar(), tk.IntVar()
+    # Default mutation distribution type.
+    mutDist.set(1)
+    mutSize.set(0)
+    # Radio buttons.
+    for name, value in mutations:
+        tk.Radiobutton(optionsFrame, text=name, variable=mutDist, value=value).grid(row=value + 7, column=0)
+    Label(optionsFrame, text='Distribution size').grid(row=9, column=0)
+    for name, value in sizes:
+        tk.Radiobutton(optionsFrame, text=name, variable=mutSize, value=value).grid(row=value+11, column=0)
+    # Mutation size option.
+
+    # Permutation option.
+    Label(optionsFrame, text='Permutation', font=('Agency FB', 14)).grid(row=6, column=2)
+    permute = tk.BooleanVar()
+    permute.set(True)
+    permuteOff = tk.Radiobutton(optionsFrame, text='Off', variable=permute, value=False)
+    permuteOff.grid(row=7, column=2)
+    permuteOn = tk.Radiobutton(optionsFrame, text='On', variable=permute, value=True)
+    permuteOn.grid(row=8, column=2)
+
+    # Crossover option.
+    Label(optionsFrame, text='Crossover', font=('Agency FB', 14)).grid(row=9, column=2)
+    cross = tk.BooleanVar()
+    cross.set(False)
+    crossOff = tk.Radiobutton(optionsFrame, text='Off', variable=cross, value=False)
+    crossOff.grid(row=10, column=2)
+    crossOn = tk.Radiobutton(optionsFrame, text='On', variable=cross, value=True)
+    crossOn.grid(row=11, column=2)
+
+    # List of buttons whose state depend on algorithm chosen.
+    buttons = (permuteOff, permuteOn, crossOff, crossOn)
+
     # Info buttons.
-    infoBtns = [(1, 1, 0), (2, 1, 1), (3, 1, 2), (0, 3, 3), (3, 3, 4), (3, 5, 5)]
+    infoBtns = [(1, 1, 0), (2, 1, 1), (3, 1, 2), (0, 3, 3), (3, 3, 4), (3, 5, 5), (6, 1, 6), (6, 3, 7), (9, 3, 8)]
     for row, col, which in infoBtns:
         Button(optionsFrame, text='?', font=('Agency FB bold', 10), command=lambda which=which: ShowMessage(window, which),
                bg='yellow').grid(row=row, column=col, padx=(0, 10))
 
     # Finish buttons.
+    Button(optionsFrame, text='Restore defaults', font=('Agency FB', 14), command=(lambda: Reset(elementsList, boxText)))\
+        .grid(row=9, column=4, rowspan=2)
     Button(optionsFrame, text='Build molecule', font=('Agency FB', 14),
            command=(lambda: ProceedToAlgo(elementsList, algo.get(), pbc.get(), popSize.get(), numCores.get(),
-                                          showPosPlot.get(), showPesPlot.get(), numPoints.get())))\
-        .grid(row=6, column=4, pady=(10, 0))
-    Button(optionsFrame, text='Cancel', font=('Agency FB', 14), command=Close).grid(row=6, column=5, padx=(0, 10), pady=(10, 0))
+                                          showPosPlot.get(), showPesPlot.get(), numPoints.get(), mutDist.get(),
+                                          mutSize.get(), permute.get(), cross.get())))\
+        .grid(row=11, column=4, rowspan=2)
+    Button(optionsFrame, text='Cancel', font=('Agency FB', 14), command=Close).grid(row=11, column=5, rowspan=2, padx=(0, 10))
 
     optionsFrame.pack()
     window.mainloop()
@@ -112,11 +155,27 @@ def DisableSlider(isDefault, slider, value, whichSlider):
         slider['state'] = 'normal'
 
 
+def EnableButtons(buttons):
+    # Disable or enable the EA options.
+    firstButton = buttons[0]
+    state = 'normal'
+    if firstButton['state'] == 'normal':
+        state = 'disabled'
+    for button in buttons:
+        button['state'] = state
+
+
 def Close():
     window.destroy()
 
 
-def ProceedToAlgo(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints):
+def Reset(elementsList, boxText):
+    Close()
+    ChooseFeatures(elementsList, boxText)
+
+
+def ProceedToAlgo(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints, mutDist, mutSize,
+                  permute, cross):
     if algo == 0:
         # How long the ManyMolecule EA takes.
         estTime = round(0.5967 * (numAtoms * numAtoms) - 1.3253 * numAtoms + 3.0362)
@@ -128,7 +187,8 @@ def ProceedToAlgo(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
     if sure == 'yes':
         Close()
         try:
-            StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints)
+            StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints, mutDist,
+                          mutSize, permute, cross)
         except:
             messagebox.showerror(title="Unsupported element", message="Some heavy elements are not yet supported by the energy calculator.\n"
                                                                       "Please try again when the project is finished.")

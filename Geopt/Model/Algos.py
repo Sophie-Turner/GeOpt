@@ -7,11 +7,11 @@ from numpy import random
 from concurrent import futures
 
 
-def SetUp(elementsList):
+def SetUp(elementsList, mutSize):
     print('setting up calculator and cell')
     # calc = SetUpVasp()
     calc = EMT()
-    thisPopulation = Population(elementsList)
+    thisPopulation = Population(elementsList, mutSize)
     boxSize = thisPopulation.boxSize
     return calc, thisPopulation, boxSize
 
