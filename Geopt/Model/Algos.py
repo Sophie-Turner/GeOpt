@@ -59,7 +59,7 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     childEnergy = GetEnergy(childMolecule, calc, pbc)
     # Don't keep any extremely terrible structures.
     if childEnergy >= bestE * 100:
-        print('Energy too high. Recursing')
+        print('Energy too high. Repeating.')
         MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute,
                         plot, pes, calc, pbc, numPoints)
     population.append([childMolecule, childCoordinates, childEnergy])
@@ -181,7 +181,7 @@ def MoveHydrogen(itsAtoms, boxSize):
 
 def RankByE(population, numToKeep):
     # I originally planned to use a quicksort but decided that since the list was small
-    # there was no need to make it complicated.
+    # there was no need to make it more complicated.
     rankedPopulation = []
     bestMolecule = None
     while len(rankedPopulation) < numToKeep:

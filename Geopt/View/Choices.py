@@ -130,6 +130,9 @@ def ChooseFeatures(elementsList, boxText):
         Button(optionsFrame, text='?', font=('Agency FB bold', 10), command=lambda which=which: ShowMessage(window, which),
                bg='yellow').grid(row=row, column=col, padx=(0, 10))
 
+    # Tooltips.
+
+
     # Finish buttons.
     Button(optionsFrame, text='Restore defaults', font=('Agency FB', 14), command=(lambda: Reset(elementsList, boxText)))\
         .grid(row=9, column=4, rowspan=2)
