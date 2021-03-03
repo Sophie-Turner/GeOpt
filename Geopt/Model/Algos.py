@@ -180,6 +180,7 @@ def MoveHydrogen(itsAtoms, boxSize):
 
 
 def RankByE(population, numToKeep):
+    print('population:', population)
     # I originally planned to use a quicksort but decided that since the list was small
     # there was no need to make it more complicated.
     rankedPopulation = []
@@ -195,6 +196,22 @@ def RankByE(population, numToKeep):
         rankedPopulation.append(bestMolecule)
         population.remove(bestMolecule)
     return rankedPopulation
+
+
+def RankByDistance(population, numToKeep):
+    # Choose molecules which have similar bond lengths.
+    rankedPopulation = []
+    bestMolecule = None
+    while len(rankedPopulation) < numToKeep:
+        bestDiff = 1000
+        shortest = 0
+        longest = 1000
+        for eachMember in population:
+            pass
+        rankedPopulation.append(bestMolecule)
+        population.remove(bestMolecule)
+    return rankedPopulation
+
 
 
 def Crossover(population):

@@ -26,7 +26,10 @@ def Start(elementsList, pbc, cores, numPoints, mutSize):
             results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc, pbc, numPoints)
                        for _ in range(cores)]
             ProcessResults(results, population, plot, pes, refs)
-        population = RankByE(population, 3)
+        if cores > 2:
+            population = RankByE(population, 3)
+        elif cores == 2:
+            population = RankByE(population, 2)
         for eachBest in population:
             newMolecule = Atoms(eachBest[0], cell=boxSize)
             newMolecule.center()

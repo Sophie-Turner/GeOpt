@@ -104,9 +104,6 @@ def ChooseFeatures(elementsList, boxText):
     sizeSlider = Scale(optionsFrame, from_=-2, to=2, orient=tk.HORIZONTAL, showvalue=0, tickinterval=1, variable=mutSize)
     sizeSlider.grid(row=10, column=1)
 
-    #for name, value in sizes:
-        #tk.Radiobutton(optionsFrame, text=name, variable=mutSize, value=value).grid(row=value+11, column=0)
-
     # Permutation option.
     Label(optionsFrame, text='Permutation', font=('Agency FB', 14)).grid(row=5, column=4)
     permute = tk.BooleanVar()
@@ -193,12 +190,12 @@ def ProceedToAlgo(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
                                   message='Estimated time: up to {} seconds. Proceed?'.format(estTime))
     if sure == 'yes':
         Close()
-        try:
-            StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints, mutDist,
-                          mutSize, permute, cross)
-        except:
-            messagebox.showerror(title="Unsupported element", message="Some heavy elements are not yet supported by the energy calculator.\n"
-                                                                      "Please try again when the project is finished.")
+        #try:
+        StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints, mutDist,
+                      mutSize, permute, cross)
+        #except:
+            #messagebox.showerror(title="Unsupported element", message="Some heavy elements are not yet supported by the energy calculator.\n"
+            #                                                          "Please try again when the project is finished.")
 
 
 

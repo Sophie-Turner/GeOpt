@@ -21,7 +21,11 @@ def StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
         imageTypes[2] = 'noPlot'
     imageHolders = [[], [], []]
 
-    for i in range(3):
+    if numCores > 2:
+        versions = 3
+    else:
+        versions = numCores
+    for i in range(versions):
         fileName = "Images/structure{num}.png".format(num=i)
         write(fileName, bestMolecules[i], rotation='10x,30y,0z')
 
@@ -39,9 +43,14 @@ def StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
             allAtomPlaces = np.array(allAtomPlaces)
             PositionPlot(allAtomPlaces, eMax, i)
 
-    colText = ['Best geometry found {:.4f} eV\nClick for more info'.format(energies[0][1]),
-               '2nd best found {:.4f} eV\nClick for more info'.format(energies[1][1]),
-               '3rd best found {:.4f} eV\nClick for more info'.format(energies[2][1])]
+    #colText = ['Best geometry found {:.4f} eV\nClick for more info'.format(energies[0][1]),
+               #'2nd best found {:.4f} eV\nClick for more info'.format(energies[1][1]),
+               #'3rd best found {:.4f} eV\nClick for more info'.format(energies[2][1])]
+    colText = ['Best geometry found {:.4f} eV\nClick for more info'.format(energies[0][1])]
+    if versions > 1:
+        colText.append('2nd best found {:.4f} eV\nClick for more info'.format(energies[1][1]))
+    if versions > 2:
+        colText.append('3rd best found {:.4f} eV\nClick for more info'.format(energies[2][1]))
     rowText = ['', 'Structure', 'Potential energy surfaces found', 'Positions tested']
 
     gridFrame = Frame(window)
@@ -51,7 +60,7 @@ def StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
     for i in range(4):
         Label(gridFrame, text=rowText[i], font=('Agency FB', 16), fg='#EEFFEE', bg='#222222') \
             .grid(row=i, column=0, rowspan=1, columnspan=1, padx='5')
-        for j in range(3):
+        for j in range(versions):
             if i == 0:
                 Button(gridFrame, text=colText[j], command=(lambda j=j: ShowInfo(energies[j], pes[j], refs[j],
                                                                                  elementsList, len(allAtomPlaces), j,
