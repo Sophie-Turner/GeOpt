@@ -57,8 +57,6 @@ def Evolve(elementsList, boxSize, population, calc, pbc, popSize, numPoints, mut
     changeSizes = [width/30, width/20, width/16, width/12, width/8, width/4]
     # Set the mutation distributions.
     mutMove, mutFill = mutDist+1, mutDist+3
-    print('mutMove = ', mutMove)
-    print('mutFill = ', mutFill)
     # See how many iterations it takes.
     iterations = 0
     similarity = 0
