@@ -48,10 +48,8 @@ def ChooseFeatures(elementsList, boxText):
     popSize.set(numAtoms)
     Label(optionsFrame, text='Population size', font=('Agency FB', 14)).grid(row=0, column=4)
     popSlider = Scale(optionsFrame, from_=2, to=numAtoms + 2, orient=tk.HORIZONTAL, showvalue=0, tickinterval=1,
-                   state="disabled", variable=popSize)
-    popSlider.grid(row=2, column=4)
-    Checkbutton(optionsFrame, text='Default', variable=defaultEA, onvalue=True, offvalue=False,
-                command=lambda: DisableSlider(defaultEA.get(), popSlider, popSize, 0)).grid(row=1, column=4)
+                      variable=popSize)
+    popSlider.grid(row=1, column=4)
 
     # Multiprocessing factor chooser.
     findCores = tk.BooleanVar()
@@ -65,12 +63,12 @@ def ChooseFeatures(elementsList, boxText):
     elif cores > 6:
         max = cores
     numCores.set(cores)
-    Label(optionsFrame, text='Parallel processes', font=('Agency FB', 14)).grid(row=3, column=4, pady=(10, 0))
+    Label(optionsFrame, text='Parallel processes', font=('Agency FB', 14)).grid(row=2, column=4, pady=(10, 0))
     proSlider = Scale(optionsFrame, from_=1, to=max, orient=tk.HORIZONTAL, showvalue=0, tickinterval=1,
                    state="disabled", variable=numCores)
-    proSlider.grid(row=5, column=4)
+    proSlider.grid(row=4, column=4)
     Checkbutton(optionsFrame, text='Default', variable=findCores, onvalue=True, offvalue=False,
-                command=lambda: DisableSlider(findCores.get(), proSlider, numCores, 1)).grid(row=4, column=4)
+                command=lambda: DisableSlider(findCores.get(), proSlider, numCores, 1)).grid(row=3, column=4)
 
     # Graph detail chooser.
     showPosPlot, showPesPlot = tk.BooleanVar(), tk.BooleanVar()
@@ -110,28 +108,28 @@ def ChooseFeatures(elementsList, boxText):
         #tk.Radiobutton(optionsFrame, text=name, variable=mutSize, value=value).grid(row=value+11, column=0)
 
     # Permutation option.
-    Label(optionsFrame, text='Permutation', font=('Agency FB', 14)).grid(row=6, column=4)
+    Label(optionsFrame, text='Permutation', font=('Agency FB', 14)).grid(row=5, column=4)
     permute = tk.BooleanVar()
     permute.set(False)
     permuteOff = tk.Radiobutton(optionsFrame, text='Off', variable=permute, value=False)
-    permuteOff.grid(row=7, column=4)
+    permuteOff.grid(row=6, column=4)
     permuteOn = tk.Radiobutton(optionsFrame, text='On', variable=permute, value=True)
-    permuteOn.grid(row=8, column=4)
+    permuteOn.grid(row=7, column=4)
 
     # Crossover option.
-    Label(optionsFrame, text='Crossover', font=('Agency FB', 14)).grid(row=9, column=4)
+    Label(optionsFrame, text='Crossover', font=('Agency FB', 14)).grid(row=8, column=4)
     cross = tk.BooleanVar()
     cross.set(False)
     crossOff = tk.Radiobutton(optionsFrame, text='Off', variable=cross, value=False)
-    crossOff.grid(row=10, column=4)
+    crossOff.grid(row=9, column=4)
     crossOn = tk.Radiobutton(optionsFrame, text='On', variable=cross, value=True)
-    crossOn.grid(row=11, column=4)
+    crossOn.grid(row=10, column=4)
 
     # List of buttons whose state depend on algorithm chosen.
     buttons = (permuteOff, permuteOn, crossOff, crossOn)
 
     # Info buttons.
-    infoBtns = [(1, 3, 0), (2, 3, 1), (3, 3, 2), (0, 5, 3), (3, 5, 4), (3, 7, 5), (6, 3, 6), (6, 5, 7), (9, 5, 8)]
+    infoBtns = [(1, 3, 0), (2, 3, 1), (3, 3, 2), (0, 5, 3), (2, 5, 4), (3, 7, 5), (6, 3, 6), (5, 5, 7), (8, 5, 8)]
     for row, col, which in infoBtns:
         Button(optionsFrame, text='?', font=('Agency FB bold', 10), command=lambda which=which: ShowMessage(window, which),
                bg='yellow').grid(row=row, column=col, padx=(0, 10))
