@@ -180,7 +180,6 @@ def MoveHydrogen(itsAtoms, boxSize):
 
 
 def RankByE(population, numToKeep):
-    print('population:', population)
     # I originally planned to use a quicksort but decided that since the list was small
     # there was no need to make it more complicated.
     rankedPopulation = []
@@ -190,6 +189,7 @@ def RankByE(population, numToKeep):
         for eachMember in population:
             # Access the last item of population because different algorithms have different types
             # of population and put low energy at the end.
+            print('member of population:', eachMember)
             if eachMember[-1] < bestEnergy:
                 bestEnergy = eachMember[-1]
                 bestMolecule = eachMember
