@@ -1,4 +1,5 @@
 from math import exp
+from ttkwidgets.frames import Balloon
 from Controller.Choices import *
 from View.Shared import SetUpWindow
 from View.Analysis import StartAnalysis
@@ -32,8 +33,8 @@ def ChooseFeatures(elementsList, boxText):
             .grid(row=value+1, column=0, columnspan=3)
 
     # Periodic boundary conditions.
-    Label(optionsFrame, text='Periodic boundary conditions', font=('Agency FB', 14)).grid(row=3, column=0, columnspan=3,
-                                                                                          pady=(10, 0))
+    pbcLabel = Label(optionsFrame, text='Periodic boundary conditions', font=('Agency FB', 14))
+    pbcLabel.grid(row=3, column=0, columnspan=3, pady=(10, 0))
     pbcs = [('Off', False), ('On', True)]
     pbc = tk.BooleanVar()
     pbc.set(False)
@@ -46,7 +47,8 @@ def ChooseFeatures(elementsList, boxText):
     # The default population size is equal to the number of atoms.
     defaultEA.set(True)
     popSize.set(numAtoms)
-    Label(optionsFrame, text='Population size', font=('Agency FB', 14)).grid(row=0, column=4)
+    popLabel = Label(optionsFrame, text='Population size', font=('Agency FB', 14))
+    popLabel.grid(row=0, column=4)
     popSlider = Scale(optionsFrame, from_=2, to=numAtoms + 2, orient=tk.HORIZONTAL, showvalue=0, tickinterval=1,
                       variable=popSize)
     popSlider.grid(row=1, column=4)
@@ -63,7 +65,8 @@ def ChooseFeatures(elementsList, boxText):
     elif cores > 6:
         max = cores
     numCores.set(cores)
-    Label(optionsFrame, text='Parallel processes', font=('Agency FB', 14)).grid(row=2, column=4, pady=(10, 0))
+    proLabel = Label(optionsFrame, text='Parallel processes', font=('Agency FB', 14))
+    proLabel.grid(row=2, column=4, pady=(10, 0))
     proSlider = Scale(optionsFrame, from_=1, to=max, orient=tk.HORIZONTAL, showvalue=0, tickinterval=1,
                    state="disabled", variable=numCores)
     proSlider.grid(row=4, column=4)
@@ -80,12 +83,14 @@ def ChooseFeatures(elementsList, boxText):
         plot.set(True)
         Checkbutton(optionsFrame, text=text, variable=plot, onvalue=True, offvalue=False,
                     ).grid(row=row, column=6)
-    Label(optionsFrame, text='Data points limit').grid(row=3, column=6)
+    limLabel = Label(optionsFrame, text='Data points limit')
+    limLabel.grid(row=3, column=6)
     Scale(optionsFrame, from_=100, to=800, orient=tk.HORIZONTAL, length=200, tickinterval=100,
           variable=numPoints).grid(row=4, column=6, columnspan=2, rowspan=2)
 
     # Mutation options.
-    Label(optionsFrame, text='Radial mutation', font=('Agency FB', 14)).grid(row=6, column=0, columnspan=3)
+    mutLabel = Label(optionsFrame, text='Radial mutation', font=('Agency FB', 14))
+    mutLabel.grid(row=6, column=0, columnspan=3)
     # Types of mutation distribution.
     mutations = [('Uniform', 0), ('Gaussian', 1)]
     # Sizes of mutation distributions.
@@ -105,7 +110,8 @@ def ChooseFeatures(elementsList, boxText):
     sizeSlider.grid(row=10, column=1)
 
     # Permutation option.
-    Label(optionsFrame, text='Permutation', font=('Agency FB', 14)).grid(row=5, column=4)
+    permuteLabel = Label(optionsFrame, text='Permutation', font=('Agency FB', 14))
+    permuteLabel.grid(row=5, column=4)
     permute = tk.BooleanVar()
     permute.set(False)
     permuteOff = tk.Radiobutton(optionsFrame, text='Off', variable=permute, value=False)
@@ -114,7 +120,8 @@ def ChooseFeatures(elementsList, boxText):
     permuteOn.grid(row=7, column=4)
 
     # Crossover option.
-    Label(optionsFrame, text='Crossover', font=('Agency FB', 14)).grid(row=8, column=4)
+    crossLabel = Label(optionsFrame, text='Crossover', font=('Agency FB', 14))
+    crossLabel.grid(row=8, column=4)
     cross = tk.BooleanVar()
     cross.set(False)
     crossOff = tk.Radiobutton(optionsFrame, text='Off', variable=cross, value=False)
@@ -126,13 +133,15 @@ def ChooseFeatures(elementsList, boxText):
     buttons = (permuteOff, permuteOn, crossOff, crossOn)
 
     # Info buttons.
-    infoBtns = [(1, 3, 0), (2, 3, 1), (3, 3, 2), (0, 5, 3), (2, 5, 4), (3, 7, 5), (6, 3, 6), (5, 5, 7), (8, 5, 8)]
+    infoBtns = [(1, 3, 0), (2, 3, 1)]
     for row, col, which in infoBtns:
         Button(optionsFrame, text='?', font=('Agency FB bold', 10), command=lambda which=which: ShowMessage(window, which),
                bg='yellow').grid(row=row, column=col, padx=(0, 10))
 
     # Tooltips.
-
+    tooltips = [pbcLabel, popLabel, proLabel, limLabel, mutLabel, permuteLabel, crossLabel]
+    for i in range(len(tooltips)):
+        Balloon(tooltips[i], headertext=messages[i+2][0], text=messages[i+2][1], timeout=0)
 
     # Finish buttons.
     Button(optionsFrame, text='Restore defaults', font=('Agency FB', 14), command=(lambda: Reset(elementsList, boxText)))\
@@ -190,12 +199,12 @@ def ProceedToAlgo(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
                                   message='Estimated time: up to {} seconds. Proceed?'.format(estTime))
     if sure == 'yes':
         Close()
-        #try:
-        StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints, mutDist,
+        try:
+            StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showPesPlot, numPoints, mutDist,
                       mutSize, permute, cross)
-        #except:
-            #messagebox.showerror(title="Unsupported element", message="Some heavy elements are not yet supported by the energy calculator.\n"
-            #                                                          "Please try again when the project is finished.")
+        except:
+            messagebox.showerror(title="Unsupported element", message="Some heavy elements are not yet supported by the energy calculator.\n"
+                                                                      "Please try again when the project is finished.")
 
 
 

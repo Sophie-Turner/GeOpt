@@ -49,7 +49,7 @@ parameters = {
     # Parameters are cohesive energy, radius, atomic potential energy,
     # electron density fall-off, lambda*, kappa* and embedding density.
     # * Lambda, kappa and many of these values can't be calculated for the elements below so they've just been
-    # made up for proof of concept, as this method would only work properly with crystalline solids anyway.
+    # made up for proof of concept, as this method would only work properly with some metals anyway.
     # Assume that helium is similar to hydrogen.
     'He': (-1.30, 31/53, 0.132, 2.652, 2.790, 3.892, 0.00547),
     'Li': (-1.82, 167/53, 0.4, 1.652, 2.790, 1.892, 0.01),
