@@ -28,6 +28,8 @@ def StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
     for i in range(versions):
         fileName = "Images/structure{num}.png".format(num=i)
         write(fileName, bestMolecules[i], rotation='10x,30y,0z')
+        fileName = "Images/structure{num}rotated.png".format(num=i)
+        write(fileName, bestMolecules[i], rotation='-10x,210y,0z')
 
         if showPesPlot is True:
             pesData = pes[i]
