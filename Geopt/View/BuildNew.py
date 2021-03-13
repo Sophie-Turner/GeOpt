@@ -1,3 +1,4 @@
+from ttkwidgets.frames import Balloon
 from Controller.BuildNew import *
 from View.Shared import SetUpWindow
 
@@ -10,6 +11,12 @@ def MakeTable(tableFrame, periods, xmlList, box):
             element = Button(tableFrame, text=symbol, command=lambda j=j: AddElement(box, j), font=('Agency FB', 12))
             element.grid(row=i, column=group)
             element.config(width=5)
+            # Grey out the unsupported elements but show them to maintain the visual structure.
+            num = int(j.get('atomicNumber'))
+            if num > 56 and num != 80 and num != 82:
+                element['state'] = 'disabled'
+                Balloon(element, headertext=symbol, text='Some heavy elements are not supported by the energy calculator.',
+                        timeout=0.5)
     SetColours(tableFrame)
 
 
