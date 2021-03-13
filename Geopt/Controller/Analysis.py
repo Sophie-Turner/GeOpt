@@ -5,7 +5,6 @@ from Model.PerAtom import Start
 import matplotlib.pyplot as plt
 import numpy as np
 from statistics import mean
-import tkinter
 
 colours = ['deeppink', 'yellow', 'dodgerblue', 'limegreen', 'darkorange', 'purple', 'red', 'blue']
 global bestVersions, surfData, surfRefs

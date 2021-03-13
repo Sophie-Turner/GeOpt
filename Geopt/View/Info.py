@@ -28,7 +28,7 @@ def ShowInfo(version, pes, refs, atoms, numTests, rank, showPosPlot, showPesPlot
 
     imageHolders.append(PhotoImage(file="Images/structure{num}.png".format(num=rank)))
     thisImage = imageHolders[-1]
-    canvas = tkinter.Canvas(topGrid, width=sizex, height=sizey, bg="#222222")
+    canvas = tk.Canvas(topGrid, width=sizex, height=sizey, bg="#222222")
     canvas.grid(row=1, column=0, padx='5')
     canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
 
@@ -41,7 +41,7 @@ def ShowInfo(version, pes, refs, atoms, numTests, rank, showPosPlot, showPesPlot
     else:
         imageHolders.append(PhotoImage(file="Images/noPlot0.png"))
     thisImage = imageHolders[-1]
-    canvas = tkinter.Canvas(topGrid, width=sizex, height=sizey)
+    canvas = tk.Canvas(topGrid, width=sizex, height=sizey)
     canvas.grid(row=1, column=2, padx='5')
     canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
 
@@ -80,7 +80,7 @@ def ShowInfo(version, pes, refs, atoms, numTests, rank, showPosPlot, showPesPlot
         pesInfoBox.insert(END, "Potential energy surface\ndata not recorded.")
         bottomGrid.pack()
     thisImage = imageHolders[-1]
-    canvas = tkinter.Canvas(bottomGrid, width=sizex, height=sizey)
+    canvas = tk.Canvas(bottomGrid, width=sizex, height=sizey)
     canvas.grid(row=1, column=1, padx='5')
     canvas.create_image(sizex/2, sizey/2, image=thisImage)
 

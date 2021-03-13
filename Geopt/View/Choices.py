@@ -1,6 +1,7 @@
 from math import exp
 from ttkwidgets.frames import Balloon
 from Controller.Choices import *
+from tkinter import ttk
 from View.Shared import SetUpWindow
 from View.Analysis import StartAnalysis
 
@@ -35,7 +36,6 @@ def ChooseFeatures(elementsList, boxText):
     # Periodic boundary conditions.
     pbcLabel = Label(optionsFrame, text='Periodic boundary conditions', font=('Agency FB', 14))
     pbcLabel.grid(row=3, column=0, columnspan=3, pady=(10, 0))
-    #pbcBalloon = Balloon(pbcLabel, headertext=messages[2][0], text=messages[2][1], timeout=0)
     pbcs = [('Off', False), ('On', True)]
     pbc = tk.BooleanVar()
     pbc.set(False)
@@ -50,7 +50,6 @@ def ChooseFeatures(elementsList, boxText):
     popSize.set(numAtoms)
     popLabel = Label(optionsFrame, text='Population size', font=('Agency FB', 14))
     popLabel.grid(row=0, column=4)
-    #popBalloon = Balloon(popLabel, headertext=messages[3][0], text=messages[3][1], timeout=0)
     popSlider = Scale(optionsFrame, from_=2, to=numAtoms + 2, orient=tk.HORIZONTAL, showvalue=0, tickinterval=1,
                       variable=popSize)
     popSlider.grid(row=1, column=4)
@@ -69,7 +68,6 @@ def ChooseFeatures(elementsList, boxText):
     numCores.set(cores)
     proLabel = Label(optionsFrame, text='Parallel processes', font=('Agency FB', 14))
     proLabel.grid(row=2, column=4, pady=(10, 0))
-    #proBalloon = Balloon(proLabel, headertext=messages[4][0], text=messages[4][1], timeout=0)
     proSlider = Scale(optionsFrame, from_=1, to=max, orient=tk.HORIZONTAL, showvalue=0, tickinterval=1,
                    state="disabled", variable=numCores)
     proSlider.grid(row=4, column=4)
@@ -88,14 +86,12 @@ def ChooseFeatures(elementsList, boxText):
                     ).grid(row=row, column=6)
     limLabel = Label(optionsFrame, text='Data points limit')
     limLabel.grid(row=3, column=6)
-    #limBalloon = Balloon(limLabel, headertext=messages[5][0], text=messages[5][1], timeout=0)
     Scale(optionsFrame, from_=100, to=800, orient=tk.HORIZONTAL, length=200, tickinterval=100,
           variable=numPoints).grid(row=4, column=6, columnspan=2, rowspan=2)
 
     # Mutation options.
     mutLabel = Label(optionsFrame, text='Radial mutation', font=('Agency FB', 14))
     mutLabel.grid(row=6, column=0, columnspan=3)
-    #mutBalloon = Balloon(mutLabel, headertext=messages[6][0], text=messages[6][1], timeout=0)
     # Types of mutation distribution.
     mutations = [('Uniform', 0), ('Gaussian', 1)]
     # Sizes of mutation distributions.
@@ -117,7 +113,6 @@ def ChooseFeatures(elementsList, boxText):
     # Permutation option.
     permuteLabel = Label(optionsFrame, text='Permutation', font=('Agency FB', 14))
     permuteLabel.grid(row=5, column=4)
-    #permuteBalloon = Balloon(permuteLabel, headertext=messages[7][0], text=messages[7][1], timeout=0)
     permute = tk.BooleanVar()
     permute.set(False)
     permuteOff = tk.Radiobutton(optionsFrame, text='Off', variable=permute, value=False)
@@ -128,7 +123,6 @@ def ChooseFeatures(elementsList, boxText):
     # Crossover option.
     crossLabel = Label(optionsFrame, text='Crossover', font=('Agency FB', 14))
     crossLabel.grid(row=8, column=4)
-    #crossBalloon = Balloon(crossLabel, headertext=messages[8][0], text=messages[8][1], timeout=0)
     cross = tk.BooleanVar()
     cross.set(False)
     crossOff = tk.Radiobutton(optionsFrame, text='Off', variable=cross, value=False)
@@ -146,9 +140,10 @@ def ChooseFeatures(elementsList, boxText):
                bg='yellow').grid(row=row, column=col, padx=(0, 10))
 
     # Tooltips.
-    #tooltips = [pbcLabel, popLabel, proLabel, limLabel, mutLabel, permuteLabel, crossLabel]
-    #for i in range(len(tooltips)):
-        #Balloon(tooltips[i], headertext=messages[i + 2][0], text=messages[i + 2][1], timeout=0)
+    tooltips = [pbcLabel, popLabel, proLabel, limLabel, mutLabel, permuteLabel, crossLabel]
+    for i in range(len(tooltips)):
+        Balloon(tooltips[i], headertext=messages[i + 2][0], text=messages[i + 2][1], timeout=0)
+
     # Finish buttons.
     Button(optionsFrame, text='Restore defaults', font=('Agency FB', 14), command=(lambda: Reset(elementsList, boxText)))\
         .grid(row=9, column=6, rowspan=2)

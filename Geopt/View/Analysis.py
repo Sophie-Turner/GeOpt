@@ -72,7 +72,7 @@ def StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
                 fileName = "Images/{type}{num}.png".format(num=j, type=imageTypes[i-1])
                 imageHolders[i-1].append(PhotoImage(file=fileName))
                 thisImage = imageHolders[i-1][j]
-                canvas = tkinter.Canvas(gridFrame, height=sizey, width=sizex, bg="#222222")
+                canvas = tk.Canvas(gridFrame, height=sizey, width=sizex, bg="#222222")
                 canvas.grid(row=i, column=j+1, rowspan=1, columnspan=1, padx='5')
                 canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
     # Show a legend for the PES plots.
