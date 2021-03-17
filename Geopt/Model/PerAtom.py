@@ -1,11 +1,11 @@
 from Model.Algos import *
 
 
-def Start(elementsList, pbc, cores, numPoints):
+def Start(elementsList, pbc, cores, numPoints, mutSize):
     print('Starting Per-atom algorithm.')
-    # Set up initial values & placeholders
-    calc, thisPopulation, boxSize = SetUp(elementsList)
-    # Get the final cell movement size
+    # Set up initial values & placeholders.
+    calc, thisPopulation, boxSize = SetUp(elementsList, mutSize)
+    # Get the final cell movement size.
     covRads = thisPopulation.covRads
 
     # Move Hydrogens to the end of the list, as they can mess up the calculations at the start.
@@ -23,9 +23,13 @@ def Start(elementsList, pbc, cores, numPoints):
 
     if __name__ == 'Model.PerAtom':
         with futures.ProcessPoolExecutor() as executor:
-            results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc, pbc, numPoints) for _ in range(cores)]
+            results = [executor.submit(Evolve, elementsList, boxSize, covRads, calc, pbc, numPoints)
+                       for _ in range(cores)]
             ProcessResults(results, population, plot, pes, refs)
-        population = RankByE(population, 3)
+        if cores > 2:
+            population = RankByE(population, 3)
+        elif cores == 2:
+            population = RankByE(population, 2)
         for eachBest in population:
             newMolecule = Atoms(eachBest[0], cell=boxSize)
             newMolecule.center()
@@ -78,7 +82,8 @@ def Evolve(elementsList, boxSize, covRads, calc, pbc, numPoints):
     return buildUp, worstEnergy, buildUpBestEnergy, plot, pes, refs
 
 
-def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, plot, pes, refs, worstEnergy, pbc, numPoints):
+def TestAllPlaces(buildUp, bestEnergy, bestStructure, onlyH, covRads, boxSize, calc, plot, pes, refs, worstEnergy, pbc,
+                  numPoints):
     # Move each atom around every atom.
     numSoFar = len(buildUp)
     for eachAtomToMove in range(numSoFar):

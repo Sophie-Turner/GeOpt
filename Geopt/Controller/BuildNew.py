@@ -92,7 +92,7 @@ def Build(box):
         if len(elementsList) > 0:
             ValidateInput(elementsList, box, boxText)
         else:
-            ShowError()
+            ShowError(1, box)
             elementsList.clear()
             Clear(box)
 
@@ -101,9 +101,12 @@ def ValidateInput(elementsList, box, boxText):
     try:
         for element in elementsList:
             testAtom = Atom(element)
+            num = testAtom.number
+            if num > 56 and num != 80 and num != 82:
+                ShowError(0, box)
+                return
     except:
-        ShowError()
-        Clear(box)
+        ShowError(1, box)
         return
     ChooseFeatures(elementsList, boxText)
 
@@ -113,9 +116,15 @@ def Clear(box):
     box.delete(0, END)
 
 
-def ShowError():
-    messagebox.showerror(title="Invalid input", message="This molecule is not supported by the energy calculator.\n"
-                                                        "Please enter a valid molecular formula, e.g. H₂O (or H2O).")
-
+def ShowError(code, box):
+    if code == 0:
+        title = "Unsupported element"
+        message = "Some heavy elements are not supported by the energy calculator.\n"
+    else:
+        title = "Invalid input"
+        message = ("This molecule is not supported by the energy calculator.\n"
+                   "Please enter a valid molecular formula, e.g. H₂O (or H2O).")
+    messagebox.showerror(title=title, message=message)
+    Clear(box)
 
 

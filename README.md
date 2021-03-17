@@ -1,5 +1,5 @@
 # COMP3000
-<h1>Molecular Geometry Optimisation Using Machine Learning</h1>
+<h1>Molecular Geometry Optimisation Using Evolutionary Computation</h1>
 <p>Sophie Turner's final year project</p>
 
 <h2>Vision</h2>
@@ -65,8 +65,18 @@ EMT was originally only intended for use with solid crystal structures.</p>
                 create plots. A smaller number will speed up execution time and 
                 may also create clearer graphs.</p>
 
-<h3></h3>
-<p></p>
+<h3>Radial mutation distribution</h3>
+<p>This alters the position of atoms and moves them randomly according to
+            a distribution around other atoms or themselves. The distribution
+            size determines how far apart atoms can move from one another. Moving             atoms too far apart can cause the energy calculator to treat each atom             as a standalone system.
+            Moving atoms too close together can result in high energies and                   repulsion.
+</p>
+
+<h3>Permutation</h3>
+<p>This swaps the positions of atoms in the molecule during an evolutionary algorithm.</p>
+
+<h3>Crossover</h3>
+<p>This combines positions of atoms from two parent molecules to form a new configuration during an evolutionary algorithm.</p>
 
 <h2>References & Other Documentation</h2>
 

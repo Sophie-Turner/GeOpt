@@ -22,31 +22,41 @@ def ShowInfo(version, pes, refs, atoms, numTests, rank, showPosPlot, showPesPlot
     sizex, sizey = 200, 170
 
     Label(topGrid, text='Geometric structure', font=('Agency FB', 16), fg='#EEFFEE', bg='#222222') \
-        .grid(row=0, column=0, columnspan=2, padx='5')
+        .grid(row=0, column=0, padx='5')
+    Label(topGrid, text='Rotated', font=('Agency FB', 16), fg='#EEFFEE', bg='#222222') \
+        .grid(row=0, column=1, padx='5')
     Label(topGrid, text='Positions tested', font=('Agency FB', 16), fg='#EEFFEE', bg='#222222') \
-        .grid(row=0, column=2, columnspan=2, padx='5')
+        .grid(row=0, column=3, padx='5')
 
+    # Show the structure.
     imageHolders.append(PhotoImage(file="Images/structure{num}.png".format(num=rank)))
     thisImage = imageHolders[-1]
-    canvas = tkinter.Canvas(topGrid, width=sizex, height=sizey, bg="#222222")
+    canvas = tk.Canvas(topGrid, width=sizex, height=sizey, bg="#222222")
     canvas.grid(row=1, column=0, padx='5')
+    canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
+
+    # Show the rotated structure.
+    imageHolders.append(PhotoImage(file="Images/structure{num}rotated.png".format(num=rank)))
+    thisImage = imageHolders[-1]
+    canvas = tk.Canvas(topGrid, width=sizex, height=sizey, bg="#222222")
+    canvas.grid(row=1, column=1, padx='5')
     canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
 
     # Show the stats for this version of the molecule.
     bestInfoBox = Text(topGrid, fg='#EEFFEE', bg="#222222", width="20", height="10")
-    bestInfoBox.grid(row=1, column=1, columnspan=1, padx='5')
+    bestInfoBox.grid(row=1, column=2, columnspan=1, padx='5')
 
     if showPosPlot is True:
         imageHolders.append(PhotoImage(file="Images/positions{num}.png".format(num=rank)))
     else:
         imageHolders.append(PhotoImage(file="Images/noPlot0.png"))
     thisImage = imageHolders[-1]
-    canvas = tkinter.Canvas(topGrid, width=sizex, height=sizey)
-    canvas.grid(row=1, column=2, padx='5')
+    canvas = tk.Canvas(topGrid, width=sizex, height=sizey)
+    canvas.grid(row=1, column=3, padx='5')
     canvas.create_image(sizex / 2, sizey / 2, image=thisImage)
 
     Label(topGrid, text='Configurations tested: {}\n(limited to show max {})'.format(numTests, numPoints), fg='#EEFFEE', bg='#222222') \
-        .grid(row=1, column=3, columnspan=1, padx='5')
+        .grid(row=1, column=4, columnspan=1, padx='5')
 
     topGrid.pack()
 
@@ -61,8 +71,8 @@ def ShowInfo(version, pes, refs, atoms, numTests, rank, showPosPlot, showPesPlot
         .grid(row=0, column=0, columnspan=4, padx='5')
 
     # Show info for the PES plot.
-    pesInfoBox = Text(bottomGrid, fg='#EEFFEE', bg="#222222", width="27", height="18")
-    pesInfoBox.grid(row=1, column=0, columnspan=1, padx='5')
+    pesInfoBox = Text(bottomGrid, fg='#EEFFEE', bg="#222222", width="46", height="18")
+    pesInfoBox.grid(row=1, column=0, columnspan=2, padx='5')
 
     if showPesPlot is True:
         pesData = np.array(pes)
@@ -80,8 +90,8 @@ def ShowInfo(version, pes, refs, atoms, numTests, rank, showPosPlot, showPesPlot
         pesInfoBox.insert(END, "Potential energy surface\ndata not recorded.")
         bottomGrid.pack()
     thisImage = imageHolders[-1]
-    canvas = tkinter.Canvas(bottomGrid, width=sizex, height=sizey)
-    canvas.grid(row=1, column=1, padx='5')
+    canvas = tk.Canvas(bottomGrid, width=sizex, height=sizey)
+    canvas.grid(row=1, column=2, padx='5')
     canvas.create_image(sizex/2, sizey/2, image=thisImage)
 
     window.mainloop()

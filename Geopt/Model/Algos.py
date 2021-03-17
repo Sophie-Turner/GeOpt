@@ -4,14 +4,15 @@ from ase.calculators.vasp import Vasp
 from Model.EmtCalculator import EMT
 from Model.Populations import Population
 from numpy import random
+from numpy.random import randint
 from concurrent import futures
 
 
-def SetUp(elementsList):
+def SetUp(elementsList, mutSize):
     print('setting up calculator and cell')
     # calc = SetUpVasp()
     calc = EMT()
-    thisPopulation = Population(elementsList)
+    thisPopulation = Population(elementsList, mutSize)
     boxSize = thisPopulation.boxSize
     return calc, thisPopulation, boxSize
 
@@ -49,16 +50,16 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
     elif mutate == 2:
         MoveAtomsGauss(atomsObject, 0, changeSize)
     elif mutate == 3:
-        FillCellGauss(atomsObject, boxSize)
-    elif mutate == 4:
         FillCellUniform(atomsObject, boxSize)
+    elif mutate == 4:
+        FillCellGauss(atomsObject, boxSize)
     elif mutate == 5:
         MoveHydrogen(atomsObject, boxSize)
     childMolecule = GenerateChild(atomsObject, boxSize)
     childEnergy = GetEnergy(childMolecule, calc, pbc)
     # Don't keep any extremely terrible structures.
     if childEnergy >= bestE * 100:
-        print('Energy too high. Recursing')
+        print('Energy too high. Repeating.')
         MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, population, mutate, cross, permute,
                         plot, pes, calc, pbc, numPoints)
     population.append([childMolecule, childCoordinates, childEnergy])
@@ -133,7 +134,7 @@ def MoveOneAtomGauss(fixedAtom, atomToMove, sigma):
 
 def MoveAtomsUniform(itsAtoms, changeSize):
     for eachAtom in itsAtoms:
-        eachAtom.position += ((random.randint(-changeSize, changeSize, 3)) / 100)
+        eachAtom.position += ((random.randint(-changeSize-1, changeSize+1, 3)) / 100)
 
 
 def MoveAtomsGauss(itsAtoms, mean, sigma):
@@ -180,7 +181,7 @@ def MoveHydrogen(itsAtoms, boxSize):
 
 def RankByE(population, numToKeep):
     # I originally planned to use a quicksort but decided that since the list was small
-    # there was no need to make it complicated.
+    # there was no need to make it more complicated.
     rankedPopulation = []
     bestMolecule = None
     while len(rankedPopulation) < numToKeep:
@@ -188,9 +189,25 @@ def RankByE(population, numToKeep):
         for eachMember in population:
             # Access the last item of population because different algorithms have different types
             # of population and put low energy at the end.
+            print('member of population:', eachMember)
             if eachMember[-1] < bestEnergy:
                 bestEnergy = eachMember[-1]
                 bestMolecule = eachMember
+        rankedPopulation.append(bestMolecule)
+        population.remove(bestMolecule)
+    return rankedPopulation
+
+
+def RankByDistance(population, numToKeep):
+    # Choose molecules which have similar bond lengths.
+    rankedPopulation = []
+    bestMolecule = None
+    while len(rankedPopulation) < numToKeep:
+        bestDiff = 1000
+        shortest = 0
+        longest = 1000
+        for eachMember in population:
+            pass
         rankedPopulation.append(bestMolecule)
         population.remove(bestMolecule)
     return rankedPopulation

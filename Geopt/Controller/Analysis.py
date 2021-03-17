@@ -5,21 +5,21 @@ from Model.PerAtom import Start
 import matplotlib.pyplot as plt
 import numpy as np
 from statistics import mean
-import tkinter
 
 colours = ['deeppink', 'yellow', 'dodgerblue', 'limegreen', 'darkorange', 'purple', 'red', 'blue']
 global bestVersions, surfData, surfRefs
 
 
-def DoTheAlgo(elementsList, algo, pbc, popSize, numCores, numPoints):
+def DoTheAlgo(elementsList, algo, pbc, popSize, numCores, numPoints, mutDist, mutSize, permute, cross):
     plt.close('all')
     global bestVersions
     if algo == 0:
         print("starting many-molecule EA")
-        bestVersions, energies, plot, pes, refs = StartEA(elementsList, pbc, popSize, numCores, numPoints)
+        bestVersions, energies, plot, pes, refs = StartEA(elementsList, pbc, popSize, numCores, numPoints, mutDist,
+                                                          mutSize, permute, cross)
     else:
         print("starting per-atom algo")
-        bestVersions, energies, plot, pes, refs = Start(elementsList, pbc, numCores, numPoints)
+        bestVersions, energies, plot, pes, refs = Start(elementsList, pbc, numCores, numPoints, mutSize)
     return bestVersions, energies, plot, pes, refs
 
 
