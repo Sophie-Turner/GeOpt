@@ -18,7 +18,7 @@ txtPerAtom = ('The per-atom exhaustive test is an algorithm which moves '
               'each atom in the molecule around each other atom, '
               'constantly testing for the configuration with the lowest '
               'total potential energy.\nThe amount of processing required '
-              'is proportional to the number of atoms factorial and it '
+              'increases exponentially with the number of atoms and it '
               'is recommended for molecules with two to four atoms.')
 titlePopSize = 'Population size'
 txtPopSize = ('The population size is the number of versions of the '

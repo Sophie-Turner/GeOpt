@@ -4,6 +4,7 @@ from View.Shared import SetUpWindow
 
 
 def MakeTable(tableFrame, periods, xmlList, box):
+    atomNums = 'Atomic number: {}\nMass: {}'
     for i in range(periods):
         for j in xmlList[i]:
             symbol = j[0].text
@@ -15,8 +16,10 @@ def MakeTable(tableFrame, periods, xmlList, box):
             num = int(j.get('atomicNumber'))
             if num > 56 and num != 80 and num != 82:
                 element['state'] = 'disabled'
-                Balloon(element, headertext=symbol, text='Some heavy elements are not supported by the energy calculator.',
+                Balloon(element, headertext=j[1].text, text='Some heavy elements are not supported by the energy calculator.',
                         timeout=0.5)
+            else:
+                Balloon(element, headertext=j[1].text, text=atomNums.format(num, j[2].text), timeout=0.5)
     SetColours(tableFrame)
 
 

@@ -213,7 +213,6 @@ def RankByDistance(population, numToKeep):
     return rankedPopulation
 
 
-
 def Crossover(population):
     mumCoordinates = population[0][1]
     howMany = len(mumCoordinates)
