@@ -64,7 +64,7 @@ def Build(box):
             if howMany > 9:
                 howMany = 0
             else:
-                # We'll need to check one node ahead.
+                # We'll need to check one place ahead.
                 character = boxText[i]
                 try:
                     nextCharacter = boxText[i+1]

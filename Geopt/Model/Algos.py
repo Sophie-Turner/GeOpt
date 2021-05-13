@@ -64,7 +64,8 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
                         plot, pes, calc, pbc, numPoints)
     population.append([childMolecule, childCoordinates, childEnergy])
     if plot is not None:
-        if len(plot) < numPoints:
+        # Need to add one to make sure it returns something at some stage.
+        if len(plot) < numPoints + 1:
             refs = []
             numAtoms = len(childMolecule)
             for each in range(numAtoms):
