@@ -2,7 +2,6 @@
 from tkinter import simpledialog, messagebox
 from ase import Atom
 from Model.InteractWithData import GetXML
-from math import exp
 from Controller.Shared import *
 from View.Choices import ChooseFeatures
 
@@ -54,10 +53,10 @@ def Build(box):
 
         for i in range(len(boxText)):
             # Don't let the user make huge molecules!
-            if len(elementsList) > 12:
+            if len(elementsList) > 14:
                 messagebox.showerror(title='Large molecule',
                                      message='This molecule is too large to build!\n'
-                                             'Please select up to 12 atoms.')
+                                             'Please select up to 14 atoms.')
                 Clear(box)
                 return
             # Skip a loop iteration if the last character was 2-digit to prevent overwriting.

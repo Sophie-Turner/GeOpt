@@ -45,9 +45,6 @@ def StartAnalysis(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
             allAtomPlaces = np.array(allAtomPlaces)
             PositionPlot(allAtomPlaces, eMax, i)
 
-    #colText = ['Best geometry found {:.4f} eV\nClick for more info'.format(energies[0][1]),
-               #'2nd best found {:.4f} eV\nClick for more info'.format(energies[1][1]),
-               #'3rd best found {:.4f} eV\nClick for more info'.format(energies[2][1])]
     colText = ['Best geometry found {:.4f} eV\nClick for more info'.format(energies[0][1])]
     if versions > 1:
         colText.append('2nd best found {:.4f} eV\nClick for more info'.format(energies[1][1]))

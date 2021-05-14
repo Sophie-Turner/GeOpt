@@ -10,17 +10,14 @@ def StartEA(elementsList, pbc, popSize, cores, numPoints, mutDist, mutSize, perm
     bestMolecules, energies, plot, pes, refs, finalists = [], [], [], [], [], []
     firstCoordinates = thisPopulation.initPositions
     atomObjectList = thisPopulation.initAtomsObject
-    numAtoms = len(elementsList)
 
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentMolecule.center()
     parentEnergy = GetEnergy(parentMolecule, calc, pbc)
 
-    if numAtoms == 1:
-        # If there's only 1 atom we can skip all this...
-        pass
-
     # Start with a reasonably spaced estimate to use as an energy comparison.
+    # The list is inside another one due to differences between algorithms' data and they both need to use the same
+    # functions and return the same data structure.
     population = [[parentMolecule, firstCoordinates, parentEnergy]]
     lastBestEnergy = parentEnergy
 

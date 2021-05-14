@@ -18,7 +18,7 @@ def ExtraSpace(atomsList):
             isFound, maxSize, covRad = FindAtom(eachAtom, treerootMain, 7, maxSize)
             if isFound is False:
                 # Check in the F block if it hasn't been found.
-                isFound, maxSize, covRad= FindAtom(eachAtom, treerootF, 2, maxSize)
+                isFound, maxSize, covRad = FindAtom(eachAtom, treerootF, 2, maxSize)
         lastAtom = eachAtom
         covRads.append(covRad)
     return maxSize/16, covRads
@@ -27,7 +27,6 @@ def ExtraSpace(atomsList):
 def FindAtom(atomToFind, xmlList, periods, maxSize):
     isFound = False
     covRad = None
-    relativeSize = None
     for i in range(periods):
         for j in xmlList[i]:
             if j[0].text == atomToFind:
