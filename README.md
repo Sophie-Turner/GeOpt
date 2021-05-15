@@ -18,6 +18,20 @@ The EMT calculator is unable to work with ions or double or triple bonds. This i
 only the forces on atoms caused by the presence of other atoms nearby. This is why it favours some geometries which are not chemically realistic.
 EMT was originally only intended for use with solid crystal structures.</p>
 
+<h3>Software required</h3>
+<p>The following software is required to use Geopt.</p>
+<h4>Python 3</h4>
+<p>Windows: https://www.python.org/downloads/ 
+  <br/>Linux command: sudo apt-get install python3</p>
+<h4>ASE</h4>
+<p>Pip command: pip install --upgrade --user ase 
+  <br/>Linux command: sudo apt-get install python3-ase</p>
+<h4>ttkwidgets</h4>
+<p>Pip command: pip install ttkwidgets 
+  <br/>Linux commands: sudo add-apt-repository ppa:j-4321-i/ttkwidgets 
+  <br/>sudo apt-get update
+  <br/>sudo apt-get install python3-ttkwidgets</p>
+
 <h3>Creating a molecule</h3>
 <p>Choose elements by either typing the molecular formula or selecting elements from the periodic table. 
   Use correct capitalisation for element symbols.</p>

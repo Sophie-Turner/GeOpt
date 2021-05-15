@@ -18,7 +18,7 @@ def ExtraSpace(atomsList):
             isFound, maxSize, covRad = FindAtom(eachAtom, treerootMain, 7, maxSize)
             if isFound is False:
                 # Check in the F block if it hasn't been found.
-                isFound, maxSize, covRad= FindAtom(eachAtom, treerootF, 2, maxSize)
+                isFound, maxSize, covRad = FindAtom(eachAtom, treerootF, 2, maxSize)
         lastAtom = eachAtom
         covRads.append(covRad)
     return maxSize/16, covRads
@@ -27,7 +27,6 @@ def ExtraSpace(atomsList):
 def FindAtom(atomToFind, xmlList, periods, maxSize):
     isFound = False
     covRad = None
-    relativeSize = None
     for i in range(periods):
         for j in xmlList[i]:
             if j[0].text == atomToFind:
@@ -53,7 +52,7 @@ def EvenSpacing(atomsList, extraSpace):
     boxSize = (dimensions, dimensions, dimensions)
     # The coordinates list is kept separate so it can be altered easily during the EA.
     coordinates = []
-    # This list of for creating the initial model and it's quicker to build it up during this loop.
+    # This list is for creating the initial model and it's quicker to build it up during this loop.
     atomObjectList = []
     for i in range(axis):
         x = i + i * extraSpace

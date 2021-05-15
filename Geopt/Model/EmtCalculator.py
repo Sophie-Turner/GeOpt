@@ -18,9 +18,7 @@
 # J. Phys.: Condens. Matter Vol. 29 273002, 2017
 
 from math import sqrt, exp, log
-
 import numpy as np
-
 from ase.data import chemical_symbols, atomic_numbers
 from ase.units import Bohr
 from ase.neighborlist import NeighborList

@@ -54,7 +54,12 @@ def ChooseFeatures(elementsList, boxText):
     popSize.set(numAtoms)
     popLabel = Label(optionsFrame, text='Population size', font=('Agency FB', 14))
     popLabel.grid(row=0, column=4)
-    popSlider = Scale(optionsFrame, from_=2, to=numAtoms + 2, orient=tk.HORIZONTAL, showvalue=0, tickinterval=1,
+    # Don't overcrowd the scale or numbers overlap.
+    if numAtoms > 8:
+        ticks = 2
+    else:
+        ticks = 1
+    popSlider = Scale(optionsFrame, from_=2, to=numAtoms + 2, orient=tk.HORIZONTAL, tickinterval=ticks,
                       variable=popSize)
     popSlider.grid(row=1, column=4)
 
@@ -98,8 +103,7 @@ def ChooseFeatures(elementsList, boxText):
     mutLabel.grid(row=6, column=0, columnspan=3)
     # Types of mutation distribution.
     mutations = [('Uniform', 0), ('Gaussian', 1)]
-    # Sizes of mutation distributions.
-    sizes = [('Very small', -2), ('Small', -1), ('Medium', 0), ('Large', 1), ('Very large', 2)]
+    # Size and shape of mutation distributions.
     mutDist, mutSize = tk.IntVar(), tk.IntVar()
     # Default mutation distribution type.
     mutDist.set(1)
@@ -190,10 +194,10 @@ def ProceedToAlgo(elementsList, algo, pbc, popSize, numCores, showPosPlot, showP
                   permute, cross):
     if algo == 0:
         # How long the ManyMolecule EA takes.
-        estTime = round(0.5967 * (numAtoms * numAtoms) - 1.3253 * numAtoms + 3.0362)
+        estTime = round(0.7033 * numAtoms + 2.1429)
     else:
         # How long the PerAtom algorithm takes.
-        estTime = round(0.6798 * exp(0.701 * numAtoms))
+        estTime = round((0.9824 * exp(0.3038 * numAtoms)) * 1.7)
     sure = messagebox.askquestion(parent=window, title='Build molecule',
                                   message='Estimated time: up to {} seconds. Proceed?'.format(estTime))
     if sure == 'yes':

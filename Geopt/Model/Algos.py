@@ -10,6 +10,7 @@ from concurrent import futures
 
 def SetUp(elementsList, mutSize):
     print('setting up calculator and cell')
+    # Choose Vasp or EMT
     # calc = SetUpVasp()
     calc = EMT()
     thisPopulation = Population(elementsList, mutSize)
@@ -64,7 +65,8 @@ def MakeNewMolecule(elementsList, inCoordinates, bestE, changeSize, boxSize, pop
                         plot, pes, calc, pbc, numPoints)
     population.append([childMolecule, childCoordinates, childEnergy])
     if plot is not None:
-        if len(plot) < numPoints:
+        # Need to increase the number to make sure it returns something at some stage.
+        if len(plot) < numPoints * 2:
             refs = []
             numAtoms = len(childMolecule)
             for each in range(numAtoms):
@@ -189,25 +191,9 @@ def RankByE(population, numToKeep):
         for eachMember in population:
             # Access the last item of population because different algorithms have different types
             # of population and put low energy at the end.
-            print('member of population:', eachMember)
             if eachMember[-1] < bestEnergy:
                 bestEnergy = eachMember[-1]
                 bestMolecule = eachMember
-        rankedPopulation.append(bestMolecule)
-        population.remove(bestMolecule)
-    return rankedPopulation
-
-
-def RankByDistance(population, numToKeep):
-    # Choose molecules which have similar bond lengths.
-    rankedPopulation = []
-    bestMolecule = None
-    while len(rankedPopulation) < numToKeep:
-        bestDiff = 1000
-        shortest = 0
-        longest = 1000
-        for eachMember in population:
-            pass
         rankedPopulation.append(bestMolecule)
         population.remove(bestMolecule)
     return rankedPopulation

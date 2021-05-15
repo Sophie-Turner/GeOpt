@@ -10,17 +10,15 @@ def StartEA(elementsList, pbc, popSize, cores, numPoints, mutDist, mutSize, perm
     bestMolecules, energies, plot, pes, refs, finalists = [], [], [], [], [], []
     firstCoordinates = thisPopulation.initPositions
     atomObjectList = thisPopulation.initAtomsObject
-    numAtoms = len(elementsList)
 
     parentMolecule = Atoms(atomObjectList, cell=boxSize)
     parentMolecule.center()
     parentEnergy = GetEnergy(parentMolecule, calc, pbc)
-
-    if numAtoms == 1:
-        # If there's only 1 atom we can skip all this...
-        pass
+    print('Starting energy = ', parentEnergy)
 
     # Start with a reasonably spaced estimate to use as an energy comparison.
+    # The list is inside another one due to differences between algorithms' data and they both need to use the same
+    # functions and return the same data structure.
     population = [[parentMolecule, firstCoordinates, parentEnergy]]
     lastBestEnergy = parentEnergy
 
@@ -67,12 +65,10 @@ def Evolve(elementsList, boxSize, population, cores, calc, pbc, popSize, numPoin
 
     bestCoordinates = population[0][1]
     lastBestEnergy = population[0][2]
-    write("C:/Users/pipin/Documents/fyp/SophieCOMP3000/Geopt/Images/startLoop.png", population[0][0],
-         rotation='10x,30y,0z')
     population.pop(0)
 
     # End if the best energy doesn't change much for several consecutive iterations.
-    while similarity < 5 and iterations < 20:
+    while similarity < 5 and iterations < 50:
 
         # New child molecules.
         for i in range(popSize):
