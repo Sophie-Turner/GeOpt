@@ -103,8 +103,7 @@ def ChooseFeatures(elementsList, boxText):
     mutLabel.grid(row=6, column=0, columnspan=3)
     # Types of mutation distribution.
     mutations = [('Uniform', 0), ('Gaussian', 1)]
-    # Sizes of mutation distributions.
-    sizes = [('Very small', -2), ('Small', -1), ('Medium', 0), ('Large', 1), ('Very large', 2)]
+    # Size and shape of mutation distributions.
     mutDist, mutSize = tk.IntVar(), tk.IntVar()
     # Default mutation distribution type.
     mutDist.set(1)

@@ -1,7 +1,11 @@
 from Model.Algos import *
 
+global first
+
 
 def Start(elementsList, pbc, cores, numPoints, mutSize):
+    global first
+    first = 1
     print('Starting Per-atom algorithm.')
     # Set up initial values & placeholders.
     calc, thisPopulation, boxSize = SetUp(elementsList, mutSize)
@@ -61,7 +65,6 @@ def Evolve(elementsList, boxSize, covRads, calc, pbc, numPoints):
                                                                              buildUpBestStructure, onlyH,
                                                                              covRads, boxSize, calc, None, None, None,
                                                                              worstEnergy, pbc, numPoints)
-
     similarity = 0
     iterations = 1
     # Wait for convergence (but don't wait for too long).

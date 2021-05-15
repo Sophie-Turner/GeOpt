@@ -52,7 +52,7 @@ def EvenSpacing(atomsList, extraSpace):
     boxSize = (dimensions, dimensions, dimensions)
     # The coordinates list is kept separate so it can be altered easily during the EA.
     coordinates = []
-    # This list of for creating the initial model and it's quicker to build it up during this loop.
+    # This list is for creating the initial model and it's quicker to build it up during this loop.
     atomObjectList = []
     for i in range(axis):
         x = i + i * extraSpace
