@@ -101,7 +101,7 @@ def ValidateInput(elementsList, box, boxText):
         for element in elementsList:
             testAtom = Atom(element)
             num = testAtom.number
-            if num > 56 and num != 80 and num != 82:
+            if num > 86 or 56 < num < 72:
                 ShowError(0, box)
                 return
     except:
