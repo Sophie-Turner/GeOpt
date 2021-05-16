@@ -14,7 +14,7 @@ def MakeTable(tableFrame, periods, xmlList, box):
             element.config(width=5)
             # Grey out the unsupported elements but show them to maintain the visual structure.
             num = int(j.get('atomicNumber'))
-            if num > 56 and num != 80 and num != 82:
+            if num > 86 or 56 < num < 72:
                 element['state'] = 'disabled'
                 Balloon(element, headertext=j[1].text, text='Some heavy elements are not supported by the energy calculator.',
                         timeout=0.5)
