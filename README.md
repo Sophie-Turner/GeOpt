@@ -42,15 +42,15 @@ EMT was originally only intended for use with solid crystal structures.</p>
                    with different configurations, applies mutations to 
                    generations of versions and selects the best versions 
                    based on the lowest total potential energy. It is 
-                   recommended for molecules with three to twelve atoms.</p>
+                   recommended for molecules with two to twelve atoms.</p>
 
 <h3>Per-atom exhaustive test</h3>
 <p>The per-atom exhaustive test is an algorithm which moves 
               each atom in the molecule around each other atom, 
               constantly testing for the configuration with the lowest 
              total potential energy. The amount of processing required 
-             is proportional to the number of atoms factorial and it 
-              is recommended for molecules with two to four atoms.</p>
+             is exponential to the number of atoms and it 
+             is recommended for molecules with two to six atoms.</p>
 
 <h3>Periodic boundary conditions</h3>
 <p>Periodic boundary conditions are used to approximate
