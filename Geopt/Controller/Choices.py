@@ -12,14 +12,14 @@ txtManyMolecule = ('The many-molecule algorithm is an evolutionary algorithm '
                    'with different configurations, applies mutations to '
                    'generations of versions and selects the best versions '
                    'based on the lowest total potential energy.\nIt is '
-                   'recommended for molecules with three to twelve atoms.')
+                   'recommended for molecules with two to twelve atoms.')
 titlePerAtom = 'Per-atom Exhaustive Test'
 txtPerAtom = ('The per-atom exhaustive test is an algorithm which moves '
               'each atom in the molecule around each other atom, '
               'constantly testing for the configuration with the lowest '
               'total potential energy.\nThe amount of processing required '
               'increases exponentially with the number of atoms and it '
-              'is recommended for molecules with two to four atoms.')
+              'is recommended for molecules with two to six atoms.')
 titlePopSize = 'Population size'
 txtPopSize = ('The population size is the number of versions of the '
               'molecule that will exist at the same time at each step in '
