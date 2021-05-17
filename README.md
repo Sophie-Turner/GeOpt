@@ -50,7 +50,7 @@ EMT was originally only intended for use with solid crystal structures.</p>
               constantly testing for the configuration with the lowest 
              total potential energy. The amount of processing required 
              is exponential to the number of atoms and it 
-             is recommended for molecules with two to six atoms.</p>
+             is recommended for molecules with two to six atoms.</p>             
 
 <h3>Periodic boundary conditions</h3>
 <p>Periodic boundary conditions are used to approximate
